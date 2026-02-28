@@ -23,6 +23,19 @@ model User {
   painEntries       PainEntry[]
   symptoms          SymptomLog[]
   questionResponses QuestionResponse[]
+  pushSubscriptions PushSubscription[]
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model PainEntry {

@@ -90,4 +90,12 @@ export const api = {
     complete: (data: any) =>
       request<any>('/onboarding/complete', { method: 'POST', body: JSON.stringify(data) }),
   },
+
+  push: {
+    subscribe: (data: any) =>
+      request<any>('/push/subscribe', { method: 'POST', body: JSON.stringify(data) }),
+    unsubscribe: (data: any) =>
+      request<any>('/push/unsubscribe', { method: 'DELETE', body: JSON.stringify(data) }),
+    vapidKey: () => request<{ publicKey: string }>('/push/vapid-key'),
+  },
 };

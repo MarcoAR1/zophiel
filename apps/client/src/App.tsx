@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { useOnlineStatus, useSyncStatus } from './hooks/useOnlineStatus';
 import { syncService } from './services/syncService';
+import { notificationService } from './services/notificationService';
 import Navbar from './components/Navbar';
 import AuthPage from './pages/AuthPage';
 import Onboarding from './pages/Onboarding';
@@ -39,6 +40,8 @@ function AppRoutes() {
   useEffect(() => {
     if (user) {
       syncService.startPeriodicSync(30_000);
+      // Initialize notifications (request permission + register push)
+      notificationService.init(user.id).catch(() => {});
     }
   }, [user]);
 

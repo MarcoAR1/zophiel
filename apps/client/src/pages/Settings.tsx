@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
+import { notificationService } from '../services/notificationService';
 import {
   NOTIFICATION_LEVELS,
   NOTIFICATION_SCHEDULES,
@@ -22,6 +23,13 @@ export default function Settings() {
   const [diagnosis, setDiagnosis] = useState(user?.diagnosis || '');
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState('');
+  const [notifPermission, setNotifPermission] = useState<string>('default');
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      setNotifPermission(Notification.permission);
+    }
+  }, []);
 
   const saveNotifications = async () => {
     setSaving(true);
@@ -31,6 +39,14 @@ export default function Settings() {
         quietHoursStart: quietStart,
         quietHoursEnd: quietEnd,
       });
+
+      // Reprogramar notificaciones locales con los nuevos horarios
+      await notificationService.scheduleLocalReminders(
+        NOTIFICATION_SCHEDULES[notifLevel],
+        quietStart,
+        quietEnd,
+      );
+
       setSuccess('Notificaciones actualizadas');
       setTimeout(() => setSuccess(''), 2000);
     } catch {
@@ -53,6 +69,18 @@ export default function Settings() {
       // ignore
     } finally {
       setSaving(false);
+    }
+  };
+
+  const activateNotifications = async () => {
+    const granted = await notificationService.requestPermission();
+    if (granted) {
+      setNotifPermission('granted');
+      await notificationService.init();
+      setSuccess('🔔 Notificaciones activadas');
+      setTimeout(() => setSuccess(''), 2000);
+    } else {
+      setNotifPermission('denied');
     }
   };
 
@@ -96,6 +124,35 @@ export default function Settings() {
         <div className="section-header">
           <h2 className="section-title">Notificaciones</h2>
         </div>
+
+        {/* Permission status */}
+        {notifPermission !== 'granted' && (
+          <div style={{ marginBottom: 'var(--space-lg)' }}>
+            <button
+              className="btn btn-primary btn-block"
+              onClick={activateNotifications}
+              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+            >
+              🔔 Activar notificaciones
+            </button>
+            {notifPermission === 'denied' && (
+              <p style={{ fontSize: 'var(--font-xs)', color: 'var(--danger)', marginTop: 'var(--space-xs)', textAlign: 'center' }}>
+                Notificaciones bloqueadas. Habilitá desde la configuración del navegador.
+              </p>
+            )}
+          </div>
+        )}
+
+        {notifPermission === 'granted' && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 'var(--space-sm)',
+            marginBottom: 'var(--space-lg)', padding: 'var(--space-sm)',
+            background: 'rgba(34,197,94,0.1)', borderRadius: 'var(--radius-md)',
+            fontSize: 'var(--font-sm)', color: 'var(--success)',
+          }}>
+            ✅ Notificaciones activas
+          </div>
+        )}
 
         <label style={{ fontSize: 'var(--font-sm)', color: 'var(--text-secondary)', fontWeight: 500, display: 'block', marginBottom: 'var(--space-md)' }}>
           Frecuencia de recordatorios
