@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./zophiel.db"
+}
+
+model User {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  passwordHash      String
+  name              String
+  dateOfBirth       String?
+  diagnosis         String?
+  notificationLevel String   @default("medium")
+  quietHoursStart   String?
+  quietHoursEnd     String?
+  createdAt         DateTime @default(now())
+
+  painEntries       PainEntry[]
+  symptoms          SymptomLog[]
+  questionResponses QuestionResponse[]
+}
+
+model PainEntry {
+  id                 String   @id @default(uuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id])
+  intensity          Int
+  bodyRegion         String
+  painSensation      String?
+  painIntensityLevel String?
+  painTemporality    String?
+  moodStates         String?  // JSON array stored as string
+  notes              String?
+  timestamp          DateTime @default(now())
+
+  @@index([userId, timestamp])
+}
+
+model SymptomLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  symptom   String
+  severity  Int
+  timestamp DateTime @default(now())
+
+  @@index([userId, timestamp])
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  text      String
+  category  String
+  scaleMin  Int      @default(0)
+  scaleMax  Int      @default(10)
+  frequency String   @default("daily")
+  active    Boolean  @default(true)
+
+  responses QuestionResponse[]
+}
+
+model QuestionResponse {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+  value      Int
+  timestamp  DateTime @default(now())
+
+  @@index([userId, timestamp])
+}
