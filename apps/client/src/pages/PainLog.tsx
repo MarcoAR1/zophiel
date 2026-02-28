@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../services/api';
+import { savePainEntry } from '../services/offlineDb';
+import { syncService } from '../services/syncService';
+import { useOnlineStatus, useSyncStatus } from '../hooks/useOnlineStatus';
 import BodyMap from '../components/BodyMap';
 import {
   PAIN_TEMPORALITIES,
@@ -16,6 +18,8 @@ import {
 
 export default function PainLog() {
   const navigate = useNavigate();
+  const isOnline = useOnlineStatus();
+  const syncStatus = useSyncStatus();
   const [intensity, setIntensity] = useState(5);
   const [painTemporality, setPainTemporality] = useState<PainTemporality | ''>('');
   const [moodStates, setMoodStates] = useState<MoodState[]>([]);
@@ -25,6 +29,7 @@ export default function PainLog() {
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [saved, setSaved] = useState(false);
 
   const painColor =
     intensity <= 2
@@ -59,7 +64,8 @@ export default function PainLog() {
     setError('');
     setSaving(true);
     try {
-      await api.pain.create({
+      // Save to IndexedDB first (offline-first)
+      await savePainEntry({
         intensity,
         painTemporality: painTemporality || undefined,
         moodStates: moodStates.length > 0 ? moodStates : undefined,
@@ -67,7 +73,17 @@ export default function PainLog() {
           Object.keys(musclePainLevels).length > 0 ? musclePainLevels : undefined,
         notes: notes || undefined,
       });
-      navigate('/');
+
+      // Show success briefly
+      setSaved(true);
+
+      // Try to sync immediately if online
+      if (navigator.onLine) {
+        syncService.scheduleSync(500);
+      }
+
+      // Navigate back after a short delay
+      setTimeout(() => navigate('/'), 800);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -79,12 +95,28 @@ export default function PainLog() {
     <div className="page">
       <h1 className="page-title animate-in">Registrar Dolor</h1>
 
+      {/* Offline indicator */}
+      {!isOnline && (
+        <div className="offline-badge animate-in">
+          📴 Sin conexión — se guardará localmente
+        </div>
+      )}
+
       {error && (
         <div
           className="toast toast-error"
           style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}
         >
           {error}
+        </div>
+      )}
+
+      {saved && (
+        <div
+          className="toast toast-success animate-in"
+          style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}
+        >
+          ✅ {isOnline ? 'Guardado y sincronizado' : 'Guardado localmente'}
         </div>
       )}
 
@@ -148,7 +180,7 @@ export default function PainLog() {
         </div>
       </div>
 
-      {/* ── 3. Mood / Physical-Emotional States (General Malaise) ── */}
+      {/* ── 3. Mood / Physical-Emotional States ── */}
       <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
         <div className="pain-segment">
           <div className="pain-segment-title">
@@ -230,9 +262,9 @@ export default function PainLog() {
       <button
         className="btn btn-primary btn-lg btn-block animate-in"
         onClick={handleSubmit}
-        disabled={saving}
+        disabled={saving || saved}
       >
-        {saving ? 'Guardando...' : 'Guardar entrada'}
+        {saving ? 'Guardando...' : saved ? '✅ Guardado' : 'Guardar entrada'}
       </button>
     </div>
   );

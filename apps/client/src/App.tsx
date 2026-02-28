@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
+import { useOnlineStatus, useSyncStatus } from './hooks/useOnlineStatus';
+import { syncService } from './services/syncService';
 import Navbar from './components/Navbar';
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
@@ -10,8 +13,34 @@ import Questions from './pages/Questions';
 import QualityOfLife from './pages/QualityOfLife';
 import Settings from './pages/Settings';
 
+function SyncBanner() {
+  const isOnline = useOnlineStatus();
+  const { pendingCount, isSyncing } = useSyncStatus();
+
+  if (isOnline && pendingCount === 0) return null;
+
+  return (
+    <div className={`sync-banner ${isOnline ? 'syncing' : 'offline'}`}>
+      {!isOnline ? (
+        <>📴 Sin conexión — los datos se guardan localmente</>
+      ) : isSyncing ? (
+        <>🔄 Sincronizando {pendingCount} entrada{pendingCount > 1 ? 's' : ''}...</>
+      ) : pendingCount > 0 ? (
+        <>⏳ {pendingCount} entrada{pendingCount > 1 ? 's' : ''} pendiente{pendingCount > 1 ? 's' : ''} de sincronizar</>
+      ) : null}
+    </div>
+  );
+}
+
 function AppRoutes() {
   const { user, loading } = useAuth();
+
+  // Start periodic sync when user is authenticated
+  useEffect(() => {
+    if (user) {
+      syncService.startPeriodicSync(30_000);
+    }
+  }, [user]);
 
   if (loading) {
     return (
@@ -27,6 +56,7 @@ function AppRoutes() {
 
   return (
     <>
+      <SyncBanner />
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/pain/new" element={<PainLog />} />

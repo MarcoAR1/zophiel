@@ -728,3 +728,46 @@ input[type='range']::-webkit-slider-thumb:hover {
   border-color: var(--accent-primary);
   color: var(--accent-primary);
 }
+
+/* ── Sync Banner ── */
+.sync-banner {
+  position: sticky;
+  top: 0;
+  z-index: 150;
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-xs);
+  font-weight: 600;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: slideIn 0.3s ease;
+}
+
+.sync-banner.offline {
+  background: rgba(239, 68, 68, 0.15);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--danger);
+}
+
+.sync-banner.syncing {
+  background: rgba(59, 130, 246, 0.12);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.25);
+  color: var(--info);
+}
+
+/* ── Offline Badge (inline) ── */
+.offline-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  margin-bottom: var(--space-md);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  font-size: var(--font-xs);
+  font-weight: 500;
+  color: var(--danger);
+}
+

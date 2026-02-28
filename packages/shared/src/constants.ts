@@ -167,9 +167,6 @@ export const PAIN_TEMPORALITIES = [
   'constant',
   'intermittent',
   'acute',
-  'episodic',
-  'progressive',
-  'at_rest',
   'with_movement',
 ] as const;
 export type PainTemporality = (typeof PAIN_TEMPORALITIES)[number];
@@ -177,10 +174,7 @@ export type PainTemporality = (typeof PAIN_TEMPORALITIES)[number];
 export const PAIN_TEMPORALITY_LABELS: Record<PainTemporality, string> = {
   constant: 'Constante',
   intermittent: 'Intermitente',
-  acute: 'Agudo (repentino)',
-  episodic: 'Episódico',
-  progressive: 'Progresivo',
-  at_rest: 'En reposo',
+  acute: 'Agudo',
   with_movement: 'Al movimiento',
 };
 
