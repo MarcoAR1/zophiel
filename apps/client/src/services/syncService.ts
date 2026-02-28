@@ -61,6 +61,7 @@ class SyncService {
           const result = await api.pain.create({
             intensity: entry.intensity,
             bodyRegion: entry.bodyRegion,
+            painIntensityLevel: entry.painIntensityLevel,
             painTemporality: entry.painTemporality,
             moodStates: entry.moodStates,
             musclePainLevels: entry.musclePainLevels,

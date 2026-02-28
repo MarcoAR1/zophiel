@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id                String   @id @default(uuid())
-  email             String   @unique
-  passwordHash      String
-  name              String
-  dateOfBirth       String?
-  diagnosis         String?
-  notificationLevel String   @default("medium")
-  quietHoursStart   String?
-  quietHoursEnd     String?
-  createdAt         DateTime @default(now())
+  id                   String   @id @default(uuid())
+  email                String   @unique
+  passwordHash         String
+  name                 String
+  dateOfBirth          String?
+  diagnosis            String?
+  notificationLevel    String   @default("medium")
+  quietHoursStart      String?
+  quietHoursEnd        String?
+  onboardingCompleted  Boolean  @default(false)
+  createdAt            DateTime @default(now())
 
   painEntries       PainEntry[]
   symptoms          SymptomLog[]

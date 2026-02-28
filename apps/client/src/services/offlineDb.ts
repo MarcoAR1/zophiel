@@ -10,6 +10,7 @@ export interface OfflinePainEntry {
   createdAt: string;
   intensity: number;
   bodyRegion?: string;
+  painIntensityLevel?: PainIntensityLevel;
   painTemporality?: PainTemporality;
   moodStates?: MoodState[];
   musclePainLevels?: Partial<Record<BodyRegion, PainIntensityLevel>>;

@@ -29,7 +29,7 @@ authRouter.post('/register', async (req, res) => {
       data: {
         accessToken,
         refreshToken,
-        user: { id: user.id, email: user.email, name: user.name, notificationLevel: user.notificationLevel, createdAt: user.createdAt.toISOString() },
+        user: { id: user.id, email: user.email, name: user.name, notificationLevel: user.notificationLevel, onboardingCompleted: user.onboardingCompleted, createdAt: user.createdAt.toISOString() },
       },
     });
   } catch (err: any) {
@@ -61,7 +61,7 @@ authRouter.post('/login', async (req, res) => {
       data: {
         accessToken,
         refreshToken,
-        user: { id: user.id, email: user.email, name: user.name, notificationLevel: user.notificationLevel, createdAt: user.createdAt.toISOString() },
+        user: { id: user.id, email: user.email, name: user.name, notificationLevel: user.notificationLevel, onboardingCompleted: user.onboardingCompleted, diagnosis: user.diagnosis, createdAt: user.createdAt.toISOString() },
       },
     });
   } catch (err: any) {

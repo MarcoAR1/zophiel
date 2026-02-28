@@ -85,4 +85,9 @@ export const api = {
     updateProfile: (data: any) =>
       request<any>('/settings/profile', { method: 'PUT', body: JSON.stringify(data) }),
   },
+
+  onboarding: {
+    complete: (data: any) =>
+      request<any>('/onboarding/complete', { method: 'POST', body: JSON.stringify(data) }),
+  },
 };

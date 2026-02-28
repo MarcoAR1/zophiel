@@ -240,15 +240,33 @@ export default function BodyMap({ musclePainLevels, onSetMusclePain }: BodyMapPr
       <div className="body-svg-wrapper" ref={containerRef}>
         <svg viewBox="0 0 200 480" xmlns="http://www.w3.org/2000/svg">
           <defs>
+            {/* Ambient body glow */}
             <radialGradient id="bodyGlow">
-              <stop offset="0%" stopColor="rgba(99, 102, 241, 0.05)" />
+              <stop offset="0%" stopColor="rgba(99, 102, 241, 0.06)" />
               <stop offset="100%" stopColor="transparent" />
             </radialGradient>
+            {/* 3D lighting — top-down highlight for volume */}
+            <linearGradient id="bodyLight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.08)" />
+              <stop offset="50%" stopColor="rgba(255, 255, 255, 0.02)" />
+              <stop offset="100%" stopColor="rgba(0, 0, 0, 0.05)" />
+            </linearGradient>
+            {/* Subtle inner shadow for depth */}
+            <filter id="innerDepth" x="-10%" y="-10%" width="120%" height="120%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur" />
+              <feOffset dx="0" dy="1" result="offset" />
+              <feComposite in="offset" in2="SourceAlpha" operator="in" result="shadow" />
+              <feFlood floodColor="rgba(0,0,0,0.2)" result="color" />
+              <feComposite in="color" in2="shadow" operator="in" result="innerShadow" />
+              <feComposite in="SourceGraphic" in2="innerShadow" operator="over" />
+            </filter>
+            {/* Zone hover/active shadow */}
             <filter id="zoneShadow">
               <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#6366f1" floodOpacity="0.4" />
             </filter>
-            <filter id="painGlow">
-              <feGaussianBlur stdDeviation="2" result="blur" />
+            {/* Pain glow for selected zones */}
+            <filter id="painGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
@@ -257,7 +275,9 @@ export default function BodyMap({ musclePainLevels, onSetMusclePain }: BodyMapPr
           <ellipse cx="100" cy="240" rx="82" ry="240" fill="url(#bodyGlow)" />
 
           {/* Body silhouette outline */}
-          <path d={SILHOUETTE} className="body-outline" />
+          <path d={SILHOUETTE} className="body-outline" filter="url(#innerDepth)" />
+          {/* 3D lighting overlay */}
+          <path d={SILHOUETTE} fill="url(#bodyLight)" opacity="0.5" style={{ pointerEvents: 'none' }} />
 
           {/* Interactive zones */}
           {zones.map((zone) => (

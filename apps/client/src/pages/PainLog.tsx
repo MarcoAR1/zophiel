@@ -7,6 +7,10 @@ import BodyMap from '../components/BodyMap';
 import {
   PAIN_TEMPORALITIES,
   PAIN_TEMPORALITY_LABELS,
+  PAIN_INTENSITY_LEVELS,
+  PAIN_INTENSITY_LABELS,
+  PAIN_INTENSITY_COLORS,
+  PAIN_LEVEL_RANGES,
   MOOD_STATES,
   MOOD_STATE_LABELS,
   MOOD_STATE_ICONS,
@@ -30,6 +34,19 @@ export default function PainLog() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
+
+  // Auto-compute intensity level from slider
+  const autoLevel: PainIntensityLevel =
+    intensity <= 3 ? 'mild' : intensity <= 5 ? 'moderate' : intensity <= 7 ? 'severe' : 'very_severe';
+  const [painIntensityLevel, setPainIntensityLevel] = useState<PainIntensityLevel>(autoLevel);
+
+  // Update level when slider changes
+  const handleIntensityChange = (val: number) => {
+    setIntensity(val);
+    const newLevel: PainIntensityLevel =
+      val <= 3 ? 'mild' : val <= 5 ? 'moderate' : val <= 7 ? 'severe' : 'very_severe';
+    setPainIntensityLevel(newLevel);
+  };
 
   const painColor =
     intensity <= 2
@@ -68,6 +85,7 @@ export default function PainLog() {
       await savePainEntry({
         intensity,
         painTemporality: painTemporality || undefined,
+        painIntensityLevel: painIntensityLevel,
         moodStates: moodStates.length > 0 ? moodStates : undefined,
         musclePainLevels:
           Object.keys(musclePainLevels).length > 0 ? musclePainLevels : undefined,
@@ -143,7 +161,7 @@ export default function PainLog() {
             min={0}
             max={10}
             value={intensity}
-            onChange={(e) => setIntensity(Number(e.target.value))}
+            onChange={(e) => handleIntensityChange(Number(e.target.value))}
             style={{ accentColor: painColor }}
           />
           <div
@@ -156,6 +174,22 @@ export default function PainLog() {
           >
             <span>Sin dolor</span>
             <span>Insoportable</span>
+          </div>
+
+          {/* Visual intensity level selector */}
+          <div className="intensity-levels" style={{ marginTop: 'var(--space-md)' }}>
+            {PAIN_INTENSITY_LEVELS.map((level) => (
+              <button
+                key={level}
+                className={`intensity-btn ${painIntensityLevel === level ? 'active' : ''}`}
+                onClick={() => setPainIntensityLevel(level)}
+                style={{ '--btn-color': PAIN_INTENSITY_COLORS[level] } as React.CSSProperties}
+              >
+                <span className="intensity-dot" style={{ background: PAIN_INTENSITY_COLORS[level] }} />
+                <span className="intensity-label">{PAIN_INTENSITY_LABELS[level]}</span>
+                <span className="intensity-range">{PAIN_LEVEL_RANGES[level]}</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>

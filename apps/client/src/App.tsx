@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { useOnlineStatus, useSyncStatus } from './hooks/useOnlineStatus';
 import { syncService } from './services/syncService';
 import Navbar from './components/Navbar';
 import AuthPage from './pages/AuthPage';
+import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import PainLog from './pages/PainLog';
 import PainHistory from './pages/PainHistory';
@@ -33,9 +34,8 @@ function SyncBanner() {
 }
 
 function AppRoutes() {
-  const { user, loading } = useAuth();
+  const { user, loading, updateUser } = useAuth();
 
-  // Start periodic sync when user is authenticated
   useEffect(() => {
     if (user) {
       syncService.startPeriodicSync(30_000);
@@ -52,6 +52,23 @@ function AppRoutes() {
 
   if (!user) {
     return <AuthPage />;
+  }
+
+  // Onboarding gate
+  if (!user.onboardingCompleted) {
+    return (
+      <Onboarding
+        userName={user.name}
+        onComplete={(userData) => {
+          if (userData) {
+            updateUser(userData);
+          } else {
+            // Offline fallback — mark locally
+            updateUser({ ...user, onboardingCompleted: true });
+          }
+        }}
+      />
+    );
   }
 
   return (

@@ -293,3 +293,41 @@ export const QOL_WEIGHTS = {
 export const PAIN_SCALE = { min: 0, max: 10 } as const;
 export const MOOD_SCALE = { min: 1, max: 5 } as const;
 export const SEVERITY_SCALE = { min: 1, max: 5 } as const;
+
+// ── Diagnosis / conditions ──
+export const DIAGNOSIS_OPTIONS = [
+  'fibromyalgia',
+  'arthritis',
+  'chronic_migraine',
+  'lower_back_pain',
+  'neuropathy',
+  'endometriosis',
+  'crohn',
+  'chronic_fatigue',
+  'other',
+] as const;
+export type DiagnosisOption = (typeof DIAGNOSIS_OPTIONS)[number];
+
+export const DIAGNOSIS_LABELS: Record<DiagnosisOption, string> = {
+  fibromyalgia: 'Fibromialgia',
+  arthritis: 'Artritis',
+  chronic_migraine: 'Migraña crónica',
+  lower_back_pain: 'Lumbalgia',
+  neuropathy: 'Neuropatía',
+  endometriosis: 'Endometriosis',
+  crohn: 'Crohn / Colitis',
+  chronic_fatigue: 'Fatiga crónica',
+  other: 'Otro',
+};
+
+export const DIAGNOSIS_ICONS: Record<DiagnosisOption, string> = {
+  fibromyalgia: '🦴',
+  arthritis: '🦵',
+  chronic_migraine: '🧠',
+  lower_back_pain: '🔙',
+  neuropathy: '⚡',
+  endometriosis: '🩺',
+  crohn: '🫃',
+  chronic_fatigue: '😴',
+  other: '📋',
+};

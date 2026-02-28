@@ -6,6 +6,7 @@ import { painRouter } from './routes/pain.js';
 import { symptomsRouter } from './routes/symptoms.js';
 import { questionsRouter } from './routes/questions.js';
 import { analyticsRouter } from './routes/analytics.js';
+import { onboardingRouter } from './routes/onboarding.js';
 import { settingsRouter } from './routes/settings.js';
 
 export const prisma = new PrismaClient();
@@ -23,6 +24,7 @@ app.use('/api/symptoms', symptomsRouter);
 app.use('/api/questions', questionsRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/settings', settingsRouter);
+app.use('/api/onboarding', onboardingRouter);
 
 // ── Health check ──
 app.get('/api/health', (_req, res) => {
