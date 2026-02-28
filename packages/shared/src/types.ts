@@ -32,17 +32,19 @@ export interface PainEntry {
   painIntensityLevel?: PainIntensityLevel;
   painTemporality?: PainTemporality;
   moodStates: MoodState[];
+  musclePainLevels?: Partial<Record<BodyRegion, PainIntensityLevel>>;
   notes?: string;
   timestamp: string;
 }
 
 export interface CreatePainEntryDTO {
   intensity: number;
-  bodyRegion: BodyRegion;
+  bodyRegion?: BodyRegion;
   painSensation?: PainSensation;
   painIntensityLevel?: PainIntensityLevel;
   painTemporality?: PainTemporality;
   moodStates?: MoodState[];
+  musclePainLevels?: Partial<Record<BodyRegion, PainIntensityLevel>>;
   notes?: string;
 }
 

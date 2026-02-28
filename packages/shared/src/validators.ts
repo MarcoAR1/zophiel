@@ -24,11 +24,12 @@ export const registerSchema = z.object({
 // ── Pain Entry ──
 export const createPainEntrySchema = z.object({
   intensity: z.number().int().min(0).max(10),
-  bodyRegion: z.enum(BODY_REGIONS),
+  bodyRegion: z.enum(BODY_REGIONS).optional(),
   painSensation: z.enum(PAIN_SENSATIONS).optional(),
   painIntensityLevel: z.enum(PAIN_INTENSITY_LEVELS).optional(),
   painTemporality: z.enum(PAIN_TEMPORALITIES).optional(),
   moodStates: z.array(z.enum(MOOD_STATES)).optional(),
+  musclePainLevels: z.record(z.enum(BODY_REGIONS), z.enum(PAIN_INTENSITY_LEVELS)).optional(),
   notes: z.string().max(500).optional(),
 });
 

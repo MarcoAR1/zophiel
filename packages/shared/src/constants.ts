@@ -155,6 +155,13 @@ export const PAIN_INTENSITY_COLORS: Record<PainIntensityLevel, string> = {
   very_severe: '#ef4444',
 };
 
+export const PAIN_LEVEL_RANGES: Record<PainIntensityLevel, string> = {
+  mild: '1-3',
+  moderate: '4-5',
+  severe: '6-7',
+  very_severe: '8-10',
+};
+
 // ── Pain temporality ──
 export const PAIN_TEMPORALITIES = [
   'constant',

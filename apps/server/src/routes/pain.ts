@@ -10,15 +10,20 @@ painRouter.use(authMiddleware);
 painRouter.post('/', async (req: AuthRequest, res) => {
   try {
     const data = createPainEntrySchema.parse(req.body);
+    // Determine bodyRegion from explicit field or first muscle key
+    const bodyRegion = data.bodyRegion
+      || (data.musclePainLevels ? Object.keys(data.musclePainLevels)[0] : undefined)
+      || 'general';
     const entry = await prisma.painEntry.create({
       data: {
         userId: req.userId!,
         intensity: data.intensity,
-        bodyRegion: data.bodyRegion,
+        bodyRegion,
         painSensation: data.painSensation,
         painIntensityLevel: data.painIntensityLevel,
         painTemporality: data.painTemporality,
         moodStates: data.moodStates ? JSON.stringify(data.moodStates) : null,
+        musclePainLevels: data.musclePainLevels ? JSON.stringify(data.musclePainLevels) : null,
         notes: data.notes,
       },
     });

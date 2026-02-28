@@ -29,11 +29,12 @@ model PainEntry {
   userId             String
   user               User     @relation(fields: [userId], references: [id])
   intensity          Int
-  bodyRegion         String
+  bodyRegion         String?
   painSensation      String?
   painIntensityLevel String?
   painTemporality    String?
   moodStates         String?  // JSON array stored as string
+  musclePainLevels   String?  // JSON object stored as string
   notes              String?
   timestamp          DateTime @default(now())
 

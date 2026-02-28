@@ -3,18 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import BodyMap from '../components/BodyMap';
 import {
-  PAIN_SENSATIONS,
-  PAIN_SENSATION_LABELS,
-  PAIN_INTENSITY_LEVELS,
-  PAIN_INTENSITY_LABELS,
-  PAIN_INTENSITY_COLORS,
   PAIN_TEMPORALITIES,
   PAIN_TEMPORALITY_LABELS,
   MOOD_STATES,
   MOOD_STATE_LABELS,
   MOOD_STATE_ICONS,
   type BodyRegion,
-  type PainSensation,
   type PainIntensityLevel,
   type PainTemporality,
   type MoodState,
@@ -23,11 +17,11 @@ import {
 export default function PainLog() {
   const navigate = useNavigate();
   const [intensity, setIntensity] = useState(5);
-  const [bodyRegion, setBodyRegion] = useState<BodyRegion | ''>('');
-  const [painSensation, setPainSensation] = useState<PainSensation | ''>('');
-  const [painIntensityLevel, setPainIntensityLevel] = useState<PainIntensityLevel | ''>('');
   const [painTemporality, setPainTemporality] = useState<PainTemporality | ''>('');
   const [moodStates, setMoodStates] = useState<MoodState[]>([]);
+  const [musclePainLevels, setMusclePainLevels] = useState<
+    Partial<Record<BodyRegion, PainIntensityLevel>>
+  >({});
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -49,21 +43,28 @@ export default function PainLog() {
     );
   };
 
+  const handleSetMusclePain = (region: BodyRegion, level: PainIntensityLevel | null) => {
+    setMusclePainLevels((prev) => {
+      const next = { ...prev };
+      if (level === null) {
+        delete next[region];
+      } else {
+        next[region] = level;
+      }
+      return next;
+    });
+  };
+
   const handleSubmit = async () => {
-    if (!bodyRegion) {
-      setError('Seleccioná una zona del cuerpo');
-      return;
-    }
     setError('');
     setSaving(true);
     try {
       await api.pain.create({
         intensity,
-        bodyRegion,
-        painSensation: painSensation || undefined,
-        painIntensityLevel: painIntensityLevel || undefined,
         painTemporality: painTemporality || undefined,
         moodStates: moodStates.length > 0 ? moodStates : undefined,
+        musclePainLevels:
+          Object.keys(musclePainLevels).length > 0 ? musclePainLevels : undefined,
         notes: notes || undefined,
       });
       navigate('/');
@@ -87,7 +88,7 @@ export default function PainLog() {
         </div>
       )}
 
-      {/* ── Intensity Slider ── */}
+      {/* ── 1. Intensity Slider (General) ── */}
       <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
         <div className="slider-container">
           <label
@@ -97,7 +98,7 @@ export default function PainLog() {
               fontWeight: 500,
             }}
           >
-            Intensidad del dolor (NRS 0-10)
+            Intensidad general (NRS 0-10)
           </label>
           <div
             className="slider-value"
@@ -127,77 +128,7 @@ export default function PainLog() {
         </div>
       </div>
 
-      {/* ── Body Map 360° ── */}
-      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
-        <label
-          style={{
-            fontSize: 'var(--font-sm)',
-            color: 'var(--text-secondary)',
-            fontWeight: 500,
-            display: 'block',
-            marginBottom: 'var(--space-md)',
-          }}
-        >
-          ¿Dónde te duele?
-        </label>
-        <BodyMap
-          selectedRegion={bodyRegion}
-          onSelectRegion={setBodyRegion}
-          painIntensityLevel={painIntensityLevel || undefined}
-        />
-      </div>
-
-      {/* ── Pain Sensation ── */}
-      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
-        <div className="pain-segment">
-          <div className="pain-segment-title">Sensación</div>
-          <div className="chip-group">
-            {PAIN_SENSATIONS.map((type) => (
-              <button
-                key={type}
-                className={`chip ${painSensation === type ? 'active' : ''}`}
-                onClick={() => setPainSensation(painSensation === type ? '' : type)}
-              >
-                {PAIN_SENSATION_LABELS[type]}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Pain Intensity Level ── */}
-      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
-        <div className="pain-segment">
-          <div className="pain-segment-title">Nivel de intensidad</div>
-          <div className="intensity-pills">
-            {PAIN_INTENSITY_LEVELS.map((level) => (
-              <button
-                key={level}
-                className={`intensity-pill ${painIntensityLevel === level ? 'active' : ''}`}
-                onClick={() =>
-                  setPainIntensityLevel(painIntensityLevel === level ? '' : level)
-                }
-                style={
-                  painIntensityLevel === level
-                    ? {
-                        borderColor: PAIN_INTENSITY_COLORS[level],
-                        color: PAIN_INTENSITY_COLORS[level],
-                      }
-                    : undefined
-                }
-              >
-                <span
-                  className="dot"
-                  style={{ background: PAIN_INTENSITY_COLORS[level] }}
-                />
-                {PAIN_INTENSITY_LABELS[level]}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Pain Temporality ── */}
+      {/* ── 2. Temporality ── */}
       <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
         <div className="pain-segment">
           <div className="pain-segment-title">Temporalidad</div>
@@ -217,11 +148,11 @@ export default function PainLog() {
         </div>
       </div>
 
-      {/* ── Mood / Physical-Emotional States ── */}
+      {/* ── 3. Mood / Physical-Emotional States (General Malaise) ── */}
       <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
         <div className="pain-segment">
           <div className="pain-segment-title">
-            Estado físico / emocional
+            Malestar general
             {moodStates.length > 0 && (
               <span
                 style={{
@@ -233,7 +164,7 @@ export default function PainLog() {
                   letterSpacing: 0,
                 }}
               >
-                ({moodStates.length} seleccionados)
+                ({moodStates.length})
               </span>
             )}
           </div>
@@ -252,7 +183,37 @@ export default function PainLog() {
         </div>
       </div>
 
-      {/* ── Notes ── */}
+      {/* ── 4. Body Map with Per-Muscle Pain ── */}
+      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
+        <label
+          style={{
+            fontSize: 'var(--font-sm)',
+            color: 'var(--text-secondary)',
+            fontWeight: 500,
+            display: 'block',
+            marginBottom: 'var(--space-md)',
+          }}
+        >
+          Dolor por zona
+          <span
+            style={{
+              fontSize: 'var(--font-xs)',
+              color: 'var(--text-muted)',
+              fontWeight: 400,
+              display: 'block',
+              marginTop: '4px',
+            }}
+          >
+            Tocá un músculo para asignar nivel de dolor
+          </span>
+        </label>
+        <BodyMap
+          musclePainLevels={musclePainLevels}
+          onSetMusclePain={handleSetMusclePain}
+        />
+      </div>
+
+      {/* ── 5. Notes ── */}
       <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
         <div className="input-group">
           <label>Notas (opcional)</label>
