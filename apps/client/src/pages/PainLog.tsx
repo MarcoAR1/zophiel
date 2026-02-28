@@ -7,10 +7,6 @@ import BodyMap from '../components/BodyMap';
 import {
   PAIN_TEMPORALITIES,
   PAIN_TEMPORALITY_LABELS,
-  PAIN_INTENSITY_LEVELS,
-  PAIN_INTENSITY_LABELS,
-  PAIN_INTENSITY_COLORS,
-  PAIN_LEVEL_RANGES,
   MOOD_STATES,
   MOOD_STATE_LABELS,
   MOOD_STATE_ICONS,
@@ -176,21 +172,14 @@ export default function PainLog() {
             <span>Insoportable</span>
           </div>
 
-          {/* Visual intensity level selector */}
-          <div className="intensity-levels" style={{ marginTop: 'var(--space-md)' }}>
-            {PAIN_INTENSITY_LEVELS.map((level) => (
-              <button
-                key={level}
-                className={`intensity-btn ${painIntensityLevel === level ? 'active' : ''}`}
-                onClick={() => setPainIntensityLevel(level)}
-                style={{ '--btn-color': PAIN_INTENSITY_COLORS[level] } as React.CSSProperties}
-              >
-                <span className="intensity-dot" style={{ background: PAIN_INTENSITY_COLORS[level] }} />
-                <span className="intensity-label">{PAIN_INTENSITY_LABELS[level]}</span>
-                <span className="intensity-range">{PAIN_LEVEL_RANGES[level]}</span>
-              </button>
-            ))}
-          </div>
+          {/* Color gradient bar reference */}
+          <div style={{
+            marginTop: 'var(--space-sm)',
+            height: '6px',
+            borderRadius: '3px',
+            background: 'linear-gradient(to right, var(--pain-0), var(--pain-3), var(--pain-5), var(--pain-7), var(--pain-10))',
+            opacity: 0.6,
+          }} />
         </div>
       </div>
 
