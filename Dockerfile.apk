@@ -1,0 +1,54 @@
+# ── Stage 1: Build web assets ──
+FROM node:22-slim AS web-build
+RUN corepack enable && corepack prepare pnpm@latest --activate
+WORKDIR /app
+
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json tsconfig.base.json ./
+COPY apps/client/package.json apps/client/
+COPY packages/shared/package.json packages/shared/
+RUN pnpm install --frozen-lockfile
+
+COPY packages/shared/ packages/shared/
+RUN pnpm --filter @zophiel/shared build
+
+COPY apps/client/ apps/client/
+RUN pnpm --filter @zophiel/client build
+
+# ── Stage 2: Build Android APK ──
+FROM thyrlian/android-sdk:latest AS android-build
+
+# Install Node.js for Capacitor CLI
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g pnpm@latest
+
+WORKDIR /app
+
+# Copy web build output
+COPY --from=web-build /app/apps/client/dist apps/client/dist/
+COPY --from=web-build /app/apps/client/package.json apps/client/
+COPY --from=web-build /app/apps/client/capacitor.config.ts apps/client/
+COPY --from=web-build /app/apps/client/capacitor.config.d.ts apps/client/
+COPY --from=web-build /app/apps/client/node_modules apps/client/node_modules/
+
+# Copy workspace files for pnpm
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY packages/shared/package.json packages/shared/
+
+# Install Capacitor dependencies in client
+WORKDIR /app/apps/client
+RUN npx cap add android
+RUN npx cap sync android
+
+# Build debug APK
+WORKDIR /app/apps/client/android
+RUN chmod +x gradlew && ./gradlew assembleDebug
+
+# Copy APK to output
+RUN mkdir -p /output && \
+    cp app/build/outputs/apk/debug/app-debug.apk /output/zophiel.apk
+
+# ── Stage 3: Output ──
+FROM scratch AS output
+COPY --from=android-build /output/zophiel.apk /zophiel.apk

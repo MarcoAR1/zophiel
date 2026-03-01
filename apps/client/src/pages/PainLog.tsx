@@ -97,7 +97,7 @@ export default function PainLog() {
       }
 
       // Navigate back after a short delay
-      setTimeout(() => navigate('/'), 800);
+      setTimeout(() => navigate('/app'), 800);
     } catch (err: any) {
       setError(err.message);
     } finally {

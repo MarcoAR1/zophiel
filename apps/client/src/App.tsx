@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { useOnlineStatus, useSyncStatus } from './hooks/useOnlineStatus';
 import { syncService } from './services/syncService';
 import { notificationService } from './services/notificationService';
 import Navbar from './components/Navbar';
+import Landing from './pages/Landing';
 import AuthPage from './pages/AuthPage';
 import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
@@ -34,13 +35,12 @@ function SyncBanner() {
   );
 }
 
-function AppRoutes() {
+function AuthenticatedApp() {
   const { user, loading, updateUser } = useAuth();
 
   useEffect(() => {
     if (user) {
       syncService.startPeriodicSync(30_000);
-      // Initialize notifications (request permission + register push)
       notificationService.init(user.id).catch(() => {});
     }
   }, [user]);
@@ -66,7 +66,6 @@ function AppRoutes() {
           if (userData) {
             updateUser(userData);
           } else {
-            // Offline fallback — mark locally
             updateUser({ ...user, onboardingCompleted: true });
           }
         }}
@@ -92,10 +91,25 @@ function AppRoutes() {
   );
 }
 
+function AppRoutes() {
+  const location = useLocation();
+
+  // Landing page is outside auth context
+  if (location.pathname === '/') {
+    return <Landing />;
+  }
+
+  return <AuthenticatedApp />;
+}
+
 export default function App() {
   return (
     <AuthProvider>
-      <AppRoutes />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/app/*" element={<AuthenticatedApp />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </AuthProvider>
   );
 }

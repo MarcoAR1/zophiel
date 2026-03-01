@@ -1,0 +1,38 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/client/**'
+      - 'packages/shared/**'
+      - 'Dockerfile.apk'
+      - '.github/workflows/build-apk.yml'
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build APK via Docker
+        run: |
+          docker build \
+            -f Dockerfile.apk \
+            --target output \
+            --output type=local,dest=./output \
+            .
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: zophiel-apk
+          path: ./output/zophiel.apk
+          retention-days: 30
