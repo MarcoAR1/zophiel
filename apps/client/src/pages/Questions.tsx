@@ -58,7 +58,6 @@ export default function Questions() {
     );
   }
 
-  const pending = questions.filter((q) => !completed.has(q.id));
 
   // Color for question slider value
   const getColor = (val: number, max: number) => {
@@ -80,20 +79,37 @@ export default function Questions() {
         </div>
       )}
 
-      {pending.length === 0 ? (
+      {questions.length === 0 ? (
         <div className="card empty-state animate-in">
           <div style={{ fontSize: '3rem', marginBottom: 'var(--space-md)' }}>🎉</div>
-          <div>¡Ya respondiste todas las preguntas de hoy!</div>
+          <div>No hay preguntas pendientes por hoy.</div>
         </div>
       ) : (
-        pending.map((q) => {
+        questions.map((q) => {
           const val = answers[q.id] ?? 5;
           const color = getColor(val, q.scaleMax);
           const isSaving = saving[q.id];
+          const isCompleted = completed.has(q.id);
 
           return (
-            <div key={q.id} className="card question-card animate-in" style={{ marginBottom: 'var(--space-md)' }}>
-              <div className="question-text">{q.text}</div>
+            <div
+              key={q.id}
+              className="card question-card animate-in"
+              style={{
+                marginBottom: 'var(--space-md)',
+                borderColor: isCompleted ? 'var(--accent-success)' : undefined,
+                borderWidth: isCompleted ? '1px' : undefined,
+                borderStyle: isCompleted ? 'solid' : undefined,
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="question-text">{q.text}</div>
+                {isCompleted && (
+                  <span style={{ fontSize: 'var(--font-xs)', color: 'var(--accent-success)', whiteSpace: 'nowrap', marginLeft: 'var(--space-sm)' }}>
+                    ✅ Guardada
+                  </span>
+                )}
+              </div>
               <div className="slider-container">
                 <div
                   className="slider-value"
