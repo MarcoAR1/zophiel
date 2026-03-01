@@ -30,12 +30,11 @@ export async function calculateQoL(userId: string, periodDays: number): Promise<
     }
   };
 
-  // Pain entries contribute pain + mood
+  // Pain entries contribute pain
   for (const entry of painEntries) {
     const date = entry.timestamp.toISOString().slice(0, 10);
     ensureDate(date);
     dateMap[date].painValues.push(entry.intensity);
-    if (entry.mood) dateMap[date].moodValues.push(entry.mood);
   }
 
   // Question responses contribute to their category

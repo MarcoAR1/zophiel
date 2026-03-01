@@ -80,9 +80,10 @@ painRouter.get('/stats', async (req: AuthRequest, res) => {
 
     const byRegion: Record<string, { total: number; count: number }> = {};
     for (const e of entries) {
-      if (!byRegion[e.bodyRegion]) byRegion[e.bodyRegion] = { total: 0, count: 0 };
-      byRegion[e.bodyRegion].total += e.intensity;
-      byRegion[e.bodyRegion].count += 1;
+      const region = e.bodyRegion || 'unknown';
+      if (!byRegion[region]) byRegion[region] = { total: 0, count: 0 };
+      byRegion[region].total += e.intensity;
+      byRegion[region].count += 1;
     }
 
     const byRegionAvg: Record<string, { average: number; count: number }> = {};

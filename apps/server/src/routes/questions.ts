@@ -47,7 +47,7 @@ questionsRouter.get('/pending', async (req: AuthRequest, res) => {
 questionsRouter.post('/:id/respond', async (req: AuthRequest, res) => {
   try {
     const data = createQuestionResponseSchema.parse(req.body);
-    const question = await prisma.question.findUnique({ where: { id: req.params.id } });
+    const question = await prisma.question.findUnique({ where: { id: req.params.id as string } });
     if (!question) {
       res.status(404).json({ success: false, error: 'Pregunta no encontrada' });
       return;
@@ -56,7 +56,7 @@ questionsRouter.post('/:id/respond', async (req: AuthRequest, res) => {
     const response = await prisma.questionResponse.create({
       data: {
         userId: req.userId!,
-        questionId: req.params.id,
+        questionId: req.params.id as string,
         value: data.value,
       },
     });
