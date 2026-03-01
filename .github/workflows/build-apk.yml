@@ -56,9 +56,16 @@ jobs:
         working-directory: apps/client
         run: npx cap sync android
 
+      - name: Upgrade Gradle wrapper
+        working-directory: apps/client/android
+        run: |
+          chmod +x gradlew
+          ./gradlew wrapper --gradle-version=8.11.1 --distribution-type=bin
+          chmod +x gradlew
+
       - name: Build debug APK
         working-directory: apps/client/android
-        run: chmod +x gradlew && ./gradlew assembleDebug
+        run: ./gradlew assembleDebug
 
       - name: Copy APK to public
         run: |
