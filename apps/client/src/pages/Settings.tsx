@@ -28,10 +28,31 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState('');
   const [notifPermission, setNotifPermission] = useState<string>('default');
+  const [healthStatus, setHealthStatus] = useState<any>(null);
+  const [healthLoading, setHealthLoading] = useState(false);
 
   useEffect(() => {
     if ('Notification' in window) {
       setNotifPermission(Notification.permission);
+    }
+    // Load health status
+    api.health.status().then(setHealthStatus).catch(() => {});
+
+    // Handle OAuth callback (Google Fit sends ?code=... back)
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    if (code) {
+      setHealthLoading(true);
+      api.health.connect(code)
+        .then(() => {
+          setHealthStatus({ connected: true, provider: 'google_fit' });
+          setSuccess('✅ Google Fit conectado');
+          setTimeout(() => setSuccess(''), 3000);
+          // Clean URL
+          window.history.replaceState({}, '', window.location.pathname);
+        })
+        .catch(() => setSuccess('❌ Error al conectar Google Fit'))
+        .finally(() => setHealthLoading(false));
     }
   }, []);
 
@@ -114,6 +135,88 @@ export default function Settings() {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Health Data Connection */}
+      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
+        <div className="section-header">
+          <h2 className="section-title">🏥 Datos de salud</h2>
+        </div>
+
+        {healthStatus?.connected ? (
+          <div>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 'var(--space-sm)',
+              marginBottom: 'var(--space-md)', padding: 'var(--space-sm)',
+              background: 'rgba(34,197,94,0.1)', borderRadius: 'var(--radius-md)',
+            }}>
+              <span style={{ fontSize: 'var(--font-sm)', color: 'var(--success)' }}>
+                ✅ Google Fit conectado
+              </span>
+            </div>
+            {healthStatus.lastSync && (
+              <p style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginBottom: 'var(--space-md)' }}>
+                Última sincronización: {new Date(healthStatus.lastSync).toLocaleString()}
+              </p>
+            )}
+            <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+              <button
+                className="btn btn-primary"
+                style={{ flex: 1, fontSize: 'var(--font-sm)' }}
+                onClick={async () => {
+                  setHealthLoading(true);
+                  try {
+                    await api.health.sync();
+                    setSuccess('📱 Datos sincronizados');
+                    setTimeout(() => setSuccess(''), 2000);
+                  } catch { /* ignore */ }
+                  setHealthLoading(false);
+                }}
+                disabled={healthLoading}
+              >
+                {healthLoading ? '⏳ Sincronizando...' : '🔄 Sincronizar ahora'}
+              </button>
+              <button
+                className="btn btn-danger"
+                style={{ fontSize: 'var(--font-sm)' }}
+                onClick={async () => {
+                  await api.health.disconnect();
+                  setHealthStatus({ connected: false });
+                  setSuccess('Desconectado');
+                  setTimeout(() => setSuccess(''), 2000);
+                }}
+              >
+                Desconectar
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <p style={{ fontSize: 'var(--font-sm)', color: 'var(--text-muted)', marginBottom: 'var(--space-md)', lineHeight: 1.6 }}>
+              Conectá tu app de salud para obtener datos automáticos de sueño, pasos, frecuencia cardíaca y más.
+            </p>
+            <button
+              className="btn btn-primary btn-block"
+              style={{ background: 'linear-gradient(135deg, #4285f4, #34a853)' }}
+              onClick={async () => {
+                setHealthLoading(true);
+                try {
+                  const { url } = await api.health.getAuthUrl();
+                  window.location.href = url;
+                } catch {
+                  setSuccess('❌ Error al conectar');
+                  setHealthLoading(false);
+                }
+              }}
+              disabled={healthLoading}
+            >
+              {healthLoading ? '⏳ Conectando...' : '🏃 Conectar Google Fit'}
+            </button>
+            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginTop: 'var(--space-md)', lineHeight: 1.6 }}>
+              📊 Datos obtenidos: sueño, pasos, frecuencia cardíaca, calorías, minutos activos
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Profile */}

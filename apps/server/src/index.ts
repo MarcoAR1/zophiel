@@ -12,6 +12,7 @@ import { analyticsRouter } from './routes/analytics.js';
 import { onboardingRouter } from './routes/onboarding.js';
 import { settingsRouter } from './routes/settings.js';
 import { pushRouter } from './routes/push.js';
+import { healthRouter } from './routes/health.js';
 import { startNotificationCron } from './services/notificationCron.js';
 
 export const prisma = new PrismaClient();
@@ -67,9 +68,10 @@ app.use('/api/analytics', analyticsRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/onboarding', onboardingRouter);
 app.use('/api/push', pushRouter);
+app.use('/api/health', healthRouter);
 
 // ── Health check ──
-app.get('/api/health', (_req, res) => {
+app.get('/api/ping', (_req, res) => {
   res.json({ status: 'ok', version: '1.0.0', timestamp: new Date().toISOString() });
 });
 

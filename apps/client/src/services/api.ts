@@ -101,4 +101,20 @@ export const api = {
       request<any>('/push/unsubscribe', { method: 'DELETE', body: JSON.stringify(data) }),
     vapidKey: () => request<{ publicKey: string }>('/push/vapid-key'),
   },
+
+  health: {
+    status: () => request<any>('/health/status'),
+    getAuthUrl: () => request<{ url: string }>('/health/connect/google/url'),
+    connect: (code: string) =>
+      request<any>('/health/connect/google', { method: 'POST', body: JSON.stringify({ code }) }),
+    disconnect: () => request<any>('/health/disconnect', { method: 'POST' }),
+    sync: (data?: any) =>
+      request<any>('/health/sync', { method: 'POST', body: JSON.stringify(data || {}) }),
+    getData: (date?: string, days?: number) => {
+      const params = new URLSearchParams();
+      if (date) params.set('date', date);
+      if (days) params.set('days', String(days));
+      return request<any>(`/health/data?${params.toString()}`);
+    },
+  },
 };

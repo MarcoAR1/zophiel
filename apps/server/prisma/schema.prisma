@@ -20,12 +20,15 @@ model User {
   quietHoursStart      String?
   quietHoursEnd        String?
   onboardingCompleted  Boolean  @default(false)
+  healthProvider       String?  // "google_fit" | "health_connect" | null
+  googleFitToken       String?  // encrypted refresh token
   createdAt            DateTime @default(now())
 
   painEntries       PainEntry[]
   symptoms          SymptomLog[]
   questionResponses QuestionResponse[]
   pushSubscriptions PushSubscription[]
+  healthSyncs       HealthSync[]
 }
 
 model PushSubscription {
@@ -90,4 +93,22 @@ model QuestionResponse {
   timestamp  DateTime @default(now())
 
   @@index([userId, timestamp])
+}
+
+model HealthSync {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  date          String   // "2026-03-01"
+  steps         Int?
+  sleepMinutes  Int?
+  heartRateAvg  Int?
+  heartRateMax  Int?
+  calories      Int?
+  activeMinutes Int?
+  source        String   // "google_fit" | "health_connect"
+  syncedAt      DateTime @default(now())
+
+  @@unique([userId, date, source])
+  @@index([userId, date])
 }
