@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { I18nProvider } from './i18n/index';
 import { useOnlineStatus, useSyncStatus } from './hooks/useOnlineStatus';
@@ -90,17 +90,6 @@ function AuthenticatedApp() {
       <Navbar />
     </>
   );
-}
-
-function AppRoutes() {
-  const location = useLocation();
-
-  // Landing page is outside auth context
-  if (location.pathname === '/') {
-    return <Landing />;
-  }
-
-  return <AuthenticatedApp />;
 }
 
 export default function App() {
