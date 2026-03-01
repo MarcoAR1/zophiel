@@ -147,7 +147,7 @@ export default function Settings() {
           <h2 className="section-title">{t('settings_notifications')}</h2>
         </div>
 
-        {notifPermission !== 'granted' && (
+        {notifPermission === 'default' && (
           <div style={{ marginBottom: 'var(--space-lg)' }}>
             <button
               className="btn btn-primary btn-block"
@@ -156,11 +156,29 @@ export default function Settings() {
             >
               🔔 Activar notificaciones
             </button>
-            {notifPermission === 'denied' && (
-              <p style={{ fontSize: 'var(--font-xs)', color: 'var(--danger)', marginTop: 'var(--space-xs)', textAlign: 'center' }}>
-                Notificaciones bloqueadas. Habilitá desde la configuración del navegador.
-              </p>
-            )}
+          </div>
+        )}
+
+        {notifPermission === 'denied' && (
+          <div style={{
+            marginBottom: 'var(--space-lg)',
+            padding: 'var(--space-md)',
+            background: 'rgba(239,68,68,0.08)',
+            borderRadius: 'var(--radius-md)',
+            border: '1px solid rgba(239,68,68,0.2)',
+          }}>
+            <div style={{ fontWeight: 600, marginBottom: 'var(--space-sm)', color: 'var(--danger)' }}>
+              🚫 Notificaciones bloqueadas
+            </div>
+            <p style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginBottom: 'var(--space-sm)', lineHeight: 1.5 }}>
+              El navegador bloqueó las notificaciones. Para activarlas:
+            </p>
+            <ol style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', paddingLeft: '1.2rem', lineHeight: 1.8 }}>
+              <li>Hacé clic en el 🔒 candado en la barra de direcciones</li>
+              <li>Buscá <strong>Notificaciones</strong></li>
+              <li>Cambialo a <strong>Permitir</strong></li>
+              <li>Recargá la página</li>
+            </ol>
           </div>
         )}
 
