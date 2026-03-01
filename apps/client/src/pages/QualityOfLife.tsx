@@ -18,13 +18,21 @@ export default function QualityOfLife() {
   const [period, setPeriod] = useState(30);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     setLoading(true);
+    setError('');
     api.analytics
       .qualityOfLife(period)
-      .then(setData)
-      .catch(() => setData([]))
+      .then((result) => {
+        setData(result || []);
+      })
+      .catch((err) => {
+        console.error('[QoL] API error:', err);
+        setError(err.message || 'Error al cargar datos');
+        setData([]);
+      })
       .finally(() => setLoading(false));
   }, [period]);
 
@@ -93,6 +101,12 @@ export default function QualityOfLife() {
   return (
     <div className="page">
       <h1 className="page-title animate-in">Calidad de Vida</h1>
+
+      {error && (
+        <div className="toast toast-error" style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}>
+          ⚠️ {error}
+        </div>
+      )}
 
       <div className="period-selector animate-in">
         {[7, 30, 90].map((p) => (
