@@ -6,7 +6,6 @@ on:
     paths:
       - 'apps/client/**'
       - 'packages/shared/**'
-      - 'Dockerfile.apk'
       - '.github/workflows/build-apk.yml'
   workflow_dispatch:
 
@@ -21,28 +20,57 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
-      - name: Build APK via Docker
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @zophiel/shared build
+
+      - name: Build web assets
+        run: pnpm --filter @zophiel/client build
+
+      - name: Add Android platform
+        working-directory: apps/client
+        run: npx cap add android
+
+      - name: Sync Capacitor
+        working-directory: apps/client
+        run: npx cap sync android
+
+      - name: Build debug APK
+        working-directory: apps/client/android
+        run: chmod +x gradlew && ./gradlew assembleDebug
+
+      - name: Copy APK to public
         run: |
-          docker build \
-            -f Dockerfile.apk \
-            --target output \
-            --output type=local,dest=./output \
-            .
+          mkdir -p apps/client/public/downloads
+          cp apps/client/android/app/build/outputs/apk/debug/app-debug.apk apps/client/public/downloads/zophiel.apk
 
-      - name: Upload APK as artifact
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: zophiel-apk
-          path: ./output/zophiel.apk
+          path: apps/client/public/downloads/zophiel.apk
           retention-days: 30
-
-      - name: Copy APK to public folder
-        run: |
-          mkdir -p apps/client/public/downloads
-          cp ./output/zophiel.apk apps/client/public/downloads/zophiel.apk
 
       - name: Commit APK to repo
         run: |
