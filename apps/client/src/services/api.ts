@@ -43,6 +43,8 @@ export const api = {
     login: (data: { email: string; password: string }) =>
       request<any>('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
     me: () => request<any>('/auth/me'),
+    google: (credential: string) =>
+      request<any>('/auth/google', { method: 'POST', body: JSON.stringify({ credential }) }),
   },
 
   pain: {

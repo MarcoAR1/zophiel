@@ -1,14 +1,73 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth';
 
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: any) => void;
+          renderButton: (element: HTMLElement, config: any) => void;
+        };
+      };
+    };
+  }
+}
+
 export default function AuthPage() {
-  const { login, register } = useAuth();
+  const { login, register, loginWithGoogle } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const googleBtnRef = useRef<HTMLDivElement>(null);
+
+  const handleGoogleResponse = useCallback(
+    async (response: any) => {
+      setError('');
+      setLoading(true);
+      try {
+        await loginWithGoogle(response.credential);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [loginWithGoogle]
+  );
+
+  useEffect(() => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (!clientId) return;
+
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      if (window.google && googleBtnRef.current) {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleResponse,
+        });
+        window.google.accounts.id.renderButton(googleBtnRef.current, {
+          theme: 'outline',
+          size: 'large',
+          width: '100%',
+          text: 'continue_with',
+          shape: 'pill',
+          locale: 'es',
+        });
+      }
+    };
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, [handleGoogleResponse]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,6 +145,15 @@ export default function AuthPage() {
             {loading ? 'Cargando...' : isLogin ? 'Iniciar Sesión' : 'Registrarse'}
           </button>
         </form>
+
+        {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
+          <>
+            <div className="auth-divider">
+              <span>o</span>
+            </div>
+            <div ref={googleBtnRef} className="google-btn-container" />
+          </>
+        )}
 
         <div className="auth-toggle">
           {isLogin ? '¿No tenés cuenta?' : '¿Ya tenés cuenta?'}{' '}

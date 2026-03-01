@@ -521,6 +521,28 @@ input[type='range']::-webkit-slider-thumb:hover {
   font-family: var(--font-family);
 }
 
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin: var(--space-lg) 0;
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.google-btn-container {
+  display: flex;
+  justify-content: center;
+}
+
 /* ── Pain Badge ── */
 .pain-badge {
   display: inline-flex;
