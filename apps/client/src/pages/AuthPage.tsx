@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../hooks/useAuth';
 import { useI18n } from '../i18n/index';
 
@@ -25,6 +26,7 @@ export default function AuthPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const googleBtnRef = useRef<HTMLDivElement>(null);
+  const isNative = Capacitor.isNativePlatform();
 
   const handleGoogleResponse = useCallback(
     async (response: any) => {
@@ -42,6 +44,9 @@ export default function AuthPage() {
   );
 
   useEffect(() => {
+    // GIS only works on web, not in Capacitor WebView
+    if (isNative) return;
+
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     if (!clientId) return;
 
@@ -68,7 +73,16 @@ export default function AuthPage() {
     return () => {
       document.head.removeChild(script);
     };
-  }, [handleGoogleResponse]);
+  }, [handleGoogleResponse, isNative]);
+
+  const handleGoogleNative = () => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (!clientId) return;
+    const redirectUri = encodeURIComponent(window.location.origin + '/app');
+    const scope = encodeURIComponent('openid email profile');
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
+    window.open(url, '_system');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -147,13 +161,28 @@ export default function AuthPage() {
           </button>
         </form>
 
-        {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
-          <>
-            <div className="auth-divider">
-              <span>{t('auth_or')}</span>
-            </div>
+        <div className="auth-divider">
+          <span>{t('auth_or')}</span>
+        </div>
+
+        {isNative ? (
+          <button
+            type="button"
+            className="btn btn-lg btn-block btn-google-native"
+            onClick={handleGoogleNative}
+          >
+            <svg width="18" height="18" viewBox="0 0 18 18">
+              <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84c-.21 1.13-.85 2.09-1.81 2.73v2.27h2.93c1.71-1.58 2.7-3.9 2.7-6.64z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.47-.81 5.96-2.18l-2.93-2.27c-.81.54-1.84.86-3.03.86-2.34 0-4.32-1.58-5.02-3.71H.96v2.34C2.44 15.98 5.48 18 9 18z"/>
+              <path fill="#FBBC05" d="M3.98 10.7c-.18-.54-.28-1.11-.28-1.7s.1-1.17.28-1.7V4.96H.96C.35 6.18 0 7.55 0 9s.35 2.82.96 4.04l3.02-2.34z"/>
+              <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l3.02 2.34c.7-2.13 2.68-3.72 5.02-3.72z"/>
+            </svg>
+            Continuar con Google
+          </button>
+        ) : (
+          import.meta.env.VITE_GOOGLE_CLIENT_ID && (
             <div ref={googleBtnRef} className="google-btn-container" />
-          </>
+          )
         )}
 
         <div className="auth-toggle">
@@ -166,3 +195,4 @@ export default function AuthPage() {
     </div>
   );
 }
+

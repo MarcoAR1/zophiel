@@ -53,6 +53,16 @@ jobs:
         working-directory: apps/client
         run: npx cap sync android
 
+      - name: Copy app icon to Android resources
+        run: |
+          ICON_SRC=apps/client/resources/icon.png
+          ANDROID_RES=apps/client/android/app/src/main/res
+          for dir in mipmap-mdpi mipmap-hdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi; do
+            cp "$ICON_SRC" "$ANDROID_RES/$dir/ic_launcher.png"
+            cp "$ICON_SRC" "$ANDROID_RES/$dir/ic_launcher_round.png"
+            cp "$ICON_SRC" "$ANDROID_RES/$dir/ic_launcher_foreground.png" 2>/dev/null || true
+          done
+
       - name: Build debug APK
         working-directory: apps/client/android
         run: chmod +x gradlew && ./gradlew assembleDebug

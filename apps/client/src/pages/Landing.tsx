@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { useI18n, LOCALE_FLAGS, LOCALE_LABELS, type Locale } from '../i18n/index';
 import '../styles/landing.css';
 
@@ -27,6 +28,13 @@ export default function Landing() {
   const scrollToFeatures = () => {
     featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // In native app, skip landing and go to auth/app
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      navigate('/app', { replace: true });
+    }
+  }, [navigate]);
 
   return (
     <div className="landing">
