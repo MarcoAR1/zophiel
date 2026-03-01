@@ -79,6 +79,7 @@ export const api = {
     qualityOfLife: (period = 30) => request<any[]>(`/analytics/quality-of-life?period=${period}`),
     symptomCorrelation: (period = 30) =>
       request<any[]>(`/analytics/symptom-correlation?period=${period}`),
+    painReport: (period = 30) => request<any>(`/analytics/pain-report?period=${period}`),
   },
 
   settings: {
