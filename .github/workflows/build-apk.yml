@@ -36,6 +36,26 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Restore debug keystore
+        run: |
+          mkdir -p ~/.android
+          if [ -f apps/client/debug.keystore ]; then
+            echo "Using committed debug keystore (consistent SHA-1)"
+            cp apps/client/debug.keystore ~/.android/debug.keystore
+          else
+            echo "No committed keystore found — generating new one..."
+            keytool -genkey -v -keystore ~/.android/debug.keystore \
+              -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass android -keypass android \
+              -dname "CN=Android Debug,O=Android,C=US"
+            cp ~/.android/debug.keystore apps/client/debug.keystore
+          fi
+          echo "=== SHA-1 FINGERPRINT ==="
+          keytool -list -v -keystore ~/.android/debug.keystore \
+            -alias androiddebugkey -storepass android -keypass android \
+            | grep -E "SHA1|SHA-1"
+          echo "========================="
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -67,22 +87,6 @@ jobs:
         working-directory: apps/client/android
         run: chmod +x gradlew && ./gradlew assembleDebug
 
-      - name: Print debug SHA-1 (for Google Cloud Console)
-        run: |
-          KEYSTORE=""
-          for path in ~/.android/debug.keystore $HOME/.android/debug.keystore /root/.android/debug.keystore; do
-            if [ -f "$path" ]; then KEYSTORE="$path"; break; fi
-          done
-          if [ -z "$KEYSTORE" ]; then
-            echo "Creating debug keystore..."
-            mkdir -p ~/.android
-            keytool -genkey -v -keystore ~/.android/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
-            KEYSTORE=~/.android/debug.keystore
-          fi
-          echo "=== DEBUG SHA-1 FINGERPRINT ==="
-          keytool -list -v -keystore "$KEYSTORE" -alias androiddebugkey -storepass android -keypass android | grep -E "SHA1|SHA-1"
-          echo "==============================="
-
       - name: Copy APK to public
         run: |
           mkdir -p apps/client/public/downloads
@@ -95,10 +99,10 @@ jobs:
           path: apps/client/public/downloads/zophiel.apk
           retention-days: 30
 
-      - name: Commit APK to repo
+      - name: Commit APK and keystore to repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add apps/client/public/downloads/zophiel.apk
-          git diff --staged --quiet || git commit -m "ci: update APK build [skip ci]"
+          git add apps/client/public/downloads/zophiel.apk apps/client/debug.keystore
+          git diff --staged --quiet || git commit -m "ci: update APK + persist debug keystore [skip ci]"
           git push
