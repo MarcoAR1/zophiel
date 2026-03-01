@@ -183,27 +183,19 @@ export default function Landing() {
           <div className="cta-card fade-up">
             <h2>{t('landing_cta_ready')}</h2>
             <p>{t('landing_cta_join')}</p>
-            <div style={{ display: 'flex', gap: 'var(--space-md)', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="cta-buttons">
               <button className="btn btn-primary btn-lg btn-glow" onClick={() => navigate('/app')}>
                 {t('landing_cta_create')}
               </button>
               <a
                 href="/downloads/zophiel.apk"
                 download
-                className="btn btn-lg"
-                style={{
-                  background: 'linear-gradient(135deg, #3ddc84, #00a86b)',
-                  color: '#fff',
-                  textDecoration: 'none',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                }}
+                className="btn btn-lg btn-android"
               >
                 📱 Android APK
               </a>
             </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 'var(--space-md)', opacity: 0.7 }}>
+            <p className="cta-note">
               También disponible como PWA instalable desde el navegador
             </p>
           </div>

@@ -487,6 +487,22 @@
   position: relative;
 }
 
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.cta-note {
+  font-size: 0.78rem;
+  color: var(--landing-muted);
+  margin-top: 1.5rem;
+  opacity: 0.6;
+  position: relative;
+}
+
 /* ── Footer ── */
 .landing-footer {
   padding: 3rem 0;
@@ -536,35 +552,314 @@
   font-size: 0.82rem;
 }
 
-/* ── Responsive ── */
+/* ── Responsive: Tablets ── */
 @media (max-width: 768px) {
-  .hero-stats {
-    gap: 1.2rem;
+  .section-container {
+    padding: 0 1.2rem;
+  }
+
+  /* Nav */
+  .landing-nav {
     padding: 1rem 1.2rem;
   }
 
+  .landing-logo {
+    font-size: 1.3rem;
+  }
+
+  .btn-ghost {
+    padding: 0.5rem 1rem;
+    font-size: 0.82rem;
+  }
+
+  /* Hero */
+  .hero-content {
+    padding: 0 1.2rem 3rem;
+  }
+
+  .hero-title {
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
+    margin-bottom: 1rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+  }
+
+  .hero-badge {
+    font-size: 0.78rem;
+    padding: 0.35rem 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+
+  /* Hero CTA */
+  .hero-cta {
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero-cta .btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 1rem;
+    padding: 0.9rem 1.5rem;
+  }
+
+  .hero-cta .btn-android {
+    order: -1;
+    font-size: 1.05rem;
+    padding: 1rem 1.5rem;
+  }
+
+  /* Hero Stats */
+  .hero-stats {
+    width: 100%;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    border-radius: 14px;
+  }
+
   .stat-number {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
+  }
+
+  .stat-label {
+    font-size: 0.68rem;
+  }
+
+  /* Features */
+  .features {
+    padding: 4rem 0;
+  }
+
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+  }
+
+  .section-desc {
+    font-size: 0.92rem;
   }
 
   .features-grid {
     grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+    border-radius: 14px;
+  }
+
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.6rem;
+    border-radius: 12px;
+    margin-bottom: 0.8rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1rem;
+  }
+
+  .feature-card p {
+    font-size: 0.85rem;
+  }
+
+  /* How it Works */
+  .how-it-works {
+    padding: 4rem 0;
+  }
+
+  .steps {
+    max-width: 100%;
+  }
+
+  .step {
     gap: 1rem;
   }
 
+  .step-number {
+    width: 42px;
+    height: 42px;
+    font-size: 1rem;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  .step-content h3 {
+    font-size: 1.05rem;
+  }
+
+  .step-content p {
+    font-size: 0.85rem;
+  }
+
+  .step-connector {
+    margin-left: 20px;
+    height: 32px;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    padding: 3rem 0 4rem;
+  }
+
+  .cta-card {
+    padding: 2.5rem 1.5rem;
+    border-radius: 18px;
+  }
+
+  .cta-card h2 {
+    font-size: clamp(1.3rem, 4vw, 1.6rem);
+  }
+
+  .cta-card p {
+    font-size: 0.92rem;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .cta-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Footer */
   .footer-content {
     flex-direction: column;
     text-align: center;
     gap: 1.5rem;
   }
 
-  .hero-cta {
-    flex-direction: column;
-    width: 100%;
-    padding: 0 1rem;
+  .footer-links {
+    gap: 1rem;
+  }
+}
+
+/* ── Responsive: Small Phones ── */
+@media (max-width: 480px) {
+  .landing-nav {
+    padding: 0.8rem 1rem;
+  }
+
+  .landing-logo {
+    font-size: 1.15rem;
+  }
+
+  .lang-switcher {
+    padding: 0.15rem;
+  }
+
+  .lang-btn {
+    font-size: 0.95rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .btn-ghost {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.78rem;
+  }
+
+  .hero-content {
+    padding: 0 0.8rem 2rem;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-subtitle {
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .hero-badge {
+    font-size: 0.72rem;
   }
 
   .hero-cta .btn {
+    padding: 0.85rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .hero-stats {
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1.2rem;
+  }
+
+  .stat {
+    flex-direction: row;
+    gap: 0.6rem;
     width: 100%;
+    justify-content: center;
+  }
+
+  .stat-divider {
+    display: none;
+  }
+
+  .stat-number {
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+  }
+
+  .hero-orb-1 {
+    width: 300px;
+    height: 300px;
+  }
+
+  .hero-orb-2 {
+    width: 250px;
+    height: 250px;
+  }
+
+  .hero-orb-3 {
+    width: 180px;
+    height: 180px;
+  }
+
+  .features {
+    padding: 3rem 0;
+  }
+
+  .section-header {
+    margin-bottom: 2rem;
+  }
+
+  .feature-card {
+    padding: 1.2rem;
+  }
+
+  .cta-card {
+    padding: 2rem 1.2rem;
+    border-radius: 16px;
+  }
+
+  .cta-note {
+    font-size: 0.7rem;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 0.8rem;
   }
 }
