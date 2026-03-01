@@ -558,18 +558,35 @@
     padding: 0 1.2rem;
   }
 
-  /* Nav */
+  /* Nav — fix overlap */
   .landing-nav {
     padding: 1rem 1.2rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   .landing-logo {
     font-size: 1.3rem;
   }
 
+  .landing-nav > div {
+    gap: 0.4rem !important;
+  }
+
   .btn-ghost {
-    padding: 0.5rem 1rem;
-    font-size: 0.82rem;
+    padding: 0.45rem 0.8rem;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  .lang-switcher {
+    gap: 0.15rem;
+    padding: 0.15rem;
+  }
+
+  .lang-btn {
+    padding: 0.25rem 0.35rem;
+    font-size: 0.9rem;
   }
 
   /* Hero */
@@ -594,7 +611,7 @@
     margin-bottom: 1.2rem;
   }
 
-  /* Hero CTA */
+  /* Hero CTA — full width stacked */
   .hero-cta {
     flex-direction: column;
     width: 100%;
@@ -603,17 +620,24 @@
     margin-bottom: 2rem;
   }
 
-  .hero-cta .btn {
+  .hero-cta .btn,
+  .hero-cta a.btn {
     width: 100%;
+    display: flex;
     justify-content: center;
+    align-items: center;
     font-size: 1rem;
     padding: 0.9rem 1.5rem;
+    text-align: center;
+    box-sizing: border-box;
   }
 
-  .hero-cta .btn-android {
+  .hero-cta .btn-android,
+  .hero-cta a.btn-android {
     order: -1;
     font-size: 1.05rem;
     padding: 1rem 1.5rem;
+    display: flex !important;
   }
 
   /* Hero Stats */
@@ -639,14 +663,24 @@
 
   .section-header {
     margin-bottom: 2.5rem;
+    text-align: center;
+    padding: 0 0.5rem;
+  }
+
+  .section-tag {
+    display: block;
+    text-align: center;
   }
 
   .section-title {
     font-size: clamp(1.3rem, 4vw, 1.8rem);
+    text-align: center;
   }
 
   .section-desc {
     font-size: 0.92rem;
+    text-align: center;
+    max-width: 100%;
   }
 
   .features-grid {
@@ -682,6 +716,7 @@
 
   .steps {
     max-width: 100%;
+    padding: 0 0.5rem;
   }
 
   .step {
@@ -733,45 +768,58 @@
     gap: 0.75rem;
   }
 
-  .cta-buttons .btn {
+  .cta-buttons .btn,
+  .cta-buttons a.btn {
     width: 100%;
+    display: flex;
     justify-content: center;
+    align-items: center;
   }
 
   /* Footer */
+  .landing-footer {
+    padding: 2rem 0;
+  }
+
   .footer-content {
     flex-direction: column;
     text-align: center;
     gap: 1.5rem;
+    padding: 0 1rem;
   }
 
   .footer-links {
     gap: 1rem;
+    justify-content: center;
+  }
+
+  .footer-bottom {
+    padding: 1.5rem 1rem 0;
   }
 }
 
 /* ── Responsive: Small Phones ── */
 @media (max-width: 480px) {
+  .section-container {
+    padding: 0 1rem;
+  }
+
   .landing-nav {
     padding: 0.8rem 1rem;
   }
 
   .landing-logo {
-    font-size: 1.15rem;
-  }
-
-  .lang-switcher {
-    padding: 0.15rem;
+    font-size: 1.1rem;
   }
 
   .lang-btn {
-    font-size: 0.95rem;
-    padding: 0.2rem 0.4rem;
+    font-size: 0.85rem;
+    padding: 0.2rem 0.3rem;
   }
 
   .btn-ghost {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.78rem;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.72rem;
   }
 
   .hero-content {
@@ -779,20 +827,22 @@
   }
 
   .hero-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     letter-spacing: -0.02em;
   }
 
   .hero-subtitle {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     line-height: 1.6;
   }
 
   .hero-badge {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.7rem;
   }
 
-  .hero-cta .btn {
+  .hero-cta .btn,
+  .hero-cta a.btn {
     padding: 0.85rem 1.2rem;
     font-size: 0.95rem;
   }
@@ -849,6 +899,10 @@
     padding: 1.2rem;
   }
 
+  .how-it-works {
+    padding: 3rem 0;
+  }
+
   .cta-card {
     padding: 2rem 1.2rem;
     border-radius: 16px;
@@ -860,6 +914,10 @@
 
   .footer-links {
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.6rem;
+  }
+
+  .footer-bottom p {
+    font-size: 0.75rem;
   }
 }
