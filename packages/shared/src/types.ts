@@ -7,7 +7,7 @@ import type {
   Symptom,
   NotificationLevel,
   QuestionCategory,
-} from './constants';
+} from './constants.js';
 
 // ── User ──
 export interface User {

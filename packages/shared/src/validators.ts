@@ -7,7 +7,7 @@ import {
   MOOD_STATES,
   SYMPTOMS,
   NOTIFICATION_LEVELS,
-} from './constants';
+} from './constants.js';
 
 // ── Auth ──
 export const loginSchema = z.object({
