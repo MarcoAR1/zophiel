@@ -68,7 +68,20 @@ jobs:
         run: chmod +x gradlew && ./gradlew assembleDebug
 
       - name: Print debug SHA-1 (for Google Cloud Console)
-        run: keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android 2>/dev/null | grep SHA1 || echo "Debug keystore not found"
+        run: |
+          KEYSTORE=""
+          for path in ~/.android/debug.keystore $HOME/.android/debug.keystore /root/.android/debug.keystore; do
+            if [ -f "$path" ]; then KEYSTORE="$path"; break; fi
+          done
+          if [ -z "$KEYSTORE" ]; then
+            echo "Creating debug keystore..."
+            mkdir -p ~/.android
+            keytool -genkey -v -keystore ~/.android/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+            KEYSTORE=~/.android/debug.keystore
+          fi
+          echo "=== DEBUG SHA-1 FINGERPRINT ==="
+          keytool -list -v -keystore "$KEYSTORE" -alias androiddebugkey -storepass android -keypass android | grep -E "SHA1|SHA-1"
+          echo "==============================="
 
       - name: Copy APK to public
         run: |
