@@ -24,7 +24,7 @@ RUN mkdir -p /prisma-client /prisma-at-client && \
 RUN cp -rL /app/node_modules /app/_resolved_modules
 
 # ── Production ──
-FROM node:22-slim AS production
+FROM base AS production
 WORKDIR /app
 
 # Copy fully resolved node_modules (no broken symlinks)
