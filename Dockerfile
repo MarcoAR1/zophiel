@@ -19,18 +19,27 @@ FROM build-shared AS build-server
 COPY apps/server/ apps/server/
 RUN cd apps/server && npx prisma generate
 RUN pnpm --filter @zophiel/server build
+# Copy Prisma client to a known location for the production stage
+RUN find /app/node_modules -path "*/.prisma/client" -type d | head -1 | xargs -I{} cp -r {} /app/_prisma_client
 
 # ── Production ──
 FROM base AS production
+
+# Copy node_modules
 COPY --from=deps /app/node_modules node_modules/
-COPY --from=deps /app/apps/server/node_modules apps/server/node_modules/
 COPY --from=deps /app/packages/shared/node_modules packages/shared/node_modules/
+
+# Copy built packages
 COPY --from=build-shared /app/packages/shared/dist packages/shared/dist/
 COPY --from=build-shared /app/packages/shared/package.json packages/shared/
+
+# Copy server
 COPY --from=build-server /app/apps/server/dist apps/server/dist/
 COPY --from=build-server /app/apps/server/package.json apps/server/
 COPY --from=build-server /app/apps/server/prisma apps/server/prisma/
-COPY --from=build-server /app/apps/server/node_modules/.prisma apps/server/node_modules/.prisma/
+
+# Copy Prisma client from known location
+COPY --from=build-server /app/_prisma_client node_modules/.prisma/client/
 
 ENV NODE_ENV=production
 EXPOSE 3001
