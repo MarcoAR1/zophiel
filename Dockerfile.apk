@@ -48,7 +48,10 @@ RUN npx cap sync android
 
 # Build debug APK
 WORKDIR /app/apps/client/android
-RUN chmod +x gradlew && ./gradlew assembleDebug
+ENV GRADLE_OPTS="-Xmx2048m -Dorg.gradle.daemon=false"
+RUN chmod +x gradlew && \
+    rm -rf /root/.gradle/caches/jars-* && \
+    ./gradlew assembleDebug --no-daemon --stacktrace
 
 # Copy APK to output
 RUN mkdir -p /output && \
