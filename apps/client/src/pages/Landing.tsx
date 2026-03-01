@@ -69,6 +69,13 @@ export default function Landing() {
             <button className="btn btn-primary btn-lg btn-glow" onClick={() => navigate('/app')}>
               {t('landing_cta_start')}
             </button>
+            <a
+              href="/downloads/zophiel.apk"
+              download
+              className="btn btn-lg btn-android"
+            >
+              📱 Android APK
+            </a>
             <button className="btn btn-outline btn-lg" onClick={scrollToFeatures}>
               {t('landing_cta_learn')}
             </button>
