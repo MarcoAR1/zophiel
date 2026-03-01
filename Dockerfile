@@ -19,7 +19,7 @@ RUN cd apps/server && pnpm exec prisma generate
 RUN pnpm --filter @zophiel/server build
 
 # Use pnpm deploy to create a standalone package with all deps resolved
-RUN pnpm --filter @zophiel/server deploy --prod /deployed
+RUN pnpm --filter @zophiel/server deploy --legacy --prod /deployed
 
 # Copy built artifacts into deployed directory
 RUN cp -r /app/apps/server/dist /deployed/dist
