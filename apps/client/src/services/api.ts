@@ -103,18 +103,18 @@ export const api = {
   },
 
   health: {
-    status: () => request<any>('/health/status'),
-    getAuthUrl: () => request<{ url: string }>('/health/connect/google/url'),
+    status: () => request<any>('/health-data/status'),
+    getAuthUrl: () => request<{ url: string }>('/health-data/connect/google/url'),
     connect: (code: string) =>
-      request<any>('/health/connect/google', { method: 'POST', body: JSON.stringify({ code }) }),
-    disconnect: () => request<any>('/health/disconnect', { method: 'POST' }),
+      request<any>('/health-data/connect/google', { method: 'POST', body: JSON.stringify({ code }) }),
+    disconnect: () => request<any>('/health-data/disconnect', { method: 'POST' }),
     sync: (data?: any) =>
-      request<any>('/health/sync', { method: 'POST', body: JSON.stringify(data || {}) }),
+      request<any>('/health-data/sync', { method: 'POST', body: JSON.stringify(data || {}) }),
     getData: (date?: string, days?: number) => {
       const params = new URLSearchParams();
       if (date) params.set('date', date);
       if (days) params.set('days', String(days));
-      return request<any>(`/health/data?${params.toString()}`);
+      return request<any>(`/health-data/data?${params.toString()}`);
     },
   },
 };
