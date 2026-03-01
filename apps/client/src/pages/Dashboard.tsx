@@ -10,6 +10,8 @@ export default function Dashboard() {
   const [stats, setStats] = useState<any>(null);
   const [pending, setPending] = useState<any[]>([]);
   const [qol, setQol] = useState<any[]>([]);
+  const [healthStatus, setHealthStatus] = useState<any>(null);
+  const [healthData, setHealthData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,10 +19,14 @@ export default function Dashboard() {
       api.pain.stats(7).catch(() => null),
       api.questions.pending().catch(() => []),
       api.analytics.qualityOfLife(7).catch(() => []),
-    ]).then(([s, p, q]) => {
+      api.health.status().catch(() => null),
+      api.health.getData().catch(() => null),
+    ]).then(([s, p, q, hs, hd]) => {
       setStats(s);
       setPending(p || []);
       setQol(q || []);
+      setHealthStatus(hs);
+      setHealthData(hd);
       setLoading(false);
     });
   }, []);
@@ -39,6 +45,40 @@ export default function Dashboard() {
     <div className="page">
       <h1 className="page-title animate-in">{t('dash_hello', { name: user?.name || '' })}</h1>
       <p className="page-subtitle animate-in">{t('dash_summary')}</p>
+
+      {/* Health Data Banner */}
+      {healthStatus?.connected && healthData ? (
+        <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)', background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(34,197,94,0.08))' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-sm)' }}>
+            <span style={{ fontSize: 'var(--font-sm)', fontWeight: 600 }}>📱 Google Fit — Hoy</span>
+            <span style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>Auto-sync</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-sm)', textAlign: 'center' }}>
+            <div>
+              <div style={{ fontSize: 'var(--font-lg)', fontWeight: 700 }}>{healthData.steps ?? '—'}</div>
+              <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>🚶 Pasos</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 'var(--font-lg)', fontWeight: 700 }}>
+                {healthData.sleepMinutes ? `${Math.floor(healthData.sleepMinutes / 60)}h${healthData.sleepMinutes % 60}m` : '—'}
+              </div>
+              <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>😴 Sueño</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 'var(--font-lg)', fontWeight: 700 }}>{healthData.heartRateAvg ?? '—'}</div>
+              <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>❤️ FC prom</div>
+            </div>
+          </div>
+        </div>
+      ) : !healthStatus?.connected ? (
+        <Link to="/app/settings" className="card animate-in" style={{ textDecoration: 'none', marginBottom: 'var(--space-lg)', display: 'flex', alignItems: 'center', gap: 'var(--space-md)', background: 'linear-gradient(135deg, rgba(66,133,244,0.08), rgba(52,168,83,0.08))', border: '1px solid rgba(66,133,244,0.15)' }}>
+          <span style={{ fontSize: '1.5rem' }}>🏃</span>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: 'var(--font-sm)' }}>Conectá Google Fit</div>
+            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>Sueño, pasos y frecuencia cardíaca automáticos</div>
+          </div>
+        </Link>
+      ) : null}
 
       {/* Stats Grid */}
       <div className="stats-grid">
