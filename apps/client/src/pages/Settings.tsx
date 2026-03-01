@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
+import { useI18n, LOCALE_LABELS, LOCALE_FLAGS, type Locale } from '../i18n/index';
 import { notificationService } from '../services/notificationService';
 import {
   NOTIFICATION_LEVELS,
@@ -14,8 +15,11 @@ const LEVEL_LABELS: Record<NotificationLevel, string> = {
   high: 'Alto — 6 veces/día',
 };
 
+const LOCALES: Locale[] = ['es', 'pt', 'fr'];
+
 export default function Settings() {
   const { user, logout } = useAuth();
+  const { t, locale, setLocale } = useI18n();
   const [notifLevel, setNotifLevel] = useState<NotificationLevel>(user?.notificationLevel || 'medium');
   const [quietStart, setQuietStart] = useState(user?.quietHoursStart || '22:00');
   const [quietEnd, setQuietEnd] = useState(user?.quietHoursEnd || '08:00');
@@ -40,14 +44,13 @@ export default function Settings() {
         quietHoursEnd: quietEnd,
       });
 
-      // Reprogramar notificaciones locales con los nuevos horarios
       await notificationService.scheduleLocalReminders(
         NOTIFICATION_SCHEDULES[notifLevel],
         quietStart,
         quietEnd,
       );
 
-      setSuccess('Notificaciones actualizadas');
+      setSuccess(t('settings_saved'));
       setTimeout(() => setSuccess(''), 2000);
     } catch {
       // ignore
@@ -63,7 +66,7 @@ export default function Settings() {
         name: name || undefined,
         diagnosis: diagnosis || undefined,
       });
-      setSuccess('Perfil actualizado');
+      setSuccess(t('settings_saved'));
       setTimeout(() => setSuccess(''), 2000);
     } catch {
       // ignore
@@ -86,7 +89,7 @@ export default function Settings() {
 
   return (
     <div className="page">
-      <h1 className="page-title animate-in">Configuración</h1>
+      <h1 className="page-title animate-in">{t('settings_title')}</h1>
 
       {success && (
         <div className="toast toast-success" style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}>
@@ -94,14 +97,33 @@ export default function Settings() {
         </div>
       )}
 
+      {/* Language Selector */}
+      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
+        <div className="section-header">
+          <h2 className="section-title">{t('settings_language')}</h2>
+        </div>
+        <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+          {LOCALES.map((loc) => (
+            <button
+              key={loc}
+              className={`chip ${locale === loc ? 'active' : ''}`}
+              style={{ flex: 1, justifyContent: 'center', padding: 'var(--space-sm) var(--space-md)', fontSize: 'var(--font-sm)' }}
+              onClick={() => setLocale(loc)}
+            >
+              {LOCALE_FLAGS[loc]} {LOCALE_LABELS[loc]}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Profile */}
       <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
         <div className="section-header">
-          <h2 className="section-title">Perfil</h2>
+          <h2 className="section-title">{t('settings_profile')}</h2>
         </div>
         <div className="auth-form">
           <div className="input-group">
-            <label>Nombre</label>
+            <label>{t('auth_name')}</label>
             <input className="input" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="input-group">
@@ -114,7 +136,7 @@ export default function Settings() {
             />
           </div>
           <button className="btn btn-primary btn-block" onClick={saveProfile} disabled={saving}>
-            Guardar perfil
+            {t('settings_save')}
           </button>
         </div>
       </div>
@@ -122,10 +144,9 @@ export default function Settings() {
       {/* Notifications */}
       <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
         <div className="section-header">
-          <h2 className="section-title">Notificaciones</h2>
+          <h2 className="section-title">{t('settings_notifications')}</h2>
         </div>
 
-        {/* Permission status */}
         {notifPermission !== 'granted' && (
           <div style={{ marginBottom: 'var(--space-lg)' }}>
             <button
@@ -191,13 +212,13 @@ export default function Settings() {
         </div>
 
         <button className="btn btn-primary btn-block" onClick={saveNotifications} disabled={saving}>
-          Guardar notificaciones
+          {t('settings_save')}
         </button>
       </div>
 
       {/* Logout */}
       <button className="btn btn-danger btn-block animate-in" onClick={logout}>
-        Cerrar sesión
+        {t('settings_logout')}
       </button>
     </div>
   );

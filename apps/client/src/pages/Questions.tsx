@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { api } from '../services/api';
+import { useI18n } from '../i18n/index';
 
 export default function Questions() {
+  const { t } = useI18n();
   const [questions, setQuestions] = useState<any[]>([]);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
@@ -17,14 +19,11 @@ export default function Questions() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Auto-save with debounce
   const autoSave = useCallback((questionId: string, value: number) => {
-    // Clear previous timer
     if (debounceTimers.current[questionId]) {
       clearTimeout(debounceTimers.current[questionId]);
     }
 
-    // Set new timer — saves 600ms after last change
     debounceTimers.current[questionId] = setTimeout(async () => {
       setSaving((prev) => ({ ...prev, [questionId]: true }));
       try {
@@ -43,7 +42,6 @@ export default function Questions() {
     autoSave(questionId, value);
   };
 
-  // Cleanup timers
   useEffect(() => {
     return () => {
       Object.values(debounceTimers.current).forEach(clearTimeout);
@@ -58,8 +56,6 @@ export default function Questions() {
     );
   }
 
-
-  // Color for question slider value
   const getColor = (val: number, max: number) => {
     const ratio = val / max;
     if (ratio <= 0.3) return 'var(--pain-0)';
@@ -71,18 +67,18 @@ export default function Questions() {
 
   return (
     <div className="page">
-      <h1 className="page-title animate-in">Preguntas del Día</h1>
+      <h1 className="page-title animate-in">{t('questions_title')}</h1>
 
       {completed.size > 0 && (
         <div className="toast toast-success" style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}>
-          ✅ {completed.size} pregunta{completed.size > 1 ? 's' : ''} guardada{completed.size > 1 ? 's' : ''}
+          {t('questions_saved', { count: completed.size })}
         </div>
       )}
 
       {questions.length === 0 ? (
         <div className="card empty-state animate-in">
           <div style={{ fontSize: '3rem', marginBottom: 'var(--space-md)' }}>🎉</div>
-          <div>No hay preguntas pendientes por hoy.</div>
+          <div>{t('questions_none')}</div>
         </div>
       ) : (
         questions.map((q) => {
@@ -106,15 +102,12 @@ export default function Questions() {
                 <div className="question-text">{q.text}</div>
                 {isCompleted && (
                   <span style={{ fontSize: 'var(--font-xs)', color: 'var(--accent-success)', whiteSpace: 'nowrap', marginLeft: 'var(--space-sm)' }}>
-                    ✅ Guardada
+                    {t('questions_saved_badge')}
                   </span>
                 )}
               </div>
               <div className="slider-container">
-                <div
-                  className="slider-value"
-                  style={{ color, WebkitTextFillColor: color }}
-                >
+                <div className="slider-value" style={{ color, WebkitTextFillColor: color }}>
                   {val}
                 </div>
                 <input
@@ -130,10 +123,9 @@ export default function Questions() {
                   <span>{q.scaleMax}</span>
                 </div>
               </div>
-              {/* Auto-save indicator */}
               {isSaving && (
                 <div style={{ textAlign: 'center', fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginTop: 'var(--space-xs)' }}>
-                  💾 Guardando...
+                  {t('questions_autosave')}
                 </div>
               )}
             </div>

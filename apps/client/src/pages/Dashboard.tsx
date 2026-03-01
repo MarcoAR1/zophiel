@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
+import { useI18n } from '../i18n/index';
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { t } = useI18n();
   const [stats, setStats] = useState<any>(null);
   const [pending, setPending] = useState<any[]>([]);
   const [qol, setQol] = useState<any[]>([]);
@@ -35,66 +37,66 @@ export default function Dashboard() {
 
   return (
     <div className="page">
-      <h1 className="page-title animate-in">Hola, {user?.name} 👋</h1>
-      <p className="page-subtitle animate-in">Resumen de los últimos 7 días</p>
+      <h1 className="page-title animate-in">{t('dash_hello', { name: user?.name || '' })}</h1>
+      <p className="page-subtitle animate-in">{t('dash_summary')}</p>
 
       {/* Stats Grid */}
       <div className="stats-grid">
         <div className="card stat-card animate-in">
           <div className="stat-value">{stats?.average ?? '—'}</div>
-          <div className="stat-label">Dolor promedio</div>
+          <div className="stat-label">{t('dash_avg_pain')}</div>
         </div>
         <div className="card stat-card animate-in">
           <div className="stat-value">{latestQol?.score ?? '—'}</div>
-          <div className="stat-label">Calidad de vida</div>
+          <div className="stat-label">{t('dash_qol')}</div>
         </div>
         <div className="card stat-card animate-in">
           <div className="stat-value">{stats?.count ?? 0}</div>
-          <div className="stat-label">Registros</div>
+          <div className="stat-label">{t('dash_records')}</div>
         </div>
         <div className="card stat-card animate-in">
           <div className="stat-value">{pending.length}</div>
-          <div className="stat-label">Preguntas pendientes</div>
+          <div className="stat-label">{t('dash_pending')}</div>
         </div>
       </div>
 
       {/* Quick Actions */}
       <div className="section-header">
-        <h2 className="section-title">Acciones rápidas</h2>
+        <h2 className="section-title">{t('dash_quick_actions')}</h2>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)' }}>
-        <Link to="/pain/new" className="card animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
+        <Link to="/app/pain/new" className="card animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
           <span style={{ fontSize: '1.5rem' }}>📝</span>
           <div>
-            <div style={{ fontWeight: 600 }}>Registrar dolor</div>
-            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>Agregá una nueva entrada de dolor</div>
+            <div style={{ fontWeight: 600 }}>{t('dash_log_pain')}</div>
+            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>{t('dash_log_pain_desc')}</div>
           </div>
         </Link>
 
-        <Link to="/symptoms" className="card animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
+        <Link to="/app/symptoms" className="card animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
           <span style={{ fontSize: '1.5rem' }}>🩹</span>
           <div>
-            <div style={{ fontWeight: 600 }}>Registrar síntomas</div>
-            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>Anotá los síntomas que sentís hoy</div>
+            <div style={{ fontWeight: 600 }}>{t('dash_log_symptoms')}</div>
+            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>{t('dash_log_symptoms_desc')}</div>
           </div>
         </Link>
 
         {pending.length > 0 && (
-          <Link to="/questions" className="card card-glow animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
+          <Link to="/app/questions" className="card card-glow animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
             <span style={{ fontSize: '1.5rem' }}>❓</span>
             <div>
-              <div style={{ fontWeight: 600 }}>Responder preguntas ({pending.length})</div>
-              <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>Tenés preguntas pendientes hoy</div>
+              <div style={{ fontWeight: 600 }}>{t('dash_answer_questions', { count: pending.length })}</div>
+              <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>{t('dash_answer_questions_desc')}</div>
             </div>
           </Link>
         )}
 
-        <Link to="/pain/history" className="card animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
+        <Link to="/app/pain/history" className="card animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
           <span style={{ fontSize: '1.5rem' }}>📊</span>
           <div>
-            <div style={{ fontWeight: 600 }}>Ver historial</div>
-            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>Gráficos y tendencias de dolor</div>
+            <div style={{ fontWeight: 600 }}>{t('dash_history')}</div>
+            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>{t('dash_history_desc')}</div>
           </div>
         </Link>
       </div>

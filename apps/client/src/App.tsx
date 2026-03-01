@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
+import { I18nProvider } from './i18n/index';
 import { useOnlineStatus, useSyncStatus } from './hooks/useOnlineStatus';
 import { syncService } from './services/syncService';
 import { notificationService } from './services/notificationService';
@@ -104,12 +105,14 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/app/*" element={<AuthenticatedApp />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AuthProvider>
+    <I18nProvider>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/app/*" element={<AuthenticatedApp />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </I18nProvider>
   );
 }

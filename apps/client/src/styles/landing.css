@@ -130,6 +130,34 @@
   border-color: rgba(255, 255, 255, 0.15);
 }
 
+.lang-switcher {
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+  padding: 0.2rem;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: 100px;
+  transition: all 0.2s;
+  opacity: 0.5;
+}
+
+.lang-btn.active {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lang-btn:hover {
+  opacity: 1;
+}
+
 /* ── Hero Content ── */
 .hero-content {
   position: relative;

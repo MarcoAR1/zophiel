@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useI18n } from '../i18n/index';
 
 declare global {
   interface Window {
@@ -16,6 +17,7 @@ declare global {
 
 export default function AuthPage() {
   const { login, register, loginWithGoogle } = useAuth();
+  const { t } = useI18n();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,7 +61,6 @@ export default function AuthPage() {
           width: '100%',
           text: 'continue_with',
           shape: 'pill',
-          locale: 'es',
         });
       }
     };
@@ -90,7 +91,7 @@ export default function AuthPage() {
     <div className="auth-page">
       <div className="auth-card card card-glow animate-in">
         <div className="auth-logo">🩺 Zophiel</div>
-        <p className="auth-tagline">Tu compañero en el manejo del dolor crónico</p>
+        <p className="auth-tagline">{t('auth_tagline')}</p>
 
         {error && (
           <div className="toast toast-error" style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}>
@@ -101,12 +102,12 @@ export default function AuthPage() {
         <form className="auth-form" onSubmit={handleSubmit}>
           {!isLogin && (
             <div className="input-group">
-              <label htmlFor="name">Nombre</label>
+              <label htmlFor="name">{t('auth_name')}</label>
               <input
                 id="name"
                 className="input"
                 type="text"
-                placeholder="Tu nombre"
+                placeholder={t('auth_name_placeholder')}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -115,12 +116,12 @@ export default function AuthPage() {
           )}
 
           <div className="input-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('auth_email')}</label>
             <input
               id="email"
               className="input"
               type="email"
-              placeholder="tu@email.com"
+              placeholder={t('auth_email_placeholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -128,12 +129,12 @@ export default function AuthPage() {
           </div>
 
           <div className="input-group">
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="password">{t('auth_password')}</label>
             <input
               id="password"
               className="input"
               type="password"
-              placeholder="Mínimo 6 caracteres"
+              placeholder={t('auth_password_placeholder')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -142,23 +143,23 @@ export default function AuthPage() {
           </div>
 
           <button className="btn btn-primary btn-lg btn-block" type="submit" disabled={loading}>
-            {loading ? 'Cargando...' : isLogin ? 'Iniciar Sesión' : 'Registrarse'}
+            {loading ? t('auth_loading') : isLogin ? t('auth_login') : t('auth_register')}
           </button>
         </form>
 
         {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
           <>
             <div className="auth-divider">
-              <span>o</span>
+              <span>{t('auth_or')}</span>
             </div>
             <div ref={googleBtnRef} className="google-btn-container" />
           </>
         )}
 
         <div className="auth-toggle">
-          {isLogin ? '¿No tenés cuenta?' : '¿Ya tenés cuenta?'}{' '}
+          {isLogin ? t('auth_no_account') : t('auth_has_account')}{' '}
           <button onClick={() => { setIsLogin(!isLogin); setError(''); }}>
-            {isLogin ? 'Registrate' : 'Iniciá sesión'}
+            {isLogin ? t('auth_signup') : t('auth_signin')}
           </button>
         </div>
       </div>
