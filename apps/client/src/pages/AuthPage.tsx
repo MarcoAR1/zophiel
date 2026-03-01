@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Capacitor } from '@capacitor/core';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { useAuth } from '../hooks/useAuth';
 import { useI18n } from '../i18n/index';
 
@@ -27,6 +28,17 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const googleBtnRef = useRef<HTMLDivElement>(null);
   const isNative = Capacitor.isNativePlatform();
+
+  // Initialize native Google Auth
+  useEffect(() => {
+    if (isNative) {
+      GoogleAuth.initialize({
+        clientId: '399934829057-ion4sr02mpnftbd3kssju2e63jg4c4s4.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+        grantOfflineAccess: false,
+      });
+    }
+  }, [isNative]);
 
   const handleGoogleResponse = useCallback(
     async (response: any) => {
@@ -75,13 +87,23 @@ export default function AuthPage() {
     };
   }, [handleGoogleResponse, isNative]);
 
-  const handleGoogleNative = () => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if (!clientId) return;
-    const redirectUri = encodeURIComponent(window.location.origin + '/app');
-    const scope = encodeURIComponent('openid email profile');
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
-    window.open(url, '_system');
+  const handleGoogleNative = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const result = await GoogleAuth.signIn();
+      if (result.authentication?.idToken) {
+        await loginWithGoogle(result.authentication.idToken);
+      } else {
+        setError('No se pudo obtener el token de Google');
+      }
+    } catch (err: any) {
+      if (err.message !== 'The user canceled the sign-in flow.') {
+        setError(err.message || 'Error al iniciar sesión con Google');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
