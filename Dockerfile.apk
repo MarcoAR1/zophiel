@@ -17,7 +17,7 @@ RUN pnpm --filter @zophiel/client build
 # ── Stage 2: Build Android APK ──
 FROM thyrlian/android-sdk:latest AS android-build
 
-# Install Node.js + pnpm for Capacitor CLI
+# Install Node.js + pnpm
 RUN apt-get update && apt-get install -y curl && \
     curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs && \
@@ -25,8 +25,21 @@ RUN apt-get update && apt-get install -y curl && \
 
 WORKDIR /app
 
-# Copy entire workspace structure from web-build (includes node_modules with pnpm symlinks)
-COPY --from=web-build /app/ /app/
+# Copy workspace config + lockfile
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json tsconfig.base.json ./
+COPY packages/shared/package.json packages/shared/
+COPY apps/client/package.json apps/client/
+
+# Install all dependencies fresh (includes @capacitor/android, @capacitor/cli, etc.)
+RUN pnpm install --frozen-lockfile
+
+# Copy built web assets from stage 1
+COPY --from=web-build /app/apps/client/dist apps/client/dist/
+
+# Copy capacitor config + source
+COPY apps/client/capacitor.config.ts apps/client/
+COPY --from=web-build /app/apps/client/capacitor.config.d.ts apps/client/
+COPY --from=web-build /app/packages/shared/ packages/shared/
 
 # Add Android platform + sync
 WORKDIR /app/apps/client
