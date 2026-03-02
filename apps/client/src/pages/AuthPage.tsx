@@ -130,7 +130,7 @@ export default function AuthPage() {
         <p className="auth-tagline">{t('auth_tagline')}</p>
 
         {error && (
-          <div className="toast toast-error" style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}>
+          <div className="toast toast-error toast-inline">
             {error}
           </div>
         )}

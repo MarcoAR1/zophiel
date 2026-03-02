@@ -326,6 +326,90 @@ input[type='range']::-webkit-slider-thumb:hover {
   gap: var(--space-sm);
 }
 
+/* ── Reusable Utility Classes ── */
+.toast-inline {
+  position: relative;
+  top: 0;
+  margin-bottom: var(--space-md);
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-xl);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+}
+
+.empty-state-text {
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+  line-height: 1.5;
+}
+
+.card-label {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+  display: block;
+  margin-bottom: var(--space-md);
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+}
+
+.page-subtitle {
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+  margin-bottom: var(--space-lg);
+}
+
+/* ── Questions Page ── */
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.question-card-completed {
+  border-color: var(--accent-success) !important;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+}
+
+.question-badge {
+  font-size: var(--font-xs);
+  color: var(--accent-success);
+  white-space: nowrap;
+  margin-left: var(--space-sm);
+}
+
+.question-autosave {
+  text-align: center;
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+
+/* ── QoL Page ── */
+.qol-score-label {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+  margin-bottom: var(--space-xl);
+}
+
 /* ── App Layout ── */
 .app-layout {
   display: flex;

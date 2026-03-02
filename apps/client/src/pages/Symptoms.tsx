@@ -36,25 +36,23 @@ export default function Symptoms() {
   return (
     <div className="page">
       <h1 className="page-title animate-in">Registrar Síntomas</h1>
-      <p className="page-subtitle animate-in">¿Qué síntomas experimentás hoy?</p>
+      <p className="page-subtitle animate-in">Anotá los síntomas que sentís hoy relacionados a tu condición</p>
 
       {success && (
-        <div className="toast toast-success" style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}>
-          ✅ Síntoma registrado
+        <div className="toast toast-success toast-inline animate-in">
+          ✅ Síntoma registrado correctamente
         </div>
       )}
 
       {error && (
-        <div className="toast toast-error" style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}>
+        <div className="toast toast-error toast-inline animate-in">
           {error}
         </div>
       )}
 
       {/* Symptom chips */}
-      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
-        <label style={{ fontSize: 'var(--font-sm)', color: 'var(--text-secondary)', fontWeight: 500, display: 'block', marginBottom: 'var(--space-md)' }}>
-          Síntoma
-        </label>
+      <div className="card animate-in">
+        <label className="card-label">Seleccioná el síntoma</label>
         <div className="chip-group">
           {SYMPTOMS.map((sym) => (
             <button
@@ -70,9 +68,9 @@ export default function Symptoms() {
 
       {/* Severity slider */}
       {selectedSymptom && (
-        <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
+        <div className="card animate-in" style={{ marginTop: 'var(--space-md)' }}>
           <div className="slider-container">
-            <label style={{ fontSize: 'var(--font-sm)', color: 'var(--text-secondary)', fontWeight: 500 }}>
+            <label className="card-label">
               Severidad: {SYMPTOM_LABELS[selectedSymptom]}
             </label>
             <div className="slider-value">{severity}</div>
@@ -83,7 +81,7 @@ export default function Symptoms() {
               value={severity}
               onChange={(e) => setSeverity(Number(e.target.value))}
             />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>
+            <div className="slider-labels">
               <span>Leve</span>
               <span>Severo</span>
             </div>
@@ -95,8 +93,9 @@ export default function Symptoms() {
         className="btn btn-primary btn-lg btn-block animate-in"
         onClick={handleSubmit}
         disabled={saving || !selectedSymptom}
+        style={{ marginTop: 'var(--space-lg)' }}
       >
-        {saving ? 'Guardando...' : 'Registrar síntoma'}
+        {saving ? 'Guardando...' : '🩹 Registrar síntoma'}
       </button>
     </div>
   );

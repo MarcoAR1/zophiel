@@ -101,9 +101,10 @@ export default function QualityOfLife() {
   return (
     <div className="page">
       <h1 className="page-title animate-in">Calidad de Vida</h1>
+      <p className="page-subtitle animate-in">Índice combinado de dolor, ánimo, actividad y sueño</p>
 
       {error && (
-        <div className="toast toast-error" style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}>
+        <div className="toast toast-error toast-inline animate-in">
           ⚠️ {error}
         </div>
       )}
@@ -134,39 +135,26 @@ export default function QualityOfLife() {
               {latest.score}
             </div>
           </div>
-          <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 'var(--font-sm)', marginBottom: 'var(--space-xl)' }}>
-            Último índice registrado
-          </p>
+          <p className="qol-score-label">Último índice registrado</p>
         </div>
       )}
 
       {/* Breakdown */}
       {latest && (
-        <div className="stats-grid animate-in" style={{ marginBottom: 'var(--space-xl)' }}>
-          <div className="card stat-card">
-            <div className="stat-value" style={{ color: getScoreColor(latest.breakdown.pain), WebkitTextFillColor: getScoreColor(latest.breakdown.pain) }}>
-              {latest.breakdown.pain}
+        <div className="stats-grid animate-in">
+          {[
+            { key: 'pain', label: 'Dolor', icon: '💊' },
+            { key: 'mood', label: 'Ánimo', icon: '😊' },
+            { key: 'activity', label: 'Actividad', icon: '🏃' },
+            { key: 'sleep', label: 'Sueño', icon: '😴' },
+          ].map(({ key, label, icon }) => (
+            <div className="card stat-card" key={key}>
+              <div className="stat-value" style={{ color: getScoreColor(latest.breakdown[key]), WebkitTextFillColor: getScoreColor(latest.breakdown[key]) }}>
+                {latest.breakdown[key]}
+              </div>
+              <div className="stat-label">{icon} {label}</div>
             </div>
-            <div className="stat-label">Dolor</div>
-          </div>
-          <div className="card stat-card">
-            <div className="stat-value" style={{ color: getScoreColor(latest.breakdown.mood), WebkitTextFillColor: getScoreColor(latest.breakdown.mood) }}>
-              {latest.breakdown.mood}
-            </div>
-            <div className="stat-label">Ánimo</div>
-          </div>
-          <div className="card stat-card">
-            <div className="stat-value" style={{ color: getScoreColor(latest.breakdown.activity), WebkitTextFillColor: getScoreColor(latest.breakdown.activity) }}>
-              {latest.breakdown.activity}
-            </div>
-            <div className="stat-label">Actividad</div>
-          </div>
-          <div className="card stat-card">
-            <div className="stat-value" style={{ color: getScoreColor(latest.breakdown.sleep), WebkitTextFillColor: getScoreColor(latest.breakdown.sleep) }}>
-              {latest.breakdown.sleep}
-            </div>
-            <div className="stat-label">Sueño</div>
-          </div>
+          ))}
         </div>
       )}
 
@@ -177,8 +165,8 @@ export default function QualityOfLife() {
         </div>
       ) : data.length === 0 ? (
         <div className="card empty-state animate-in">
-          <div style={{ fontSize: '3rem', marginBottom: 'var(--space-md)' }}>📊</div>
-          <div>Registrá dolor y respondé preguntas para generar tu índice de calidad de vida.</div>
+          <div className="empty-state-icon">📊</div>
+          <div className="empty-state-text">Registrá dolor y respondé preguntas para generar tu índice de calidad de vida.</div>
         </div>
       ) : null}
     </div>

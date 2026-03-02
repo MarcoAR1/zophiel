@@ -68,69 +68,62 @@ export default function Questions() {
   return (
     <div className="page">
       <h1 className="page-title animate-in">{t('questions_title')}</h1>
+      <p className="page-subtitle animate-in">Respondé las preguntas para calcular tu calidad de vida</p>
 
       {completed.size > 0 && (
-        <div className="toast toast-success" style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}>
+        <div className="toast toast-success toast-inline animate-in">
           {t('questions_saved', { count: completed.size })}
         </div>
       )}
 
       {questions.length === 0 ? (
         <div className="card empty-state animate-in">
-          <div style={{ fontSize: '3rem', marginBottom: 'var(--space-md)' }}>🎉</div>
-          <div>{t('questions_none')}</div>
+          <div className="empty-state-icon">🎉</div>
+          <div className="empty-state-text">{t('questions_none')}</div>
         </div>
       ) : (
-        questions.map((q) => {
-          const val = answers[q.id] ?? 5;
-          const color = getColor(val, q.scaleMax);
-          const isSaving = saving[q.id];
-          const isCompleted = completed.has(q.id);
+        <div className="questions-list">
+          {questions.map((q) => {
+            const val = answers[q.id] ?? 5;
+            const color = getColor(val, q.scaleMax);
+            const isSaving = saving[q.id];
+            const isCompleted = completed.has(q.id);
 
-          return (
-            <div
-              key={q.id}
-              className="card question-card animate-in"
-              style={{
-                marginBottom: 'var(--space-md)',
-                borderColor: isCompleted ? 'var(--accent-success)' : undefined,
-                borderWidth: isCompleted ? '1px' : undefined,
-                borderStyle: isCompleted ? 'solid' : undefined,
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div className="question-text">{q.text}</div>
-                {isCompleted && (
-                  <span style={{ fontSize: 'var(--font-xs)', color: 'var(--accent-success)', whiteSpace: 'nowrap', marginLeft: 'var(--space-sm)' }}>
-                    {t('questions_saved_badge')}
-                  </span>
+            return (
+              <div
+                key={q.id}
+                className={`card question-card animate-in ${isCompleted ? 'question-card-completed' : ''}`}
+              >
+                <div className="question-header">
+                  <div className="question-text">{q.text}</div>
+                  {isCompleted && (
+                    <span className="question-badge">✓ {t('questions_saved_badge')}</span>
+                  )}
+                </div>
+                <div className="slider-container">
+                  <div className="slider-value" style={{ color, WebkitTextFillColor: color }}>
+                    {val}
+                  </div>
+                  <input
+                    type="range"
+                    min={q.scaleMin}
+                    max={q.scaleMax}
+                    value={val}
+                    onChange={(e) => handleSliderChange(q.id, Number(e.target.value))}
+                    style={{ accentColor: color }}
+                  />
+                  <div className="slider-labels">
+                    <span>{q.scaleMin}</span>
+                    <span>{q.scaleMax}</span>
+                  </div>
+                </div>
+                {isSaving && (
+                  <div className="question-autosave">{t('questions_autosave')}</div>
                 )}
               </div>
-              <div className="slider-container">
-                <div className="slider-value" style={{ color, WebkitTextFillColor: color }}>
-                  {val}
-                </div>
-                <input
-                  type="range"
-                  min={q.scaleMin}
-                  max={q.scaleMax}
-                  value={val}
-                  onChange={(e) => handleSliderChange(q.id, Number(e.target.value))}
-                  style={{ accentColor: color }}
-                />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>
-                  <span>{q.scaleMin}</span>
-                  <span>{q.scaleMax}</span>
-                </div>
-              </div>
-              {isSaving && (
-                <div style={{ textAlign: 'center', fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginTop: 'var(--space-xs)' }}>
-                  {t('questions_autosave')}
-                </div>
-              )}
-            </div>
-          );
-        })
+            );
+          })}
+        </div>
       )}
     </div>
   );
