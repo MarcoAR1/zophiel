@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zophiel - Mobile Health</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8c25f4",
+                        secondary: "#00c853", // Added for Android APK button as requested
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#0f0b15", // Deepened slightly for contrast
+                        "surface-dark": "#1d1625",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px",
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(29, 22, 37, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(140, 37, 244, 0.15);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #a78bfa, #8c25f4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+<!-- Top AppBar -->
+<header class="sticky top-0 z-50 glass-card px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-3xl">stethoscope</span>
+<span class="text-xl font-bold tracking-tight text-white">Zophiel</span>
+</div>
+<button class="p-2 text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+</header>
+<!-- Hero Section -->
+<section class="relative px-4 pt-10 pb-12 flex flex-col items-center text-center">
+<!-- Abstract Background Glow -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-primary/20 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-6">
+<span class="material-symbols-outlined text-sm">biotech</span>
+            Inteligencia Médica Avanzada
+        </div>
+<h1 class="text-4xl md:text-5xl font-black leading-tight tracking-tight mb-4">
+            Gestioná tu <br/>
+<span class="text-gradient">dolor crónico</span> <br/>
+            con inteligencia
+        </h1>
+<p class="text-slate-400 max-w-md mx-auto mb-8 text-base font-normal leading-relaxed">
+            Una solución integral potenciada por IA para monitorear, entender y aliviar tus síntomas diarios.
+        </p>
+<div class="flex flex-col w-full max-w-xs gap-3 sm:flex-row sm:justify-center">
+<button class="flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-gradient-to-r from-violet-600 to-primary text-white font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all">
+<span>Empezar Gratis</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<button class="flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-[#1e2a23] border border-green-500/30 text-green-400 font-bold hover:bg-[#1e2a23]/80 transition-all">
+<span class="material-symbols-outlined text-sm">android</span>
+<span>Android APK</span>
+</button>
+</div>
+</section>
+<!-- Stats Bar -->
+<section class="px-4 pb-8">
+<div class="grid grid-cols-3 gap-2 sm:gap-4">
+<!-- Stat 1 -->
+<div class="glass-card p-3 rounded-xl flex flex-col items-center text-center gap-1">
+<span class="material-symbols-outlined text-primary mb-1">accessibility_new</span>
+<span class="text-lg font-bold text-white leading-none">360°</span>
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Mapa Corporal</span>
+</div>
+<!-- Stat 2 -->
+<div class="glass-card p-3 rounded-xl flex flex-col items-center text-center gap-1">
+<span class="material-symbols-outlined text-primary mb-1">monitoring</span>
+<span class="text-lg font-bold text-white leading-none">24/7</span>
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Seguimiento</span>
+</div>
+<!-- Stat 3 -->
+<div class="glass-card p-3 rounded-xl flex flex-col items-center text-center gap-1">
+<span class="material-symbols-outlined text-primary mb-1">encrypted</span>
+<span class="text-lg font-bold text-white leading-none">100%</span>
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Privacidad</span>
+</div>
+</div>
+</section>
+<!-- App Visualization -->
+<div class="w-full px-4 mb-12">
+<div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-700/50 shadow-2xl">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent z-10"></div>
+<div class="w-full h-full bg-slate-800 bg-cover bg-center" data-alt="Dark medical interface dashboard showing body map and vital signs graph" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBzUxMhOOyWv11ECX55X5AvXK70iZBU4BrHRXuayJvh27S4kSmR_sozaOLvsmNFnCUHTixFIdlGDccZEf_P1LMJnKrPRAWfvA2xq6NJTthJX7FGK0ShOd4_aidBaI6ktey_v-La8TniDLXWhsR7TRPuLgkik4o0qBTdUpj0M0NLLerG7nfJWKKmr8MO2Kfmxx1qS4CS8VhzdBnyfY3UvwZBPB5BYA-oy5R54CMyCflY5SdnpSjZSgoaWIWgmdY5HAESV06QIThcPw');"></div>
+</div>
+</div>
+<!-- Features Grid -->
+<section class="px-4 py-8">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xl font-bold text-white">Características</h3>
+<span class="text-xs font-semibold text-primary">Ver todas</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<!-- Feature 1 -->
+<div class="glass-card p-4 rounded-xl flex flex-col gap-3 hover:bg-white/5 transition-colors group">
+<div class="w-10 h-10 rounded-lg bg-surface-dark flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">body_system</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white">Body System</h4>
+<p class="text-xs text-slate-400 mt-1">Mapeo de dolor preciso</p>
+</div>
+</div>
+<!-- Feature 2 -->
+<div class="glass-card p-4 rounded-xl flex flex-col gap-3 hover:bg-white/5 transition-colors group">
+<div class="w-10 h-10 rounded-lg bg-surface-dark flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">auto_graph</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white">Auto Graph</h4>
+<p class="text-xs text-slate-400 mt-1">Reportes automáticos</p>
+</div>
+</div>
+<!-- Feature 3 -->
+<div class="glass-card p-4 rounded-xl flex flex-col gap-3 hover:bg-white/5 transition-colors group">
+<div class="w-10 h-10 rounded-lg bg-surface-dark flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">cardiology</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white">Vital Signs</h4>
+<p class="text-xs text-slate-400 mt-1">Integración wearables</p>
+</div>
+</div>
+<!-- Feature 4 -->
+<div class="glass-card p-4 rounded-xl flex flex-col gap-3 hover:bg-white/5 transition-colors group">
+<div class="w-10 h-10 rounded-lg bg-surface-dark flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white">Alertas</h4>
+<p class="text-xs text-slate-400 mt-1">Recordatorios de med</p>
+</div>
+</div>
+<!-- Feature 5 -->
+<div class="glass-card p-4 rounded-xl flex flex-col gap-3 hover:bg-white/5 transition-colors group">
+<div class="w-10 h-10 rounded-lg bg-surface-dark flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">wifi_off</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white">Offline</h4>
+<p class="text-xs text-slate-400 mt-1">Funciona sin red</p>
+</div>
+</div>
+<!-- Feature 6 -->
+<div class="glass-card p-4 rounded-xl flex flex-col gap-3 hover:bg-white/5 transition-colors group">
+<div class="w-10 h-10 rounded-lg bg-surface-dark flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white">Encryption</h4>
+<p class="text-xs text-slate-400 mt-1">Seguridad grado médico</p>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works Timeline -->
+<section class="px-4 py-10 bg-surface-dark/30">
+<h3 class="text-xl font-bold text-white mb-8">Cómo funciona</h3>
+<div class="relative pl-4 space-y-8 border-l-2 border-slate-700 ml-2">
+<!-- Step 1 -->
+<div class="relative pl-6">
+<div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-background-dark border-2 border-primary"></div>
+<h4 class="text-lg font-bold text-white mb-1">Registra tus síntomas</h4>
+<p class="text-sm text-slate-400 leading-relaxed">Usa el mapa corporal interactivo para marcar las zonas de dolor e intensidad en segundos.</p>
+</div>
+<!-- Step 2 -->
+<div class="relative pl-6">
+<div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-background-dark border-2 border-primary"></div>
+<h4 class="text-lg font-bold text-white mb-1">Recibe análisis IA</h4>
+<p class="text-sm text-slate-400 leading-relaxed">Nuestra inteligencia artificial correlaciona tus datos con el clima, actividad y sueño.</p>
+</div>
+<!-- Step 3 -->
+<div class="relative pl-6">
+<div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-background-dark border-2 border-primary"></div>
+<h4 class="text-lg font-bold text-white mb-1">Mejora tu calidad de vida</h4>
+<p class="text-sm text-slate-400 leading-relaxed">Obtén recomendaciones personalizadas y reportes para compartir con tu médico.</p>
+</div>
+</div>
+</section>
+<!-- Conditions Horizontal Scroll -->
+<section class="py-10 overflow-hidden">
+<div class="px-4 mb-4">
+<h3 class="text-xl font-bold text-white">Especializado en</h3>
+</div>
+<div class="flex overflow-x-auto gap-4 px-4 pb-4 snap-x snap-mandatory scrollbar-hide">
+<!-- Card 1 -->
+<div class="snap-center shrink-0 w-64 glass-card p-5 rounded-xl border-l-4 border-l-primary">
+<h4 class="text-white font-bold text-lg mb-2">Fibromialgia</h4>
+<p class="text-sm text-slate-400">Seguimiento detallado de puntos sensibles y fatiga.</p>
+</div>
+<!-- Card 2 -->
+<div class="snap-center shrink-0 w-64 glass-card p-5 rounded-xl border-l-4 border-l-primary">
+<h4 class="text-white font-bold text-lg mb-2">Artritis</h4>
+<p class="text-sm text-slate-400">Monitoreo de rigidez matutina y movilidad articular.</p>
+</div>
+<!-- Card 3 -->
+<div class="snap-center shrink-0 w-64 glass-card p-5 rounded-xl border-l-4 border-l-primary">
+<h4 class="text-white font-bold text-lg mb-2">Migraña</h4>
+<p class="text-sm text-slate-400">Registro de desencadenantes, aura y duración.</p>
+</div>
+<!-- Card 4 -->
+<div class="snap-center shrink-0 w-64 glass-card p-5 rounded-xl border-l-4 border-l-primary">
+<h4 class="text-white font-bold text-lg mb-2">Dolor Lumbar</h4>
+<p class="text-sm text-slate-400">Ejercicios sugeridos y seguimiento de postura.</p>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="px-4 py-12 mb-8">
+<div class="rounded-2xl bg-gradient-to-br from-[#2a1e38] to-background-dark border border-white/10 p-6 sm:p-8 text-center relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-[50px] rounded-full"></div>
+<h2 class="text-2xl font-bold text-white mb-3 relative z-10">Empieza tu recuperación hoy</h2>
+<p class="text-slate-400 text-sm mb-6 max-w-xs mx-auto relative z-10">Únete a más de 50,000 personas gestionando su dolor de forma inteligente.</p>
+<button class="relative z-10 w-full sm:w-auto px-8 h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold transition-colors shadow-lg shadow-primary/20">
+                Descargar App
+            </button>
+</div>
+</section>
+<!-- Footer -->
+<footer class="mt-auto border-t border-slate-800 bg-background-dark py-8 px-4">
+<div class="flex flex-col items-center gap-6 text-center">
+<div class="flex items-center gap-2 text-white/50">
+<span class="material-symbols-outlined text-2xl">stethoscope</span>
+<span class="font-bold text-lg">Zophiel</span>
+</div>
+<div class="flex gap-6 text-sm text-slate-400">
+<a class="hover:text-white transition-colors" href="#">Términos</a>
+<a class="hover:text-white transition-colors" href="#">Privacidad</a>
+<a class="hover:text-white transition-colors" href="#">Soporte</a>
+</div>
+<p class="text-xs text-slate-600 mt-2">© 2023 Zophiel Health Technologies.</p>
+</div>
+</footer>
+</body></html>
