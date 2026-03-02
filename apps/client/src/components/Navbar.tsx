@@ -3,63 +3,83 @@ import { useI18n } from '../i18n/index';
 import ZophielLogo from './ZophielLogo';
 
 const NAV_ITEMS = [
-  { to: '/app', key: 'nav_home' as const, icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-  { to: '/app/pain/new', key: 'nav_pain' as const, icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
-  { to: '/app/questions', key: 'nav_questions' as const, icon: 'M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
-  { to: '/app/qol', key: 'nav_quality' as const, icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-  { to: '/app/settings', key: 'nav_settings' as const, icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
+  { to: '/app', key: 'nav_home' as const, icon: 'home' },
+  { to: '/app/pain/new', key: 'nav_pain' as const, icon: 'favorite' },
+  { to: '/app/questions', key: 'nav_questions' as const, icon: 'help' },
+  { to: '/app/qol', key: 'nav_quality' as const, icon: 'monitoring' },
+  { to: '/app/settings', key: 'nav_settings' as const, icon: 'settings' },
 ];
 
-function NavIcon({ d }: { d: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d={d} />
-    </svg>
-  );
-}
-
-/** Desktop sidebar */
+/** Desktop sidebar — Stitch Tailwind */
 export function Sidebar() {
   const location = useLocation();
   const { t } = useI18n();
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-brand"><ZophielLogo size={22} /> Zophiel</div>
-      <nav className="sidebar-nav">
-        {NAV_ITEMS.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={`sidebar-item ${location.pathname === item.to ? 'active' : ''}`}
-          >
-            <NavIcon d={item.icon} />
-            {t(item.key)}
-          </NavLink>
-        ))}
+    <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-56 flex-col glass-card border-r border-white/10 rounded-none z-40">
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+
+      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/5">
+        <ZophielLogo size={22} />
+        <span className="text-white font-bold text-lg tracking-tight">Zophiel</span>
+      </div>
+
+      <nav className="flex-1 flex flex-col gap-1 p-3 mt-1">
+        {NAV_ITEMS.map((item) => {
+          const isActive = item.to === '/app'
+            ? location.pathname === '/app'
+            : location.pathname.startsWith(item.to);
+
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 no-underline ${
+                isActive
+                  ? 'bg-primary/15 text-primary font-semibold'
+                  : 'text-slate-400 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <span className={`material-symbols-outlined text-[20px] ${isActive ? 'text-primary' : ''}`}>
+                {item.icon}
+              </span>
+              <span className="text-sm">{t(item.key)}</span>
+            </NavLink>
+          );
+        })}
       </nav>
     </aside>
   );
 }
 
-/** Mobile bottom nav */
+/** Mobile bottom nav — Stitch Tailwind */
 export default function Navbar() {
   const location = useLocation();
   const { t } = useI18n();
 
   return (
-    <nav className="navbar">
-      <div className="navbar-inner">
-        {NAV_ITEMS.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={`nav-item ${location.pathname === item.to ? 'active' : ''}`}
-          >
-            <NavIcon d={item.icon} />
-            {t(item.key)}
-          </NavLink>
-        ))}
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-card border-t border-white/10 rounded-none safe-bottom">
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+
+      <div className="grid grid-cols-5 px-2 py-1.5">
+        {NAV_ITEMS.map((item) => {
+          const isActive = item.to === '/app'
+            ? location.pathname === '/app'
+            : location.pathname.startsWith(item.to);
+
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={`flex flex-col items-center gap-0.5 py-1.5 rounded-lg transition-colors no-underline ${
+                isActive ? 'text-primary' : 'text-slate-500'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
+              <span className="text-[10px] font-medium leading-none">{t(item.key)}</span>
+            </NavLink>
+          );
+        })}
       </div>
     </nav>
   );

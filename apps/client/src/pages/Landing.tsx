@@ -7,9 +7,9 @@ import ZophielLogo from '../components/ZophielLogo';
 /* ── Stitch data arrays ── */
 const FEATURES = [
   { icon: 'body_system', title: 'Mapa Corporal', desc: 'Mapeo de dolor preciso' },
-  { icon: 'auto_graph', title: 'Tendencias IA', desc: 'Reportes automáticos' },
+  { icon: 'bar_chart_4_bars', title: 'Historial', desc: 'Gráficos y tendencias' },
   { icon: 'cardiology', title: 'Signos Vitales', desc: 'Integración wearables' },
-  { icon: 'notifications_active', title: 'Alertas', desc: 'Recordatorios de med' },
+  { icon: 'notifications_active', title: 'Alertas', desc: 'Recordatorios diarios' },
   { icon: 'wifi_off', title: 'Offline', desc: 'Funciona sin red' },
   { icon: 'lock', title: 'Seguridad', desc: 'Seguridad grado médico' },
 ];
@@ -18,13 +18,13 @@ const CONDITIONS = [
   { name: 'Fibromialgia', desc: 'Seguimiento detallado de puntos sensibles y fatiga.' },
   { name: 'Artritis', desc: 'Monitoreo de rigidez matutina y movilidad articular.' },
   { name: 'Migraña', desc: 'Registro de desencadenantes, aura y duración.' },
-  { name: 'Dolor Lumbar', desc: 'Ejercicios sugeridos y seguimiento de postura.' },
+  { name: 'Dolor Lumbar', desc: 'Correlación con actividad diaria y postura.' },
 ];
 
 const STEPS = [
   { title: 'Registra tus síntomas', desc: 'Usa el mapa corporal interactivo para marcar las zonas de dolor e intensidad en segundos.' },
-  { title: 'Recibe análisis IA', desc: 'Nuestra inteligencia artificial correlaciona tus datos con el clima, actividad y sueño.' },
-  { title: 'Mejora tu calidad de vida', desc: 'Obtén recomendaciones personalizadas y reportes para compartir con tu médico.' },
+  { title: 'Visualizá tus patrones', desc: 'Gráficos de tendencias, heatmaps semanales y estadísticas detalladas de tu historial de dolor.' },
+  { title: 'Compartí con tu médico', desc: 'Generá reportes claros con datos reales de tu día a día para llevar a tu consulta.' },
 ];
 
 export default function Landing() {

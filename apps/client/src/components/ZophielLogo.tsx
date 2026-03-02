@@ -27,9 +27,9 @@ export default function ZophielLogo({ size = 28, className = '', variant = 'mark
       >
         <defs>
           <linearGradient id={`${id}-bg`} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1e1b4b" />
-            <stop offset="50%" stopColor="#4338ca" />
-            <stop offset="100%" stopColor="#7c3aed" />
+            <stop offset="0%" stopColor="#1d1625" />
+            <stop offset="50%" stopColor="#8c25f4" />
+            <stop offset="100%" stopColor="#a78bfa" />
           </linearGradient>
         </defs>
         <rect width="120" height="120" rx="26" fill={`url(#${id}-bg)`} />
@@ -53,8 +53,8 @@ export default function ZophielLogo({ size = 28, className = '', variant = 'mark
     >
       <defs>
         <linearGradient id={`${id}-grad`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#6366f1" />
-          <stop offset="50%" stopColor="#8b5cf6" />
+          <stop offset="0%" stopColor="#8c25f4" />
+          <stop offset="50%" stopColor="#a855f7" />
           <stop offset="100%" stopColor="#a78bfa" />
         </linearGradient>
       </defs>
@@ -78,7 +78,7 @@ function renderMark(id: string) {
       <path d="M75 20 C95 20, 100 35, 100 50" fill="none" />
       {/* Stethoscope earpiece */}
       <circle cx="100" cy="50" r="6" fill="white" stroke="none" />
-      <circle cx="100" cy="50" r="3" fill="#4338ca" stroke="none" />
+      <circle cx="100" cy="50" r="3" fill="#8c25f4" stroke="none" />
 
       {/* Heart shape flowing from bottom of Z */}
       <path
