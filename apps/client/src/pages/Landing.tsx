@@ -7,12 +7,12 @@ import '../styles/landing.css';
 const LOCALES: Locale[] = ['es', 'pt', 'fr'];
 
 const FEATURES = [
-  { icon: 'accessibility', title: 'Mapa Corporal Interactivo', desc: 'Visualizá tu dolor con precisión anatómica 3D. Marcá zonas exactas y tipos de sensación.' },
-  { icon: 'trending_up', title: 'Tendencias IA', desc: 'Nuestros algoritmos detectan patrones entre tu clima, actividad y niveles de dolor.' },
-  { icon: 'vital_signs', title: 'Puntaje QoL', desc: 'Medí tu Calidad de Vida diariamente con métricas estandarizadas clínicamente.' },
-  { icon: 'notifications_active', title: 'Recordatorios Inteligentes', desc: 'Nunca olvides tus medicamentos o ejercicios. Alertas personalizables y discretas.' },
-  { icon: 'wifi_off', title: 'Modo Offline', desc: 'Accedé a tus datos y registrá síntomas sin conexión. Sincronización automática.' },
-  { icon: 'lock', title: 'Privacidad Total', desc: 'Tus datos médicos encriptados de extremo a extremo. Nadie más puede verlos.' },
+  { icon: 'body_system', title: 'Mapa Corporal', desc: 'Visualizá tus puntos de dolor con precisión anatómica.' },
+  { icon: 'auto_graph', title: 'Tendencias IA', desc: 'Predicciones y patrones basados en tus datos.' },
+  { icon: 'vital_signs', title: 'Puntaje QoL', desc: 'Calidad de vida medida clínicamente.' },
+  { icon: 'notifications_active', title: 'Recordatorios', desc: 'Medicamentos y ejercicios al día.' },
+  { icon: 'wifi_off', title: 'Modo Offline', desc: 'Acceso sin conexión a internet.' },
+  { icon: 'encrypted', title: 'Privacidad', desc: 'Tus datos encriptados de extremo a extremo.' },
 ];
 
 const CONDITIONS = [
@@ -24,9 +24,9 @@ const CONDITIONS = [
 ];
 
 const STEPS = [
-  { num: '1', title: 'Registrá', desc: 'Anotá tus síntomas y niveles de dolor en segundos usando nuestro mapa interactivo.' },
-  { num: '2', title: 'Descubrí', desc: 'Nuestra IA analiza tus datos para encontrar qué actividades o climas disparan tu dolor.' },
-  { num: '3', title: 'Mejorá', desc: 'Ajustá tu tratamiento basándote en evidencia real y compartí reportes con tu médico.' },
+  { num: '1', title: 'Registrá tus síntomas', desc: 'Logueá tu nivel de dolor y factores desencadenantes en segundos.' },
+  { num: '2', title: 'Recibí insights', desc: 'Nuestra IA analiza patrones y te ofrece reportes personalizados.' },
+  { num: '3', title: 'Mejorá tu vida', desc: 'Aplicá las recomendaciones y observá tu progreso diario.' },
 ];
 
 export default function Landing() {

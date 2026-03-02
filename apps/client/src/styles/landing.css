@@ -727,7 +727,20 @@
 }
 
 /* ═══════════════════════════════════════════
-   RESPONSIVE — TABLET
+   RESPONSIVE — TABLET (1024px)
+   ═══════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .conditions-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — MOBILE (Stitch Mobile Design)
    ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
   .fade-up {
@@ -736,21 +749,17 @@
   }
 
   .section-container {
-    padding: 0 1.2rem;
+    padding: 0 1rem;
   }
 
-  .landing-nav {
-    padding: 1rem 1.2rem;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .nav-links {
+  /* Hide nav links & lang switcher on mobile */
+  .nav-links,
+  .lang-switcher {
     display: none;
   }
 
-  .landing-logo {
-    font-size: 1.3rem;
+  .landing-nav {
+    padding: 0.8rem 1rem;
   }
 
   .nav-right {
@@ -758,40 +767,47 @@
   }
 
   .btn-ghost {
-    padding: 0.45rem 0.8rem;
+    padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
   }
 
-  .lang-btn {
-    padding: 0.25rem 0.35rem;
-    font-size: 0.9rem;
+  /* ── Hero ── */
+  .hero {
+    min-height: auto;
+    padding-bottom: 1rem;
   }
 
   .hero-content {
-    padding: 1.5rem 1.2rem 3rem;
+    padding: 1rem 0.5rem 1.5rem;
   }
 
   .hero-title {
-    font-size: clamp(1.8rem, 6vw, 2.5rem);
-    margin-bottom: 1rem;
+    font-size: 1.65rem;
+    line-height: 1.2;
   }
 
   .hero-subtitle {
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.88rem;
+    margin-bottom: 1.2rem;
+    max-width: 100%;
   }
 
   .hero-badge {
-    font-size: 0.78rem;
-    padding: 0.35rem 0.8rem;
-    margin-bottom: 1.2rem;
+    font-size: 0.72rem;
+    padding: 0.35rem 0.9rem;
+    margin-bottom: 1rem;
   }
 
+  .hero-badge .material-symbols-rounded {
+    font-size: 0.85rem;
+  }
+
+  /* ── CTA Buttons: full-width stacked ── */
   .hero-cta {
     flex-direction: column;
     width: 100%;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
   }
 
   .hero-cta .btn,
@@ -801,186 +817,279 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1rem;
-    padding: 0.9rem 1.5rem;
+    font-size: 0.95rem;
+    padding: 0.8rem 1.5rem;
     text-align: center;
     box-sizing: border-box;
-  }
-
-  .hero-stats {
-    width: 100%;
-    gap: 1rem;
-    padding: 1rem 1.2rem;
     border-radius: 14px;
   }
 
+  /* ── Stats Bar: compact horizontal ── */
+  .hero-stats {
+    width: 100%;
+    gap: 0;
+    padding: 0.7rem 0.4rem;
+    border-radius: 14px;
+    justify-content: space-around;
+  }
+
+  .hero-stats .stat {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.15rem;
+    flex: 1;
+  }
+
+  .stat-icon {
+    font-size: 1.1rem;
+  }
+
   .hero-stats .stat-number {
-    font-size: 1.15rem;
+    font-size: 1rem;
   }
 
   .hero-stats .stat-label {
-    font-size: 0.68rem;
+    font-size: 0.52rem;
+    line-height: 1.2;
   }
 
+  .stat-divider {
+    width: 1px;
+    height: 28px;
+  }
+
+  /* ── Dashboard Preview ── */
+  .hero-preview {
+    margin-top: 1rem;
+  }
+
+  .hero-preview-img {
+    transform: none;
+    border-radius: 12px;
+  }
+
+  /* ── Sections ── */
   .features, .how-it-works, .conditions {
-    padding: 4rem 0;
+    padding: 2.5rem 0;
   }
 
   .section-header {
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.2rem;
   }
 
   .section-tag {
     display: block;
     text-align: center;
+    font-size: 0.68rem;
+    margin-bottom: 0.4rem;
   }
 
   .section-title {
-    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    font-size: 1.2rem;
     text-align: center;
+    line-height: 1.3;
   }
 
   .section-desc {
-    font-size: 0.92rem;
+    font-size: 0.82rem;
     text-align: center;
   }
 
+  /* ── Features: 2-column compact grid (Stitch) ── */
   .features-grid {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
   }
 
   .feature-card {
-    padding: 1.5rem;
-    border-radius: 14px;
+    padding: 0.9rem;
+    border-radius: 12px;
+  }
+
+  .feature-card::before {
+    display: none;
   }
 
   .feature-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    margin-bottom: 0.8rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
   }
 
   .feature-icon .material-symbols-rounded {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
   }
 
   .feature-card h3 {
-    font-size: 1rem;
+    font-size: 0.82rem;
+    margin-bottom: 0.2rem;
   }
 
   .feature-card p {
-    font-size: 0.85rem;
+    font-size: 0.72rem;
+    line-height: 1.35;
   }
 
+  /* ── Conditions: horizontal scroll (Stitch mobile) ── */
   .conditions-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .conditions-grid::-webkit-scrollbar {
+    display: none;
   }
 
   .condition-card {
-    padding: 1.2rem;
+    scroll-snap-align: start;
+    min-width: 120px;
+    flex-shrink: 0;
+    padding: 0.9rem;
+    gap: 0.4rem;
   }
 
-  .hero-preview {
-    margin-top: 2rem;
+  .condition-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
   }
 
-  .hero-preview-img {
-    transform: none;
+  .condition-icon-wrap .material-symbols-rounded {
+    font-size: 1.2rem;
   }
 
+  .condition-info h3 {
+    font-size: 0.78rem;
+  }
+
+  .condition-subtag {
+    font-size: 0.6rem;
+  }
+
+  /* ── Steps ── */
   .steps {
-    padding: 0 0.5rem;
+    padding: 0;
   }
 
   .step {
-    gap: 1rem;
+    gap: 0.7rem;
   }
 
   .step-number {
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
-    font-size: 1rem;
-    border-radius: 12px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: 0.85rem;
+    border-radius: 10px;
   }
 
   .step-content h3 {
-    font-size: 1.05rem;
+    font-size: 0.9rem;
   }
 
   .step-content p {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
   }
 
   .step-connector {
-    height: 30px;
-    margin-left: 20px;
+    height: 20px;
+    margin-left: 17px;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 2rem 0;
   }
 
   .cta-card {
-    padding: 2.5rem 1.5rem;
+    padding: 1.8rem 1.2rem;
+    border-radius: 14px;
   }
 
   .cta-card h2 {
-    font-size: 1.4rem;
+    font-size: 1.15rem;
+    line-height: 1.3;
+  }
+
+  .cta-card p {
+    font-size: 0.82rem;
   }
 
   .cta-buttons {
     flex-direction: column;
     align-items: center;
+    width: 100%;
   }
 
-  .cta-buttons .btn,
-  .cta-buttons .btn-android {
+  .cta-buttons .btn {
     width: 100%;
     justify-content: center;
+    padding: 0.8rem;
+    font-size: 0.9rem;
   }
 
+  .cta-note {
+    font-size: 0.72rem;
+  }
+
+  /* ── Footer ── */
   .footer-content {
     flex-direction: column;
     text-align: center;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   .footer-links {
     flex-wrap: wrap;
     justify-content: center;
+    gap: 0.8rem;
   }
 
+  /* ── Reduce orbs on mobile ── */
   .hero-orb-1 {
-    width: 300px;
-    height: 300px;
+    width: 200px;
+    height: 200px;
   }
 
   .hero-orb-2 {
-    width: 250px;
-    height: 250px;
+    width: 150px;
+    height: 150px;
   }
 
   .hero-orb-3 {
-    width: 200px;
-    height: 200px;
+    display: none;
   }
 }
 
 /* ═══════════════════════════════════════════
-   RESPONSIVE — SMALL MOBILE
+   RESPONSIVE — SMALL MOBILE (< 380px)
    ═══════════════════════════════════════════ */
 @media (max-width: 380px) {
   .hero-title {
-    font-size: 1.6rem;
+    font-size: 1.45rem;
   }
 
-  .hero-stats {
-    flex-direction: column;
-    gap: 0.5rem;
+  .hero-stats .stat-label {
+    font-size: 0.48rem;
   }
 
-  .stat-divider {
-    width: 40px;
-    height: 1px;
+  .condition-card {
+    min-width: 105px;
+    padding: 0.7rem;
+  }
+
+  .feature-card h3 {
+    font-size: 0.78rem;
+  }
+
+  .feature-card p {
+    font-size: 0.68rem;
   }
 }
