@@ -5,7 +5,7 @@ import { I18nProvider } from './i18n/index';
 import { useOnlineStatus, useSyncStatus } from './hooks/useOnlineStatus';
 import { syncService } from './services/syncService';
 import { notificationService } from './services/notificationService';
-import Navbar from './components/Navbar';
+import Navbar, { Sidebar } from './components/Navbar';
 import Landing from './pages/Landing';
 import AuthPage from './pages/AuthPage';
 import Onboarding from './pages/Onboarding';
@@ -75,20 +75,23 @@ function AuthenticatedApp() {
   }
 
   return (
-    <>
-      <SyncBanner />
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/pain/new" element={<PainLog />} />
-        <Route path="/pain/history" element={<PainHistory />} />
-        <Route path="/symptoms" element={<Symptoms />} />
-        <Route path="/questions" element={<Questions />} />
-        <Route path="/qol" element={<QualityOfLife />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+    <div className="app-layout">
+      <Sidebar />
+      <div className="app-content">
+        <SyncBanner />
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/pain/new" element={<PainLog />} />
+          <Route path="/pain/history" element={<PainHistory />} />
+          <Route path="/symptoms" element={<Symptoms />} />
+          <Route path="/questions" element={<Questions />} />
+          <Route path="/qol" element={<QualityOfLife />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
       <Navbar />
-    </>
+    </div>
   );
 }
 

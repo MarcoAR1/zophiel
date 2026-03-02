@@ -48,34 +48,34 @@ export default function Dashboard() {
 
       {/* Health Data Banner */}
       {healthStatus?.connected && healthData ? (
-        <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)', background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(34,197,94,0.08))' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-sm)' }}>
-            <span style={{ fontSize: 'var(--font-sm)', fontWeight: 600 }}>📱 Google Fit — Hoy</span>
-            <span style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>Auto-sync</span>
+        <div className="card card-health animate-in">
+          <div className="card-health-header">
+            <span className="card-health-title">📱 Google Fit — Hoy</span>
+            <span className="card-health-badge">Auto-sync</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-sm)', textAlign: 'center' }}>
+          <div className="health-metrics">
             <div>
-              <div style={{ fontSize: 'var(--font-lg)', fontWeight: 700 }}>{healthData.steps ?? '—'}</div>
-              <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>🚶 Pasos</div>
+              <div className="health-metric-value">{healthData.steps ?? '—'}</div>
+              <div className="health-metric-label">🚶 Pasos</div>
             </div>
             <div>
-              <div style={{ fontSize: 'var(--font-lg)', fontWeight: 700 }}>
+              <div className="health-metric-value">
                 {healthData.sleepMinutes ? `${Math.floor(healthData.sleepMinutes / 60)}h${healthData.sleepMinutes % 60}m` : '—'}
               </div>
-              <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>😴 Sueño</div>
+              <div className="health-metric-label">😴 Sueño</div>
             </div>
             <div>
-              <div style={{ fontSize: 'var(--font-lg)', fontWeight: 700 }}>{healthData.heartRateAvg ?? '—'}</div>
-              <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>❤️ FC prom</div>
+              <div className="health-metric-value">{healthData.heartRateAvg ?? '—'}</div>
+              <div className="health-metric-label">❤️ FC prom</div>
             </div>
           </div>
         </div>
       ) : !healthStatus?.connected ? (
-        <Link to="/app/settings" className="card animate-in" style={{ textDecoration: 'none', marginBottom: 'var(--space-lg)', display: 'flex', alignItems: 'center', gap: 'var(--space-md)', background: 'linear-gradient(135deg, rgba(66,133,244,0.08), rgba(52,168,83,0.08))', border: '1px solid rgba(66,133,244,0.15)' }}>
-          <span style={{ fontSize: '1.5rem' }}>🏃</span>
+        <Link to="/app/settings" className="card card-connect animate-in">
+          <span className="card-connect-icon">🏃</span>
           <div>
-            <div style={{ fontWeight: 600, fontSize: 'var(--font-sm)' }}>Conectá Google Fit</div>
-            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>Sueño, pasos y frecuencia cardíaca automáticos</div>
+            <div className="card-connect-title">Conectá Google Fit</div>
+            <div className="card-connect-desc">Sueño, pasos y frecuencia cardíaca automáticos</div>
           </div>
         </Link>
       ) : null}
@@ -105,39 +105,43 @@ export default function Dashboard() {
         <h2 className="section-title">{t('dash_quick_actions')}</h2>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)' }}>
-        <Link to="/app/pain/new" className="card animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
-          <span style={{ fontSize: '1.5rem' }}>📝</span>
-          <div>
-            <div style={{ fontWeight: 600 }}>{t('dash_log_pain')}</div>
-            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>{t('dash_log_pain_desc')}</div>
+      <div className="action-list">
+        <Link to="/app/pain/new" className="action-item animate-in">
+          <span className="action-item-icon">📝</span>
+          <div className="action-item-text">
+            <div className="action-item-title">{t('dash_log_pain')}</div>
+            <div className="action-item-desc">{t('dash_log_pain_desc')}</div>
           </div>
+          <span className="action-item-arrow">›</span>
         </Link>
 
-        <Link to="/app/symptoms" className="card animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
-          <span style={{ fontSize: '1.5rem' }}>🩹</span>
-          <div>
-            <div style={{ fontWeight: 600 }}>{t('dash_log_symptoms')}</div>
-            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>{t('dash_log_symptoms_desc')}</div>
+        <Link to="/app/symptoms" className="action-item animate-in">
+          <span className="action-item-icon">🩹</span>
+          <div className="action-item-text">
+            <div className="action-item-title">{t('dash_log_symptoms')}</div>
+            <div className="action-item-desc">{t('dash_log_symptoms_desc')}</div>
           </div>
+          <span className="action-item-arrow">›</span>
         </Link>
 
         {pending.length > 0 && (
-          <Link to="/app/questions" className="card card-glow animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
-            <span style={{ fontSize: '1.5rem' }}>❓</span>
-            <div>
-              <div style={{ fontWeight: 600 }}>{t('dash_answer_questions', { count: pending.length })}</div>
-              <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>{t('dash_answer_questions_desc')}</div>
+          <Link to="/app/questions" className="action-item action-item-glow animate-in">
+            <span className="action-item-icon">❓</span>
+            <div className="action-item-text">
+              <div className="action-item-title">{t('dash_answer_questions', { count: pending.length })}</div>
+              <div className="action-item-desc">{t('dash_answer_questions_desc')}</div>
             </div>
+            <span className="action-item-arrow">›</span>
           </Link>
         )}
 
-        <Link to="/app/pain/history" className="card animate-in" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
-          <span style={{ fontSize: '1.5rem' }}>📊</span>
-          <div>
-            <div style={{ fontWeight: 600 }}>{t('dash_history')}</div>
-            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>{t('dash_history_desc')}</div>
+        <Link to="/app/pain/history" className="action-item animate-in">
+          <span className="action-item-icon">📊</span>
+          <div className="action-item-text">
+            <div className="action-item-title">{t('dash_history')}</div>
+            <div className="action-item-desc">{t('dash_history_desc')}</div>
           </div>
+          <span className="action-item-arrow">›</span>
         </Link>
       </div>
     </div>
