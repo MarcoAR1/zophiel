@@ -1,13 +1,15 @@
-export type Locale = 'es' | 'pt' | 'fr';
+export type Locale = 'es' | 'en' | 'pt' | 'fr';
 
 export const LOCALE_LABELS: Record<Locale, string> = {
   es: 'Español',
+  en: 'English',
   pt: 'Português',
   fr: 'Français',
 };
 
 export const LOCALE_FLAGS: Record<Locale, string> = {
   es: '🇪🇸',
+  en: '🇺🇸',
   pt: '🇧🇷',
   fr: '🇫🇷',
 };
@@ -131,6 +133,34 @@ export const translations = {
     landing_cta_create: 'Crear Cuenta Gratis',
     landing_footer: '© 2026 Zophiel — Hecho con 💜 para quienes viven con dolor',
     landing_features_link: 'Funcionalidades',
+  },
+
+  en: {
+    nav_home: 'Home',
+    nav_pain: 'Pain',
+    nav_questions: 'Questions',
+    nav_quality: 'Quality',
+    nav_settings: 'Settings',
+    auth_tagline: 'Your companion for chronic pain management',
+    auth_name: 'Name',
+    auth_email: 'Email',
+    auth_password: 'Password',
+    auth_name_placeholder: 'Your name',
+    auth_email_placeholder: 'your@email.com',
+    auth_password_placeholder: 'Minimum 6 characters',
+    auth_login: 'Log In',
+    auth_register: 'Sign Up',
+    auth_loading: 'Loading...',
+    auth_no_account: "Don't have an account?",
+    auth_has_account: 'Already have an account?',
+    auth_signup: 'Sign up',
+    auth_signin: 'Sign in',
+    auth_or: 'or',
+    dash_hello: 'Hello, {name}',
+    dash_summary: 'Summary of the last 7 days',
+    dash_log_pain: 'Log Pain',
+    dash_log_symptoms: 'Log Symptoms',
+    dash_history: 'View History',
   },
 
   pt: {

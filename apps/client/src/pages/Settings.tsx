@@ -1,349 +1,204 @@
 import { useState, useEffect } from 'react';
-import { api } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
-import { useI18n, LOCALE_LABELS, LOCALE_FLAGS, type Locale } from '../i18n/index';
-import { notificationService } from '../services/notificationService';
-import {
-  NOTIFICATION_LEVELS,
-  NOTIFICATION_SCHEDULES,
-  type NotificationLevel,
-} from '@zophiel/shared';
+import { api } from '../services/api';
+import { useI18n } from '../i18n/index';
 
-const LEVEL_LABELS: Record<NotificationLevel, string> = {
-  low: 'Bajo — 2 veces/día',
-  medium: 'Medio — 4 veces/día',
-  high: 'Alto — 6 veces/día',
-};
+const LANGUAGES = [
+  { code: 'es' as const, label: 'ES' },
+  { code: 'en' as const, label: 'EN' },
+  { code: 'pt' as const, label: 'PT' },
+  { code: 'fr' as const, label: 'FR' },
+];
 
-const LOCALES: Locale[] = ['es', 'pt', 'fr'];
+const NOTIF_LEVELS = [
+  { value: 'all', icon: 'notifications_active', title: 'Todas', desc: 'Recordatorios, mensajes y alertas' },
+  { value: 'important', icon: 'notifications', title: 'Solo importantes', desc: 'Alertas médicas y citas' },
+  { value: 'none', icon: 'notifications_off', title: 'Ninguna', desc: 'Sin interrupciones' },
+];
 
 export default function Settings() {
-  const { user, logout } = useAuth();
-  const { t, locale, setLocale } = useI18n();
-  const [notifLevel, setNotifLevel] = useState<NotificationLevel>(user?.notificationLevel || 'medium');
-  const [quietStart, setQuietStart] = useState(user?.quietHoursStart || '22:00');
-  const [quietEnd, setQuietEnd] = useState(user?.quietHoursEnd || '08:00');
+  const { user, updateUser, logout } = useAuth();
+  const { locale, setLocale, t } = useI18n();
   const [name, setName] = useState(user?.name || '');
-  const [diagnosis, setDiagnosis] = useState(user?.diagnosis || '');
+  const [notifLevel, setNotifLevel] = useState(user?.notificationLevel || 'all');
   const [saving, setSaving] = useState(false);
-  const [success, setSuccess] = useState('');
-  const [notifPermission, setNotifPermission] = useState<string>('default');
   const [healthStatus, setHealthStatus] = useState<any>(null);
-  const [healthLoading, setHealthLoading] = useState(false);
 
   useEffect(() => {
-    if ('Notification' in window) {
-      setNotifPermission(Notification.permission);
-    }
-    api.health.status().then(setHealthStatus).catch(() => {});
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    if (code) {
-      setHealthLoading(true);
-      api.health.connect(code)
-        .then(() => {
-          setHealthStatus({ connected: true, provider: 'google_fit' });
-          setSuccess('✅ Google Fit conectado');
-          setTimeout(() => setSuccess(''), 3000);
-          window.history.replaceState({}, '', window.location.pathname);
-        })
-        .catch(() => setSuccess('❌ Error al conectar Google Fit'))
-        .finally(() => setHealthLoading(false));
-    }
+    api.health.status().catch(() => null).then(setHealthStatus);
   }, []);
 
-  const saveNotifications = async () => {
+  const save = async (field: string, value: any) => {
     setSaving(true);
     try {
-      await api.settings.updateNotifications({
-        notificationLevel: notifLevel,
-        quietHoursStart: quietStart,
-        quietHoursEnd: quietEnd,
-      });
-      await notificationService.scheduleLocalReminders(
-        NOTIFICATION_SCHEDULES[notifLevel],
-        quietStart,
-        quietEnd,
-      );
-      setSuccess(t('settings_saved'));
-      setTimeout(() => setSuccess(''), 2000);
-    } catch { /* ignore */ }
-    finally { setSaving(false); }
+      await api.settings.updateProfile({ [field]: value });
+    } catch {}
+    setSaving(false);
   };
 
-  const saveProfile = async () => {
-    setSaving(true);
+  const connectGoogleFit = async () => {
     try {
-      await api.settings.updateProfile({
-        name: name || undefined,
-        diagnosis: diagnosis || undefined,
-      });
-      setSuccess(t('settings_saved'));
-      setTimeout(() => setSuccess(''), 2000);
-    } catch { /* ignore */ }
-    finally { setSaving(false); }
+      const { url } = await api.health.getAuthUrl();
+      window.location.href = url;
+    } catch {}
   };
 
-  const activateNotifications = async () => {
-    const granted = await notificationService.requestPermission();
-    if (granted) {
-      setNotifPermission('granted');
-      await notificationService.init();
-      setSuccess('🔔 Notificaciones activadas');
-      setTimeout(() => setSuccess(''), 2000);
-    } else {
-      setNotifPermission('denied');
-    }
+  const disconnectGoogleFit = async () => {
+    try {
+      await api.health.disconnect();
+      setHealthStatus(null);
+    } catch {}
   };
 
   return (
-    <div className="bg-background-dark min-h-screen font-display text-slate-100 px-5 py-6 pb-24">
+    <div className="bg-[#0a0a0f] font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
 
-      <h1 className="text-2xl font-bold text-white mb-6">{t('settings_title')}</h1>
-
-      {success && (
-        <div className="mb-4 p-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm text-center">
-          {success}
-        </div>
-      )}
-
-      {/* Language Selector */}
-      <div className="glass-card rounded-2xl p-5 mb-4">
-        <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-[20px]">translate</span>
-          {t('settings_language')}
-        </h2>
-        <div className="flex gap-2">
-          {LOCALES.map((loc) => (
-            <button
-              key={loc}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-center transition-all duration-200 ${
-                locale === loc
-                  ? 'bg-primary text-white shadow-lg shadow-primary/25'
-                  : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'
-              }`}
-              onClick={() => setLocale(loc)}
-            >
-              {LOCALE_FLAGS[loc]} {LOCALE_LABELS[loc]}
-            </button>
-          ))}
-        </div>
+      {/* Header */}
+      <div className="flex items-center gap-3 px-5 pt-6 mb-6">
+        <button onClick={() => window.history.back()} className="size-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 bg-transparent cursor-pointer">
+          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+        </button>
+        <h1 className="text-xl font-bold text-white tracking-tight">Configuración</h1>
       </div>
 
-      {/* Health Data Connection */}
-      <div className="glass-card rounded-2xl p-5 mb-4">
-        <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-[20px]">cardiology</span>
-          Datos de salud
-        </h2>
-
-        {healthStatus?.connected ? (
-          <div>
-            <div className="flex items-center gap-2 mb-4 p-2.5 rounded-xl bg-green-500/10 border border-green-500/20">
-              <span className="text-sm text-green-400">✅ Google Fit conectado</span>
-            </div>
-            {healthStatus.lastSync && (
-              <p className="text-[10px] text-slate-500 mb-4">
-                Última sincronización: {new Date(healthStatus.lastSync).toLocaleString()}
-              </p>
-            )}
-            <div className="flex gap-2">
-              <button
-                className="flex-1 h-12 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-semibold rounded-xl text-sm disabled:opacity-50 transition-all"
-                onClick={async () => {
-                  setHealthLoading(true);
-                  try {
-                    await api.health.sync();
-                    setSuccess('📱 Datos sincronizados');
-                    setTimeout(() => setSuccess(''), 2000);
-                  } catch { /* ignore */ }
-                  setHealthLoading(false);
-                }}
-                disabled={healthLoading}
-              >
-                {healthLoading ? '⏳ Sincronizando...' : '🔄 Sincronizar'}
-              </button>
-              <button
-                className="px-4 h-12 rounded-xl text-sm font-semibold bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors"
-                onClick={async () => {
-                  await api.health.disconnect();
-                  setHealthStatus({ connected: false });
-                  setSuccess('Desconectado');
-                  setTimeout(() => setSuccess(''), 2000);
-                }}
-              >
-                Desconectar
-              </button>
+      {/* Profile Card */}
+      <div className="mx-5 rounded-2xl p-5 mb-5 bg-white/[0.03] border border-white/[0.06]">
+        <div className="flex flex-col items-center mb-5">
+          <div className="size-20 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 border-2 border-primary/30 flex items-center justify-center mb-2 relative">
+            <span className="material-symbols-outlined text-primary text-3xl">person</span>
+            <div className="absolute -bottom-0.5 -right-0.5 size-6 rounded-full bg-primary flex items-center justify-center">
+              <span className="material-symbols-outlined text-white text-[12px]">edit</span>
             </div>
           </div>
-        ) : (
-          <div>
-            <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-              Conectá tu app de salud para obtener datos automáticos de sueño, pasos, frecuencia cardíaca y más.
-            </p>
-            <button
-              className="w-full h-12 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #4285f4, #34a853)' }}
-              onClick={async () => {
-                setHealthLoading(true);
-                try {
-                  const { url } = await api.health.getAuthUrl();
-                  window.location.href = url;
-                } catch {
-                  setSuccess('❌ Error al conectar');
-                  setHealthLoading(false);
-                }
-              }}
-              disabled={healthLoading}
-            >
-              {healthLoading ? '⏳ Conectando...' : '🏃 Conectar Google Fit'}
-            </button>
-            <div className="text-[10px] text-slate-500 mt-3 leading-relaxed">
-              📊 Datos obtenidos: sueño, pasos, frecuencia cardíaca, calorías, minutos activos
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
 
-      {/* Profile */}
-      <div className="glass-card rounded-2xl p-5 mb-4">
-        <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-[20px]">person</span>
-          {t('settings_profile')}
-        </h2>
         <div className="space-y-4">
           <div>
-            <label className="text-xs font-semibold text-slate-400 ml-1 mb-1.5 block">{t('auth_name')}</label>
-            <input
-              className="w-full h-12 pl-4 pr-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+            <label className="text-[10px] text-slate-500 font-medium uppercase tracking-wider block mb-1.5">Nombre completo</label>
+            <div className="flex items-center gap-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl px-3.5 py-3">
+              <span className="material-symbols-outlined text-slate-500 text-[18px]">person</span>
+              <input
+                className="flex-1 bg-transparent text-white text-sm outline-none border-none placeholder-slate-600 font-[inherit]"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onBlur={() => name !== user?.name && save('name', name)}
+                placeholder="Tu nombre"
+              />
+            </div>
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-400 ml-1 mb-1.5 block">Diagnóstico</label>
-            <input
-              className="w-full h-12 pl-4 pr-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
-              placeholder="Ej: Fibromialgia, Artritis reumatoide..."
-              value={diagnosis}
-              onChange={(e) => setDiagnosis(e.target.value)}
-            />
+            <label className="text-[10px] text-slate-500 font-medium uppercase tracking-wider block mb-1.5">Email</label>
+            <div className="flex items-center gap-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl px-3.5 py-3">
+              <span className="material-symbols-outlined text-slate-500 text-[18px]">mail</span>
+              <span className="flex-1 text-slate-400 text-sm">{user?.email || '—'}</span>
+              <div className="size-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                <span className="material-symbols-outlined text-green-400 text-[12px]">check</span>
+              </div>
+            </div>
           </div>
-          <button
-            className="w-full h-12 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[0.99] transition-all duration-200 disabled:opacity-50 text-sm"
-            onClick={saveProfile}
-            disabled={saving}
-          >
-            {t('settings_save')}
-          </button>
+        </div>
+      </div>
+
+      {/* Language */}
+      <div className="mx-5 mb-5">
+        <h3 className="text-sm font-bold text-white mb-3">Idioma</h3>
+        <div className="flex gap-2">
+          {LANGUAGES.map((lang) => (
+            <button
+              key={lang.code}
+              onClick={() => {
+                setLocale(lang.code);
+                save('language', lang.code);
+              }}
+              className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer border ${
+                locale === lang.code
+                  ? 'bg-primary text-white border-primary shadow-[0_0_15px_rgba(140,37,244,0.3)]'
+                  : 'bg-white/[0.04] text-slate-400 border-white/[0.08] hover:bg-white/[0.06]'
+              }`}
+            >
+              {lang.label}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Notifications */}
-      <div className="glass-card rounded-2xl p-5 mb-4">
-        <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-[20px]">notifications</span>
-          {t('settings_notifications')}
-        </h2>
-
-        {notifPermission === 'default' && (
-          <div className="mb-4">
+      <div className="mx-5 mb-5">
+        <h3 className="text-sm font-bold text-white mb-3">Notificaciones</h3>
+        <div className="flex flex-col gap-2.5">
+          {NOTIF_LEVELS.map((level) => (
             <button
-              className="w-full h-12 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 text-sm"
-              onClick={activateNotifications}
-            >
-              🔔 Activar notificaciones
-            </button>
-          </div>
-        )}
-
-        {notifPermission === 'denied' && (
-          <div className="mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
-            <div className="font-semibold mb-2 text-red-400 text-sm">🚫 Notificaciones bloqueadas</div>
-            <p className="text-[10px] text-slate-500 mb-2 leading-relaxed">
-              El navegador bloqueó las notificaciones. Para activarlas:
-            </p>
-            <ol className="text-[10px] text-slate-500 pl-4 leading-relaxed list-decimal">
-              <li>Hacé clic en el 🔒 candado en la barra de direcciones</li>
-              <li>Buscá <strong className="text-slate-300">Notificaciones</strong></li>
-              <li>Cambialo a <strong className="text-slate-300">Permitir</strong></li>
-              <li>Recargá la página</li>
-            </ol>
-          </div>
-        )}
-
-        {notifPermission === 'granted' && (
-          <div className="flex items-center gap-2 mb-4 p-2.5 rounded-xl bg-green-500/10 border border-green-500/20">
-            <span className="text-sm text-green-400">✅ Notificaciones activas</span>
-          </div>
-        )}
-
-        <label className="text-xs font-semibold text-slate-400 mb-3 block">
-          Frecuencia de recordatorios
-        </label>
-
-        <div className="flex flex-col gap-2 mb-4">
-          {NOTIFICATION_LEVELS.map((level) => (
-            <button
-              key={level}
-              className={`w-full py-3 px-4 rounded-xl text-sm font-medium text-left transition-all duration-200 ${
-                notifLevel === level
-                  ? 'bg-primary/20 border border-primary/40 text-white'
-                  : 'bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10'
+              key={level.value}
+              onClick={() => {
+                setNotifLevel(level.value);
+                save('notificationLevel', level.value);
+              }}
+              className={`rounded-xl p-4 flex items-center gap-3.5 text-left transition-all duration-200 cursor-pointer border ${
+                notifLevel === level.value
+                  ? 'bg-primary/[0.08] border-primary/30 shadow-[0_0_20px_rgba(140,37,244,0.08)]'
+                  : 'bg-white/[0.03] border-white/[0.06]'
               }`}
-              onClick={() => setNotifLevel(level)}
             >
-              {LEVEL_LABELS[level]}
+              <div className={`size-10 rounded-xl flex items-center justify-center ${
+                notifLevel === level.value ? 'bg-primary/15 text-primary' : 'bg-white/5 text-slate-500'
+              }`}>
+                <span className="material-symbols-outlined text-[20px]">{level.icon}</span>
+              </div>
+              <div className="flex-1">
+                <span className="text-white font-semibold text-sm block">{level.title}</span>
+                <span className="text-[11px] text-slate-500">{level.desc}</span>
+              </div>
+              <div className={`size-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                notifLevel === level.value ? 'border-primary bg-primary' : 'border-slate-600'
+              }`}>
+                {notifLevel === level.value && (
+                  <span className="material-symbols-outlined text-white text-[12px]">check</span>
+                )}
+              </div>
             </button>
           ))}
         </div>
+      </div>
 
-        <div className="text-[10px] text-slate-500 mb-4">
-          Horarios: {NOTIFICATION_SCHEDULES[notifLevel].join(', ')}
-        </div>
-
-        <label className="text-xs font-semibold text-slate-400 mb-3 block">
-          Horas silenciosas
-        </label>
-
-        <div className="flex gap-3 mb-4">
-          <div className="flex-1">
-            <label className="text-[10px] text-slate-500 mb-1 block">Desde</label>
-            <input
-              className="w-full h-12 pl-4 pr-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
-              type="time"
-              value={quietStart}
-              onChange={(e) => setQuietStart(e.target.value)}
-            />
+      {/* Google Fit */}
+      <div className="mx-5 rounded-2xl p-5 mb-5 bg-white/[0.03] border border-white/[0.06]">
+        <div className="flex items-center gap-3.5">
+          <div className="size-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400">
+            <span className="material-symbols-outlined text-[20px]">fitness_center</span>
           </div>
           <div className="flex-1">
-            <label className="text-[10px] text-slate-500 mb-1 block">Hasta</label>
-            <input
-              className="w-full h-12 pl-4 pr-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
-              type="time"
-              value={quietEnd}
-              onChange={(e) => setQuietEnd(e.target.value)}
-            />
+            <span className="text-white font-semibold text-sm block">Google Fit</span>
+            <span className="text-[11px] text-slate-500">Sincronizá tu actividad física</span>
           </div>
+          {healthStatus?.connected ? (
+            <button onClick={disconnectGoogleFit} className="px-4 py-2 rounded-xl text-xs font-bold text-red-400 bg-red-500/10 border border-red-500/20 cursor-pointer transition-colors hover:bg-red-500/20">
+              Desconectar
+            </button>
+          ) : (
+            <button onClick={connectGoogleFit} className="px-4 py-2 rounded-xl text-xs font-bold text-green-400 bg-green-500/15 border border-green-500/25 cursor-pointer transition-colors hover:bg-green-500/25">
+              Conectar
+            </button>
+          )}
         </div>
-
-        <button
-          className="w-full h-12 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[0.99] transition-all duration-200 disabled:opacity-50 text-sm"
-          onClick={saveNotifications}
-          disabled={saving}
-        >
-          {t('settings_save')}
-        </button>
       </div>
 
       {/* Logout */}
-      <button
-        className="w-full h-12 rounded-xl text-sm font-bold bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 active:scale-[0.99] transition-all duration-200"
-        onClick={logout}
-      >
-        {t('settings_logout')}
-      </button>
+      <div className="mx-5 mt-2">
+        <button
+          onClick={logout}
+          className="w-full flex items-center justify-center gap-2 py-3 text-red-400 text-sm font-semibold bg-transparent border-none cursor-pointer hover:text-red-300 transition-colors"
+        >
+          <span className="material-symbols-outlined text-[18px]">logout</span>
+          Cerrar Sesión
+        </button>
+      </div>
+
+      {saving && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-medium">
+          Guardando...
+        </div>
+      )}
     </div>
   );
 }

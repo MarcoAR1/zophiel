@@ -82,10 +82,16 @@ export default function PainLog() {
   };
 
   return (
-    <div className="bg-background-dark min-h-screen font-display text-slate-100 px-5 py-6 pb-24">
+    <div className="bg-[#0a0a0f] min-h-screen font-display text-slate-100 px-5 py-6 pb-24 antialiased">
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
 
-      <h1 className="text-2xl font-bold text-white mb-1">Registrar Dolor</h1>
+      {/* Header with back arrow */}
+      <div className="flex items-center gap-3 mb-5">
+        <button onClick={() => navigate('/app')} className="size-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 bg-transparent cursor-pointer">
+          <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+        </button>
+        <h1 className="text-xl font-bold text-white tracking-tight">Registrar Dolor</h1>
+      </div>
 
       {/* Offline indicator */}
       {!isOnline && (
@@ -107,10 +113,10 @@ export default function PainLog() {
       )}
 
       {/* ── 1. Intensity Slider ── */}
-      <div className="glass-card rounded-2xl p-5 mb-5">
+      <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-5 mb-5">
         <div className="flex items-center justify-between mb-3">
-          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
-            Intensidad general (NRS 0-10)
+          <label className="text-[10px] font-bold text-primary/80 uppercase tracking-[0.15em]">
+            Intensidad (NRS 0-10)
           </label>
           <span className="text-3xl font-bold" style={{ color: painColor }}>{intensity}</span>
         </div>
@@ -134,18 +140,18 @@ export default function PainLog() {
       </div>
 
       {/* ── 2. Temporality ── */}
-      <div className="glass-card rounded-2xl p-5 mb-5">
-        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3 block">
+      <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-5 mb-5">
+        <label className="text-[10px] font-bold text-primary/80 uppercase tracking-[0.15em] mb-3 block">
           Temporalidad
         </label>
         <div className="flex flex-wrap gap-2">
           {PAIN_TEMPORALITIES.map((temp) => (
             <button
               key={temp}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 active:scale-[0.97] ${
+              className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 active:scale-[0.97] cursor-pointer border ${
                 painTemporality === temp
-                  ? 'bg-primary text-white shadow-lg shadow-primary/25'
-                  : 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10'
+                  ? 'bg-primary text-white border-primary shadow-[0_0_15px_rgba(140,37,244,0.3)]'
+                  : 'bg-white/[0.04] text-slate-300 border-white/[0.08] hover:bg-white/[0.06]'
               }`}
               onClick={() => setPainTemporality(painTemporality === temp ? '' : temp)}
             >
@@ -156,10 +162,10 @@ export default function PainLog() {
       </div>
 
       {/* ── 3. Mood States ── */}
-      <div className="glass-card rounded-2xl p-5 mb-5">
+      <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-5 mb-5">
         <div className="flex items-center justify-between mb-3">
-          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
-            Malestar general
+          <label className="text-[10px] font-bold text-primary/80 uppercase tracking-[0.15em]">
+            Malestar y Síntomas
           </label>
           {moodStates.length > 0 && (
             <span className="text-xs text-primary font-medium">({moodStates.length})</span>
@@ -169,10 +175,10 @@ export default function PainLog() {
           {MOOD_STATES.map((state) => (
             <button
               key={state}
-              className={`flex flex-col items-center gap-1 p-3 rounded-xl text-center transition-all duration-200 active:scale-[0.97] ${
+              className={`flex flex-col items-center gap-1.5 p-3 rounded-xl text-center transition-all duration-200 active:scale-[0.97] cursor-pointer border ${
                 moodStates.includes(state)
-                  ? 'bg-primary/20 border border-primary/40 text-white'
-                  : 'bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10'
+                  ? 'bg-primary/15 border-primary/30 text-white shadow-[0_0_12px_rgba(140,37,244,0.1)]'
+                  : 'bg-white/[0.03] border-white/[0.06] text-slate-400 hover:bg-white/[0.05]'
               }`}
               onClick={() => toggleMoodState(state)}
             >
@@ -184,9 +190,9 @@ export default function PainLog() {
       </div>
 
       {/* ── 4. Body Map ── */}
-      <div className="glass-card rounded-2xl p-5 mb-5">
-        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1 block">
-          Dolor por zona
+      <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-5 mb-5">
+        <label className="text-[10px] font-bold text-primary/80 uppercase tracking-[0.15em] mb-1 block">
+          Mapa de Dolor
         </label>
         <span className="text-[10px] text-slate-500 block mb-4">
           Tocá un músculo para asignar nivel de dolor
@@ -199,8 +205,8 @@ export default function PainLog() {
 
       {/* ── 5. Notes ── */}
       <div className="glass-card rounded-2xl p-5 mb-6">
-        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3 block">
-          Notas (opcional)
+        <label className="text-[10px] font-bold text-primary/80 uppercase tracking-[0.15em] mb-3 block">
+          Notas Adicionales
         </label>
         <textarea
           className="w-full h-24 p-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 resize-none text-sm"
@@ -212,12 +218,12 @@ export default function PainLog() {
       </div>
 
       <button
-        className="w-full h-14 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full h-14 bg-gradient-to-r from-primary to-[#a855f7] text-white font-bold rounded-2xl shadow-[0_4px_20px_rgba(140,37,244,0.3)] hover:shadow-[0_4px_30px_rgba(140,37,244,0.5)] hover:scale-[1.01] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 text-sm uppercase tracking-wider cursor-pointer border-none"
         onClick={handleSubmit}
         disabled={saving || saved}
       >
-        <span className="material-symbols-outlined text-[18px]">save</span>
-        {saving ? 'Guardando...' : saved ? '✅ Guardado' : 'Guardar entrada'}
+        <span className="material-symbols-outlined text-[16px]">save</span>
+        {saving ? 'Guardando...' : saved ? '✅ Guardado' : 'Guardar Registro'}
       </button>
     </div>
   );
