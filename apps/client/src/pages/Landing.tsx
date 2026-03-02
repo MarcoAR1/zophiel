@@ -7,20 +7,20 @@ import '../styles/landing.css';
 const LOCALES: Locale[] = ['es', 'pt', 'fr'];
 
 const FEATURES = [
-  { icon: 'accessibility_new', title: 'Mapa Corporal Interactivo', desc: 'Visualizá y localizá tu dolor con precisión anatómica en un modelo detallado del cuerpo humano.' },
-  { icon: 'query_stats', title: 'Tendencias y Análisis', desc: 'Identificá patrones estacionales y disparadores con gráficos impulsados por inteligencia artificial.' },
-  { icon: 'favorite', title: 'Calidad de Vida (QoL)', desc: 'Medí el impacto real del dolor en tu rutina diaria mediante métricas médicas estandarizadas.' },
-  { icon: 'notifications_active', title: 'Recordatorios Inteligentes', desc: 'Nunca olvides registrar tus síntomas con alertas contextuales personalizadas a tu rutina.' },
-  { icon: 'cloud_off', title: 'Modo Offline', desc: 'Registrá tus datos incluso sin conexión. Sincronización automática cuando vuelvas a estar online.' },
-  { icon: 'encrypted', title: 'Privacidad Total', desc: 'Tus datos médicos están encriptados de extremo a extremo y bajo tu control absoluto.' },
+  { icon: 'accessibility', title: 'Mapa Corporal Interactivo', desc: 'Visualizá tu dolor con precisión anatómica 3D. Marcá zonas exactas y tipos de sensación.' },
+  { icon: 'trending_up', title: 'Tendencias IA', desc: 'Nuestros algoritmos detectan patrones entre tu clima, actividad y niveles de dolor.' },
+  { icon: 'vital_signs', title: 'Puntaje QoL', desc: 'Medí tu Calidad de Vida diariamente con métricas estandarizadas clínicamente.' },
+  { icon: 'notifications_active', title: 'Recordatorios Inteligentes', desc: 'Nunca olvides tus medicamentos o ejercicios. Alertas personalizables y discretas.' },
+  { icon: 'wifi_off', title: 'Modo Offline', desc: 'Accedé a tus datos y registrá síntomas sin conexión. Sincronización automática.' },
+  { icon: 'lock', title: 'Privacidad Total', desc: 'Tus datos médicos encriptados de extremo a extremo. Nadie más puede verlos.' },
 ];
 
 const CONDITIONS = [
-  { icon: '🦋', name: 'Fibromialgia', desc: 'Registrá puntos de dolor difusos, fatiga y niebla mental. Correlacioná con clima y sueño.' },
-  { icon: '🦴', name: 'Artritis Reumatoide', desc: 'Seguí rigidez matutina, inflamación articular y brotes. Registro preciso para tu reumatólogo.' },
-  { icon: '🧠', name: 'Migraña Crónica', desc: 'Identificá triggers, registrá auras y medicación. Descubrí patrones que desencadenan episodios.' },
-  { icon: '⚡', name: 'Dolor Neuropático', desc: 'Mapeá sensaciones eléctricas, hormigueo y ardor. Distinguí dolor constante de intermitente.' },
-  { icon: '🔄', name: 'Lumbalgia Crónica', desc: 'Registrá intensidad según actividad y postura. Evaluá efectividad de fisioterapia y ejercicios.' },
+  { icon: 'accessibility_new', name: 'Fibromialgia', subtag: 'Rastreo de puntos sensibles', desc: 'Registrá puntos de dolor difusos, fatiga y niebla mental. Correlacioná con clima y sueño.' },
+  { icon: 'orthopedics', name: 'Artritis', subtag: 'Rigidez matutina', desc: 'Seguí rigidez matutina, inflamación articular y brotes. Registro preciso para tu reumatólogo.' },
+  { icon: 'neurology', name: 'Migraña Crónica', subtag: 'Disparadores ambientales', desc: 'Identificá triggers, registrá auras y medicación. Descubrí patrones que desencadenan episodios.' },
+  { icon: 'electric_bolt', name: 'Dolor Neuropático', subtag: 'Sensaciones eléctricas', desc: 'Mapeá sensaciones eléctricas, hormigueo y ardor. Distinguí dolor constante de intermitente.' },
+  { icon: 'back_hand', name: 'Lumbalgia', subtag: 'Impacto en movilidad', desc: 'Registrá intensidad según actividad y postura. Evaluá efectividad de fisioterapia y ejercicios.' },
 ];
 
 const STEPS = [
@@ -103,7 +103,7 @@ export default function Landing() {
             Gestioná tu <span className="text-gradient">dolor crónico</span> con inteligencia
           </h1>
           <p className="hero-subtitle">
-            Seguí tus síntomas, descubrí patrones y mejorá tu calidad de vida con tecnología avanzada de mapeo y análisis biométrico.
+            Zophiel te ayuda a entender, predecir y controlar tus síntomas mediante herramientas de seguimiento clínico validadas por especialistas.
           </p>
           <div className="hero-cta">
             <button className="btn btn-primary btn-lg btn-glow" onClick={() => navigate('/app')}>
@@ -116,19 +116,32 @@ export default function Landing() {
           </div>
           <div className="hero-stats">
             <div className="stat">
-              <span className="stat-number">360°</span>
-              <span className="stat-label">Mapa corporal</span>
+              <span className="material-symbols-rounded stat-icon">accessibility_new</span>
+              <div>
+                <span className="stat-number">360°</span>
+                <span className="stat-label">Mapa corporal interactivo</span>
+              </div>
             </div>
             <div className="stat-divider" />
             <div className="stat">
-              <span className="stat-number">24/7</span>
-              <span className="stat-label">Seguimiento</span>
+              <span className="material-symbols-rounded stat-icon">monitoring</span>
+              <div>
+                <span className="stat-number">24/7</span>
+                <span className="stat-label">Seguimiento continuo</span>
+              </div>
             </div>
             <div className="stat-divider" />
             <div className="stat">
-              <span className="stat-number">100%</span>
-              <span className="stat-label">Privacidad</span>
+              <span className="material-symbols-rounded stat-icon">encrypted</span>
+              <div>
+                <span className="stat-number">100%</span>
+                <span className="stat-label">Privacidad garantizada</span>
+              </div>
             </div>
+          </div>
+
+          <div className="hero-preview">
+            <img src="/dashboard-preview.png" alt="Zophiel Dashboard" className="hero-preview-img" />
           </div>
         </div>
       </section>
@@ -137,9 +150,9 @@ export default function Landing() {
       <section className="features" id="features" ref={featuresRef}>
         <div className="section-container">
           <div className="section-header fade-up">
-            <span className="section-tag">✨ Funcionalidades</span>
-            <h2 className="section-title">Todo lo que necesitás para tu bienestar</h2>
-            <p className="section-desc">Herramientas diseñadas por expertos médicos para el manejo integral del dolor crónico.</p>
+            <span className="section-tag">Características Premium</span>
+            <h2 className="section-title">Herramientas diseñadas para el manejo <span className="text-gradient">clínico del dolor</span></h2>
+            <p className="section-desc">Potenciadas por inteligencia artificial y validadas por especialistas.</p>
           </div>
           <div className="features-grid">
             {FEATURES.map((f) => (
@@ -184,16 +197,20 @@ export default function Landing() {
       <section className="conditions" id="conditions">
         <div className="section-container">
           <div className="section-header fade-up">
-            <span className="section-tag">🏥 Especializado</span>
-            <h2 className="section-title">Optimizado para condiciones complejas</h2>
-            <p className="section-desc">Zophiel entiende las particularidades de cada diagnóstico crónico y se adapta a tus necesidades.</p>
+            <span className="section-tag">Especializado en condiciones complejas</span>
+            <h2 className="section-title">Adaptado para el seguimiento de <span className="text-gradient">patologías crónicas</span></h2>
+            <p className="section-desc">Zophiel entiende las particularidades de cada diagnóstico y se adapta a tus necesidades.</p>
           </div>
           <div className="conditions-grid">
             {CONDITIONS.map((c) => (
               <div className="condition-card fade-up" key={c.name}>
-                <div className="condition-icon">{c.icon}</div>
-                <h3>{c.name}</h3>
-                <p>{c.desc}</p>
+                <div className="condition-icon-wrap">
+                  <span className="material-symbols-rounded">{c.icon}</span>
+                </div>
+                <div className="condition-info">
+                  <h3>{c.name}</h3>
+                  <span className="condition-subtag">{c.subtag}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -205,18 +222,14 @@ export default function Landing() {
         <div className="section-container">
           <div className="cta-card fade-up">
             <h2>¿Listo para transformar tu gestión del dolor?</h2>
-            <p>Unite a las personas que ya usan Zophiel para entender mejor su cuerpo y mejorar su calidad de vida.</p>
+            <p>Únete a miles de usuarios que han recuperado el control de su vida con Zophiel.</p>
             <div className="cta-buttons">
               <button className="btn btn-primary btn-lg btn-glow" onClick={() => navigate('/app')}>
-                Crear cuenta gratis
+                Crear Cuenta Gratis
               </button>
-              <a href="/downloads/zophiel.apk" download className="btn btn-lg btn-android">
-                <span className="material-symbols-rounded">smartphone</span>
-                Android APK
-              </a>
             </div>
             <p className="cta-note">
-              También disponible como PWA instalable desde el navegador
+              No se requiere tarjeta de crédito para empezar.
             </p>
           </div>
         </div>
