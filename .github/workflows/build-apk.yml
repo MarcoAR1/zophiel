@@ -63,7 +63,11 @@ jobs:
         run: pnpm --filter @zophiel/shared build
 
       - name: Build web assets
-        run: pnpm --filter @zophiel/client build
+        working-directory: apps/client
+        run: pnpm build
+        env:
+          VITE_API_URL: https://zophielserver-production.up.railway.app/api
+          VITE_GOOGLE_CLIENT_ID: 399934829057-ion4sr02mpnftbd3kssju2e63jg4c4s4.apps.googleusercontent.com
 
       - name: Add Android platform
         working-directory: apps/client
