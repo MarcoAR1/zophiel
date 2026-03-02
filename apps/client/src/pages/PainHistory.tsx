@@ -37,7 +37,7 @@ const TEMPORALITY_LABELS: Record<string, string> = {
   'no especificado': 'Sin especificar',
 };
 
-const TEMPORALITY_COLORS = ['#6366f1', '#f59e0b', '#ef4444', '#6b7280'];
+const TEMPORALITY_COLORS = ['#8c25f4', '#eab308', '#ef4444', '#6b7280'];
 
 export default function PainHistory() {
   const { user } = useAuth();
@@ -75,18 +75,17 @@ export default function PainHistory() {
     }
   };
 
-  // ── Chart configs ──
   const trendChartData = {
     labels: trend.map((t) => t.date.slice(5)),
     datasets: [{
       label: 'Dolor promedio',
       data: trend.map((t) => t.average),
-      borderColor: '#6366f1',
-      backgroundColor: 'rgba(99, 102, 241, 0.1)',
+      borderColor: '#8c25f4',
+      backgroundColor: 'rgba(140, 37, 244, 0.1)',
       fill: true,
       tension: 0.4,
       pointRadius: 4,
-      pointBackgroundColor: '#6366f1',
+      pointBackgroundColor: '#8c25f4',
       pointBorderColor: 'transparent',
     }],
   };
@@ -97,10 +96,10 @@ export default function PainHistory() {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: 'rgba(15, 15, 35, 0.9)',
+        backgroundColor: 'rgba(15, 11, 21, 0.95)',
         titleColor: '#e8e8f0',
         bodyColor: '#9b9bb8',
-        borderColor: 'rgba(99, 102, 241, 0.3)',
+        borderColor: 'rgba(140, 37, 244, 0.3)',
         borderWidth: 1,
         cornerRadius: 8,
         padding: 12,
@@ -113,7 +112,7 @@ export default function PainHistory() {
   };
 
   const getHeatColor = (avg: number) => {
-    if (avg === 0) return 'rgba(99,102,241,0.1)';
+    if (avg === 0) return 'rgba(140,37,244,0.1)';
     if (avg <= 3) return 'rgba(34,197,94,0.4)';
     if (avg <= 5) return 'rgba(234,179,8,0.5)';
     if (avg <= 7) return 'rgba(249,115,22,0.6)';
@@ -122,69 +121,74 @@ export default function PainHistory() {
 
   if (loading) {
     return (
-      <div className="page">
-        <div className="loading"><div className="spinner" /></div>
+      <div className="min-h-screen bg-background-dark flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="page">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 className="page-title animate-in">Historial de Dolor</h1>
+    <div className="bg-background-dark min-h-screen font-display text-slate-100 px-5 py-6 pb-24">
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="text-2xl font-bold text-white">Historial de Dolor</h1>
         {report && (
           <button
-            className="btn btn-outline animate-in"
+            className="px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 transition-colors disabled:opacity-50"
             onClick={handleExportPDF}
             disabled={exporting}
-            style={{ fontSize: 'var(--font-sm)', padding: '0.5rem 1rem' }}
           >
-            {exporting ? '⏳ Generando...' : '📄 Exportar PDF'}
+            {exporting ? '⏳ Generando...' : '📄 PDF'}
           </button>
         )}
       </div>
 
       {/* Period selector */}
-      <div className="period-selector animate-in">
+      <div className="flex gap-2 mb-6 mt-4">
         {[7, 30, 90].map((p) => (
-          <button key={p} className={`period-btn ${period === p ? 'active' : ''}`} onClick={() => setPeriod(p)}>
+          <button
+            key={p}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+              period === p
+                ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'
+            }`}
+            onClick={() => setPeriod(p)}
+          >
             {p}d
           </button>
         ))}
       </div>
 
-      {/* ── All report content (captured for PDF) ── */}
+      {/* ── Report content (captured for PDF) ── */}
       <div ref={reportRef}>
         {/* Stats summary */}
         {stats && (
-          <div className="stats-grid animate-in">
-            <div className="card stat-card">
-              <div className="stat-value">{stats.average}</div>
-              <div className="stat-label">Promedio</div>
-            </div>
-            <div className="card stat-card">
-              <div className="stat-value">{stats.count}</div>
-              <div className="stat-label">Registros</div>
-            </div>
-            <div className="card stat-card">
-              <div className="stat-value">{stats.min}</div>
-              <div className="stat-label">Mínimo</div>
-            </div>
-            <div className="card stat-card">
-              <div className="stat-value">{stats.max}</div>
-              <div className="stat-label">Máximo</div>
-            </div>
+          <div className="grid grid-cols-4 gap-3 mb-6">
+            {[
+              { val: stats.average, label: 'Promedio' },
+              { val: stats.count, label: 'Registros' },
+              { val: stats.min, label: 'Mínimo' },
+              { val: stats.max, label: 'Máximo' },
+            ].map(({ val, label }) => (
+              <div className="glass-card p-3 rounded-2xl text-center" key={label}>
+                <div className="text-xl font-bold text-white">{val}</div>
+                <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-1">{label}</div>
+              </div>
+            ))}
           </div>
         )}
 
         {/* Trend chart */}
         {trend.length > 0 ? (
-          <div className="card chart-container animate-in" style={{ height: 260 }}>
+          <div className="glass-card rounded-2xl p-4 mb-6" style={{ height: 260 }}>
             <Line data={trendChartData} options={chartOptions} />
           </div>
         ) : (
-          <div className="card empty-state animate-in">
-            No hay datos suficientes. ¡Registrá tu primer dolor!
+          <div className="glass-card rounded-2xl p-8 mb-6 text-center">
+            <span className="material-symbols-outlined text-4xl text-slate-500 mb-3 block">timeline</span>
+            <div className="text-slate-400 text-sm">No hay datos suficientes. ¡Registrá tu primer dolor!</div>
           </div>
         )}
 
@@ -193,18 +197,19 @@ export default function PainHistory() {
           <>
             {/* Time of day insight */}
             {report.timeOfDay?.peak && (
-              <div className="card animate-in" style={{ marginTop: 'var(--space-md)' }}>
-                <div className="section-header">
-                  <h2 className="section-title">⏰ Momentos del día</h2>
-                </div>
-                <div style={{ display: 'flex', gap: 'var(--space-md)' }}>
-                  <div style={{ flex: 1, textAlign: 'center', padding: 'var(--space-sm)', background: 'rgba(239,68,68,0.08)', borderRadius: 'var(--radius-md)' }}>
-                    <div style={{ fontSize: 'var(--font-xl)', fontWeight: 700, color: 'var(--danger)' }}>{report.timeOfDay.peak.hour}:00</div>
-                    <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>Peor momento ({report.timeOfDay.peak.average}/10)</div>
+              <div className="glass-card rounded-2xl p-5 mb-4">
+                <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[20px]">schedule</span>
+                  Momentos del día
+                </h2>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-xl bg-red-500/10 text-center">
+                    <div className="text-xl font-bold text-red-400">{report.timeOfDay.peak.hour}:00</div>
+                    <div className="text-[10px] text-slate-500">Peor ({report.timeOfDay.peak.average}/10)</div>
                   </div>
-                  <div style={{ flex: 1, textAlign: 'center', padding: 'var(--space-sm)', background: 'rgba(34,197,94,0.08)', borderRadius: 'var(--radius-md)' }}>
-                    <div style={{ fontSize: 'var(--font-xl)', fontWeight: 700, color: 'var(--success)' }}>{report.timeOfDay.best.hour}:00</div>
-                    <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>Mejor momento ({report.timeOfDay.best.average}/10)</div>
+                  <div className="p-3 rounded-xl bg-green-500/10 text-center">
+                    <div className="text-xl font-bold text-green-400">{report.timeOfDay.best.hour}:00</div>
+                    <div className="text-[10px] text-slate-500">Mejor ({report.timeOfDay.best.average}/10)</div>
                   </div>
                 </div>
               </div>
@@ -212,21 +217,17 @@ export default function PainHistory() {
 
             {/* Weekly heatmap */}
             {report.weeklyHeatmap && (
-              <div className="card animate-in" style={{ marginTop: 'var(--space-md)' }}>
-                <div className="section-header">
-                  <h2 className="section-title">📅 Patrón semanal</h2>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '0.4rem' }}>
+              <div className="glass-card rounded-2xl p-5 mb-4">
+                <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[20px]">calendar_month</span>
+                  Patrón semanal
+                </h2>
+                <div className="grid grid-cols-7 gap-1.5">
                   {report.weeklyHeatmap.map((d: any) => (
-                    <div key={d.day} style={{
-                      textAlign: 'center',
-                      padding: 'var(--space-sm)',
-                      borderRadius: 'var(--radius-md)',
-                      background: getHeatColor(d.average),
-                    }}>
-                      <div style={{ fontSize: 'var(--font-xs)', fontWeight: 600, marginBottom: '0.2rem' }}>{d.day}</div>
-                      <div style={{ fontSize: 'var(--font-lg)', fontWeight: 700 }}>{d.average || '—'}</div>
-                      <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>{d.count}x</div>
+                    <div key={d.day} className="text-center p-2 rounded-xl" style={{ background: getHeatColor(d.average) }}>
+                      <div className="text-[10px] font-semibold mb-0.5">{d.day}</div>
+                      <div className="text-lg font-bold">{d.average || '—'}</div>
+                      <div className="text-[8px] text-slate-400">{d.count}x</div>
                     </div>
                   ))}
                 </div>
@@ -235,10 +236,11 @@ export default function PainHistory() {
 
             {/* Sensation stats */}
             {report.sensationStats?.length > 0 && (
-              <div className="card animate-in" style={{ marginTop: 'var(--space-md)' }}>
-                <div className="section-header">
-                  <h2 className="section-title">🎯 Tipo de sensación</h2>
-                </div>
+              <div className="glass-card rounded-2xl p-5 mb-4">
+                <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[20px]">target</span>
+                  Tipo de sensación
+                </h2>
                 <div style={{ height: Math.max(200, report.sensationStats.length * 45) }}>
                   <Bar
                     data={{
@@ -247,7 +249,7 @@ export default function PainHistory() {
                         label: 'Dolor promedio',
                         data: report.sensationStats.map((s: any) => s.average),
                         backgroundColor: report.sensationStats.map((_: any, i: number) =>
-                          `hsla(${240 + i * 30}, 70%, 60%, 0.7)`
+                          `hsla(${275 + i * 20}, 70%, 55%, 0.7)`
                         ),
                         borderRadius: 6,
                         barThickness: 28,
@@ -265,7 +267,7 @@ export default function PainHistory() {
                     }}
                   />
                 </div>
-                <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginTop: 'var(--space-sm)', textAlign: 'center' }}>
+                <div className="text-[10px] text-slate-500 text-center mt-3">
                   {report.sensationStats.map((s: any) => `${SENSATION_LABELS[s.sensation] || s.sensation}: ${s.count}x`).join(' · ')}
                 </div>
               </div>
@@ -273,12 +275,13 @@ export default function PainHistory() {
 
             {/* Temporality distribution */}
             {report.temporalityStats?.length > 0 && (
-              <div className="card animate-in" style={{ marginTop: 'var(--space-md)' }}>
-                <div className="section-header">
-                  <h2 className="section-title">⏱️ Distribución temporal</h2>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-lg)' }}>
-                  <div style={{ width: 160, height: 160 }}>
+              <div className="glass-card rounded-2xl p-5 mb-4">
+                <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[20px]">timer</span>
+                  Distribución temporal
+                </h2>
+                <div className="flex items-center gap-6">
+                  <div className="w-40 h-40">
                     <Doughnut
                       data={{
                         labels: report.temporalityStats.map((t: any) => TEMPORALITY_LABELS[t.temporality] || t.temporality),
@@ -296,12 +299,12 @@ export default function PainHistory() {
                       }}
                     />
                   </div>
-                  <div style={{ flex: 1 }}>
+                  <div className="flex-1">
                     {report.temporalityStats.map((t: any, i: number) => (
-                      <div key={t.temporality} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginBottom: 'var(--space-xs)' }}>
-                        <div style={{ width: 10, height: 10, borderRadius: '50%', background: TEMPORALITY_COLORS[i] }} />
-                        <span style={{ flex: 1, fontSize: 'var(--font-sm)' }}>{TEMPORALITY_LABELS[t.temporality] || t.temporality}</span>
-                        <span style={{ fontWeight: 700, fontSize: 'var(--font-sm)' }}>{t.percentage}%</span>
+                      <div key={t.temporality} className="flex items-center gap-2 mb-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: TEMPORALITY_COLORS[i] }} />
+                        <span className="flex-1 text-sm text-slate-300">{TEMPORALITY_LABELS[t.temporality] || t.temporality}</span>
+                        <span className="text-sm font-bold text-white">{t.percentage}%</span>
                       </div>
                     ))}
                   </div>
@@ -311,20 +314,24 @@ export default function PainHistory() {
 
             {/* Body region */}
             {report.regionStats?.length > 0 && (
-              <div className="card animate-in" style={{ marginTop: 'var(--space-md)' }}>
-                <div className="section-header">
-                  <h2 className="section-title">🫀 Dolor por zona corporal</h2>
-                </div>
+              <div className="glass-card rounded-2xl p-5 mb-4">
+                <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[20px]">accessibility_new</span>
+                  Dolor por zona corporal
+                </h2>
                 {report.regionStats.map((r: any) => {
                   const pct = (r.average / 10) * 100;
                   return (
-                    <div key={r.region} style={{ marginBottom: 'var(--space-sm)' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-sm)', marginBottom: '0.2rem' }}>
-                        <span>{(BODY_REGION_LABELS as any)[r.region] || r.region}</span>
-                        <span style={{ fontWeight: 600 }}>{r.average}/10 ({r.count}x)</span>
+                    <div key={r.region} className="mb-3">
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-slate-300">{(BODY_REGION_LABELS as any)[r.region] || r.region}</span>
+                        <span className="font-semibold text-white">{r.average}/10 ({r.count}x)</span>
                       </div>
-                      <div style={{ height: 8, borderRadius: 4, background: 'rgba(255,255,255,0.06)' }}>
-                        <div style={{ height: '100%', width: `${pct}%`, borderRadius: 4, background: `hsl(${(1 - pct / 100) * 120}, 70%, 50%)` }} />
+                      <div className="h-2 rounded-full bg-white/5">
+                        <div className="h-full rounded-full transition-all" style={{
+                          width: `${pct}%`,
+                          background: `hsl(${(1 - pct / 100) * 120}, 70%, 50%)`
+                        }} />
                       </div>
                     </div>
                   );
@@ -334,22 +341,23 @@ export default function PainHistory() {
 
             {/* Mood correlation */}
             {report.moodCorrelation?.length > 0 && (
-              <div className="card animate-in" style={{ marginTop: 'var(--space-md)' }}>
-                <div className="section-header">
-                  <h2 className="section-title">💜 Correlación ánimo-dolor</h2>
-                </div>
-                <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginBottom: 'var(--space-md)' }}>
-                  Dolor promedio cuando reportaste cada estado de ánimo
-                </div>
+              <div className="glass-card rounded-2xl p-5 mb-4">
+                <h2 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[20px]">psychology</span>
+                  Correlación ánimo-dolor
+                </h2>
+                <p className="text-[10px] text-slate-500 mb-4">Dolor promedio cuando reportaste cada estado de ánimo</p>
                 {report.moodCorrelation.map((m: any) => (
-                  <div key={m.mood} className="list-item">
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 500 }}>{m.mood}</div>
-                      <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>{m.count} registros</div>
+                  <div key={m.mood} className="flex items-center justify-between py-2.5 border-b border-white/5 last:border-0">
+                    <div>
+                      <div className="text-sm font-medium text-white">{m.mood}</div>
+                      <div className="text-[10px] text-slate-500">{m.count} registros</div>
                     </div>
-                    <div style={{ fontWeight: 700, color: m.averagePain >= 7 ? 'var(--danger)' : m.averagePain >= 4 ? 'var(--warning)' : 'var(--success)' }}>
+                    <span className={`text-sm font-bold ${
+                      m.averagePain >= 7 ? 'text-red-400' : m.averagePain >= 4 ? 'text-yellow-400' : 'text-green-400'
+                    }`}>
                       {m.averagePain}/10
-                    </div>
+                    </span>
                   </div>
                 ))}
               </div>
@@ -357,14 +365,15 @@ export default function PainHistory() {
 
             {/* Summary card */}
             {report.summary && (
-              <div className="card animate-in" style={{ marginTop: 'var(--space-md)', background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.15)' }}>
-                <div className="section-header">
-                  <h2 className="section-title">📋 Resumen del período</h2>
-                </div>
-                <div style={{ fontSize: 'var(--font-sm)', lineHeight: 1.8, color: 'var(--text-secondary)' }}>
-                  En los últimos <strong>{report.summary.periodDays} días</strong> registraste dolor <strong>{report.summary.total} veces</strong> en <strong>{report.summary.daysWithPain} días distintos</strong>.
-                  Tu dolor promedio fue <strong>{report.summary.average}/10</strong>, con un mínimo de <strong>{report.summary.min}</strong> y un máximo de <strong>{report.summary.max}</strong>.
-                </div>
+              <div className="glass-card-accent rounded-2xl p-5 mb-4">
+                <h2 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[20px]">summarize</span>
+                  Resumen del período
+                </h2>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  En los últimos <strong className="text-white">{report.summary.periodDays} días</strong> registraste dolor <strong className="text-white">{report.summary.total} veces</strong> en <strong className="text-white">{report.summary.daysWithPain} días distintos</strong>.
+                  Tu dolor promedio fue <strong className="text-white">{report.summary.average}/10</strong>, con un mínimo de <strong className="text-white">{report.summary.min}</strong> y un máximo de <strong className="text-white">{report.summary.max}</strong>.
+                </p>
               </div>
             )}
           </>

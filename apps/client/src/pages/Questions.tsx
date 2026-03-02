@@ -23,17 +23,13 @@ export default function Questions() {
     if (debounceTimers.current[questionId]) {
       clearTimeout(debounceTimers.current[questionId]);
     }
-
     debounceTimers.current[questionId] = setTimeout(async () => {
       setSaving((prev) => ({ ...prev, [questionId]: true }));
       try {
         await api.questions.respond(questionId, value);
         setCompleted((prev) => new Set([...prev, questionId]));
-      } catch {
-        // ignore
-      } finally {
-        setSaving((prev) => ({ ...prev, [questionId]: false }));
-      }
+      } catch { /* ignore */ }
+      finally { setSaving((prev) => ({ ...prev, [questionId]: false })); }
     }, 600);
   }, []);
 
@@ -43,46 +39,46 @@ export default function Questions() {
   };
 
   useEffect(() => {
-    return () => {
-      Object.values(debounceTimers.current).forEach(clearTimeout);
-    };
+    return () => { Object.values(debounceTimers.current).forEach(clearTimeout); };
   }, []);
+
+  const getColor = (val: number, max: number) => {
+    const ratio = val / max;
+    if (ratio <= 0.3) return '#22c55e';
+    if (ratio <= 0.5) return '#84cc16';
+    if (ratio <= 0.7) return '#eab308';
+    if (ratio <= 0.85) return '#f97316';
+    return '#ef4444';
+  };
 
   if (loading) {
     return (
-      <div className="page">
-        <div className="loading"><div className="spinner" /></div>
+      <div className="min-h-screen bg-background-dark flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
-  const getColor = (val: number, max: number) => {
-    const ratio = val / max;
-    if (ratio <= 0.3) return 'var(--pain-0)';
-    if (ratio <= 0.5) return 'var(--pain-3)';
-    if (ratio <= 0.7) return 'var(--pain-5)';
-    if (ratio <= 0.85) return 'var(--pain-7)';
-    return 'var(--pain-10)';
-  };
-
   return (
-    <div className="page">
-      <h1 className="page-title animate-in">{t('questions_title')}</h1>
-      <p className="page-subtitle animate-in">Respondé las preguntas para calcular tu calidad de vida</p>
+    <div className="bg-background-dark min-h-screen font-display text-slate-100 px-5 py-6 pb-24">
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+
+      <h1 className="text-2xl font-bold text-white mb-1">{t('questions_title')}</h1>
+      <p className="text-slate-400 text-sm mb-6">Respondé las preguntas para calcular tu calidad de vida</p>
 
       {completed.size > 0 && (
-        <div className="toast toast-success toast-inline animate-in">
+        <div className="mb-4 p-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm text-center">
           {t('questions_saved', { count: completed.size })}
         </div>
       )}
 
       {questions.length === 0 ? (
-        <div className="card empty-state animate-in">
-          <div className="empty-state-icon">🎉</div>
-          <div className="empty-state-text">{t('questions_none')}</div>
+        <div className="glass-card rounded-2xl p-8 text-center">
+          <div className="text-4xl mb-3">🎉</div>
+          <div className="text-slate-400 text-sm">{t('questions_none')}</div>
         </div>
       ) : (
-        <div className="questions-list">
+        <div className="flex flex-col gap-4">
           {questions.map((q) => {
             const val = answers[q.id] ?? 5;
             const color = getColor(val, q.scaleMax);
@@ -92,33 +88,41 @@ export default function Questions() {
             return (
               <div
                 key={q.id}
-                className={`card question-card animate-in ${isCompleted ? 'question-card-completed' : ''}`}
+                className={`glass-card rounded-2xl p-5 transition-all duration-300 ${
+                  isCompleted ? 'border-green-500/30 bg-green-500/5' : ''
+                }`}
               >
-                <div className="question-header">
-                  <div className="question-text">{q.text}</div>
+                <div className="flex items-start justify-between mb-4">
+                  <div className="text-white font-medium text-sm leading-relaxed pr-4">{q.text}</div>
                   {isCompleted && (
-                    <span className="question-badge">✓ {t('questions_saved_badge')}</span>
+                    <span className="shrink-0 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-[10px] font-bold uppercase tracking-wider">
+                      ✓ {t('questions_saved_badge')}
+                    </span>
                   )}
                 </div>
-                <div className="slider-container">
-                  <div className="slider-value" style={{ color, WebkitTextFillColor: color }}>
-                    {val}
-                  </div>
-                  <input
-                    type="range"
-                    min={q.scaleMin}
-                    max={q.scaleMax}
-                    value={val}
-                    onChange={(e) => handleSliderChange(q.id, Number(e.target.value))}
-                    style={{ accentColor: color }}
-                  />
-                  <div className="slider-labels">
-                    <span>{q.scaleMin}</span>
-                    <span>{q.scaleMax}</span>
-                  </div>
+
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] text-slate-500 uppercase tracking-wider">Intensidad</span>
+                  <span className="text-xl font-bold" style={{ color }}>{val}</span>
                 </div>
+                <input
+                  type="range"
+                  min={q.scaleMin}
+                  max={q.scaleMax}
+                  value={val}
+                  onChange={(e) => handleSliderChange(q.id, Number(e.target.value))}
+                  className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                  style={{ accentColor: color }}
+                />
+                <div className="flex justify-between text-[10px] uppercase tracking-wider text-slate-500 mt-2">
+                  <span>{q.scaleMin}</span>
+                  <span>{q.scaleMax}</span>
+                </div>
+
                 {isSaving && (
-                  <div className="question-autosave">{t('questions_autosave')}</div>
+                  <div className="mt-3 text-[10px] text-primary font-medium animate-pulse">
+                    {t('questions_autosave')}
+                  </div>
                 )}
               </div>
             );

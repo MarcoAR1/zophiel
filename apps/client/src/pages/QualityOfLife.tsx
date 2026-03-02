@@ -25,9 +25,7 @@ export default function QualityOfLife() {
     setError('');
     api.analytics
       .qualityOfLife(period)
-      .then((result) => {
-        setData(result || []);
-      })
+      .then((result) => setData(result || []))
       .catch((err) => {
         console.error('[QoL] API error:', err);
         setError(err.message || 'Error al cargar datos');
@@ -40,19 +38,17 @@ export default function QualityOfLife() {
 
   const chartData = {
     labels: data.map((d) => d.date.slice(5)),
-    datasets: [
-      {
-        label: 'Calidad de Vida',
-        data: data.map((d) => d.score),
-        borderColor: '#8b5cf6',
-        backgroundColor: 'rgba(139, 92, 246, 0.1)',
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-        pointBackgroundColor: '#8b5cf6',
-        pointBorderColor: 'transparent',
-      },
-    ],
+    datasets: [{
+      label: 'Calidad de Vida',
+      data: data.map((d) => d.score),
+      borderColor: '#8c25f4',
+      backgroundColor: 'rgba(140, 37, 244, 0.1)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 4,
+      pointBackgroundColor: '#8c25f4',
+      pointBorderColor: 'transparent',
+    }],
   };
 
   const chartOptions = {
@@ -61,59 +57,58 @@ export default function QualityOfLife() {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: 'rgba(15, 15, 35, 0.9)',
+        backgroundColor: 'rgba(15, 11, 21, 0.95)',
         titleColor: '#e8e8f0',
         bodyColor: '#9b9bb8',
-        borderColor: 'rgba(139, 92, 246, 0.3)',
+        borderColor: 'rgba(140, 37, 244, 0.3)',
         borderWidth: 1,
         cornerRadius: 8,
         padding: 12,
       },
     },
     scales: {
-      x: {
-        ticks: { color: '#6b6b8a', font: { size: 10 } },
-        grid: { color: 'rgba(255,255,255,0.04)' },
-      },
-      y: {
-        min: 0,
-        max: 100,
-        ticks: { color: '#6b6b8a', font: { size: 10 }, stepSize: 25 },
-        grid: { color: 'rgba(255,255,255,0.04)' },
-      },
+      x: { ticks: { color: '#6b6b8a', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { min: 0, max: 100, ticks: { color: '#6b6b8a', font: { size: 10 }, stepSize: 25 }, grid: { color: 'rgba(255,255,255,0.04)' } },
     },
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 70) return 'var(--success)';
-    if (score >= 40) return 'var(--warning)';
-    return 'var(--danger)';
+    if (score >= 70) return '#22c55e';
+    if (score >= 40) return '#eab308';
+    return '#ef4444';
   };
 
   if (loading) {
     return (
-      <div className="page">
-        <div className="loading"><div className="spinner" /></div>
+      <div className="min-h-screen bg-background-dark flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="page">
-      <h1 className="page-title animate-in">Calidad de Vida</h1>
-      <p className="page-subtitle animate-in">Índice combinado de dolor, ánimo, actividad y sueño</p>
+    <div className="bg-background-dark min-h-screen font-display text-slate-100 px-5 py-6 pb-24">
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+
+      <h1 className="text-2xl font-bold text-white mb-1">Calidad de Vida</h1>
+      <p className="text-slate-400 text-sm mb-6">Índice combinado de dolor, ánimo, actividad y sueño</p>
 
       {error && (
-        <div className="toast toast-error toast-inline animate-in">
+        <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
           ⚠️ {error}
         </div>
       )}
 
-      <div className="period-selector animate-in">
+      {/* Period selector */}
+      <div className="flex gap-2 mb-6">
         {[7, 30, 90].map((p) => (
           <button
             key={p}
-            className={`period-btn ${period === p ? 'active' : ''}`}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+              period === p
+                ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'
+            }`}
             onClick={() => setPeriod(p)}
           >
             {p}d
@@ -123,36 +118,34 @@ export default function QualityOfLife() {
 
       {/* QoL Score Circle */}
       {latest && (
-        <div className="animate-in">
-          <div className="qol-score" style={{ borderColor: getScoreColor(latest.score) }}>
-            <div
-              className="qol-score-value"
-              style={{
-                color: getScoreColor(latest.score),
-                WebkitTextFillColor: getScoreColor(latest.score),
-              }}
-            >
+        <div className="flex flex-col items-center mb-8">
+          <div
+            className="w-28 h-28 rounded-full flex items-center justify-center border-4 mb-2"
+            style={{ borderColor: getScoreColor(latest.score) }}
+          >
+            <span className="text-4xl font-bold" style={{ color: getScoreColor(latest.score) }}>
               {latest.score}
-            </div>
+            </span>
           </div>
-          <p className="qol-score-label">Último índice registrado</p>
+          <p className="text-slate-400 text-xs">Último índice registrado</p>
         </div>
       )}
 
       {/* Breakdown */}
       {latest && (
-        <div className="stats-grid animate-in">
+        <div className="grid grid-cols-2 gap-3 mb-6">
           {[
-            { key: 'pain', label: 'Dolor', icon: '💊' },
-            { key: 'mood', label: 'Ánimo', icon: '😊' },
-            { key: 'activity', label: 'Actividad', icon: '🏃' },
-            { key: 'sleep', label: 'Sueño', icon: '😴' },
+            { key: 'pain', label: 'Dolor', icon: 'medication' },
+            { key: 'mood', label: 'Ánimo', icon: 'mood' },
+            { key: 'activity', label: 'Actividad', icon: 'directions_run' },
+            { key: 'sleep', label: 'Sueño', icon: 'bedtime' },
           ].map(({ key, label, icon }) => (
-            <div className="card stat-card" key={key}>
-              <div className="stat-value" style={{ color: getScoreColor(latest.breakdown[key]), WebkitTextFillColor: getScoreColor(latest.breakdown[key]) }}>
+            <div className="glass-card p-4 rounded-2xl text-center" key={key}>
+              <span className="material-symbols-outlined text-primary mb-1 block">{icon}</span>
+              <div className="text-2xl font-bold" style={{ color: getScoreColor(latest.breakdown[key]) }}>
                 {latest.breakdown[key]}
               </div>
-              <div className="stat-label">{icon} {label}</div>
+              <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-1">{label}</div>
             </div>
           ))}
         </div>
@@ -160,13 +153,13 @@ export default function QualityOfLife() {
 
       {/* Trend chart */}
       {data.length > 1 ? (
-        <div className="card chart-container animate-in" style={{ height: 260 }}>
+        <div className="glass-card rounded-2xl p-4" style={{ height: 260 }}>
           <Line data={chartData} options={chartOptions} />
         </div>
       ) : data.length === 0 ? (
-        <div className="card empty-state animate-in">
-          <div className="empty-state-icon">📊</div>
-          <div className="empty-state-text">Registrá dolor y respondé preguntas para generar tu índice de calidad de vida.</div>
+        <div className="glass-card rounded-2xl p-8 text-center">
+          <span className="material-symbols-outlined text-4xl text-slate-500 mb-3 block">monitoring</span>
+          <div className="text-slate-400 text-sm">Registrá dolor y respondé preguntas para generar tu índice de calidad de vida.</div>
         </div>
       ) : null}
     </div>

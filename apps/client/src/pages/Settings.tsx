@@ -35,10 +35,7 @@ export default function Settings() {
     if ('Notification' in window) {
       setNotifPermission(Notification.permission);
     }
-    // Load health status
     api.health.status().then(setHealthStatus).catch(() => {});
-
-    // Handle OAuth callback (Google Fit sends ?code=... back)
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     if (code) {
@@ -48,7 +45,6 @@ export default function Settings() {
           setHealthStatus({ connected: true, provider: 'google_fit' });
           setSuccess('✅ Google Fit conectado');
           setTimeout(() => setSuccess(''), 3000);
-          // Clean URL
           window.history.replaceState({}, '', window.location.pathname);
         })
         .catch(() => setSuccess('❌ Error al conectar Google Fit'))
@@ -64,20 +60,15 @@ export default function Settings() {
         quietHoursStart: quietStart,
         quietHoursEnd: quietEnd,
       });
-
       await notificationService.scheduleLocalReminders(
         NOTIFICATION_SCHEDULES[notifLevel],
         quietStart,
         quietEnd,
       );
-
       setSuccess(t('settings_saved'));
       setTimeout(() => setSuccess(''), 2000);
-    } catch {
-      // ignore
-    } finally {
-      setSaving(false);
-    }
+    } catch { /* ignore */ }
+    finally { setSaving(false); }
   };
 
   const saveProfile = async () => {
@@ -89,11 +80,8 @@ export default function Settings() {
       });
       setSuccess(t('settings_saved'));
       setTimeout(() => setSuccess(''), 2000);
-    } catch {
-      // ignore
-    } finally {
-      setSaving(false);
-    }
+    } catch { /* ignore */ }
+    finally { setSaving(false); }
   };
 
   const activateNotifications = async () => {
@@ -109,26 +97,32 @@ export default function Settings() {
   };
 
   return (
-    <div className="page">
-      <h1 className="page-title animate-in">{t('settings_title')}</h1>
+    <div className="bg-background-dark min-h-screen font-display text-slate-100 px-5 py-6 pb-24">
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+
+      <h1 className="text-2xl font-bold text-white mb-6">{t('settings_title')}</h1>
 
       {success && (
-        <div className="toast toast-success" style={{ position: 'relative', top: 0, marginBottom: 'var(--space-md)' }}>
-          ✅ {success}
+        <div className="mb-4 p-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm text-center">
+          {success}
         </div>
       )}
 
       {/* Language Selector */}
-      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
-        <div className="section-header">
-          <h2 className="section-title">{t('settings_language')}</h2>
-        </div>
-        <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+      <div className="glass-card rounded-2xl p-5 mb-4">
+        <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary text-[20px]">translate</span>
+          {t('settings_language')}
+        </h2>
+        <div className="flex gap-2">
           {LOCALES.map((loc) => (
             <button
               key={loc}
-              className={`chip ${locale === loc ? 'active' : ''}`}
-              style={{ flex: 1, justifyContent: 'center', padding: 'var(--space-sm) var(--space-md)', fontSize: 'var(--font-sm)' }}
+              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-center transition-all duration-200 ${
+                locale === loc
+                  ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                  : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'
+              }`}
               onClick={() => setLocale(loc)}
             >
               {LOCALE_FLAGS[loc]} {LOCALE_LABELS[loc]}
@@ -138,31 +132,25 @@ export default function Settings() {
       </div>
 
       {/* Health Data Connection */}
-      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
-        <div className="section-header">
-          <h2 className="section-title">🏥 Datos de salud</h2>
-        </div>
+      <div className="glass-card rounded-2xl p-5 mb-4">
+        <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary text-[20px]">cardiology</span>
+          Datos de salud
+        </h2>
 
         {healthStatus?.connected ? (
           <div>
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 'var(--space-sm)',
-              marginBottom: 'var(--space-md)', padding: 'var(--space-sm)',
-              background: 'rgba(34,197,94,0.1)', borderRadius: 'var(--radius-md)',
-            }}>
-              <span style={{ fontSize: 'var(--font-sm)', color: 'var(--success)' }}>
-                ✅ Google Fit conectado
-              </span>
+            <div className="flex items-center gap-2 mb-4 p-2.5 rounded-xl bg-green-500/10 border border-green-500/20">
+              <span className="text-sm text-green-400">✅ Google Fit conectado</span>
             </div>
             {healthStatus.lastSync && (
-              <p style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginBottom: 'var(--space-md)' }}>
+              <p className="text-[10px] text-slate-500 mb-4">
                 Última sincronización: {new Date(healthStatus.lastSync).toLocaleString()}
               </p>
             )}
-            <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+            <div className="flex gap-2">
               <button
-                className="btn btn-primary"
-                style={{ flex: 1, fontSize: 'var(--font-sm)' }}
+                className="flex-1 h-12 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-semibold rounded-xl text-sm disabled:opacity-50 transition-all"
                 onClick={async () => {
                   setHealthLoading(true);
                   try {
@@ -174,11 +162,10 @@ export default function Settings() {
                 }}
                 disabled={healthLoading}
               >
-                {healthLoading ? '⏳ Sincronizando...' : '🔄 Sincronizar ahora'}
+                {healthLoading ? '⏳ Sincronizando...' : '🔄 Sincronizar'}
               </button>
               <button
-                className="btn btn-danger"
-                style={{ fontSize: 'var(--font-sm)' }}
+                className="px-4 h-12 rounded-xl text-sm font-semibold bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors"
                 onClick={async () => {
                   await api.health.disconnect();
                   setHealthStatus({ connected: false });
@@ -192,11 +179,11 @@ export default function Settings() {
           </div>
         ) : (
           <div>
-            <p style={{ fontSize: 'var(--font-sm)', color: 'var(--text-muted)', marginBottom: 'var(--space-md)', lineHeight: 1.6 }}>
+            <p className="text-sm text-slate-400 mb-4 leading-relaxed">
               Conectá tu app de salud para obtener datos automáticos de sueño, pasos, frecuencia cardíaca y más.
             </p>
             <button
-              className="btn btn-primary btn-block"
+              className="w-full h-12 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-50"
               style={{ background: 'linear-gradient(135deg, #4285f4, #34a853)' }}
               onClick={async () => {
                 setHealthLoading(true);
@@ -212,7 +199,7 @@ export default function Settings() {
             >
               {healthLoading ? '⏳ Conectando...' : '🏃 Conectar Google Fit'}
             </button>
-            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginTop: 'var(--space-md)', lineHeight: 1.6 }}>
+            <div className="text-[10px] text-slate-500 mt-3 leading-relaxed">
               📊 Datos obtenidos: sueño, pasos, frecuencia cardíaca, calorías, minutos activos
             </div>
           </div>
@@ -220,42 +207,51 @@ export default function Settings() {
       </div>
 
       {/* Profile */}
-      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
-        <div className="section-header">
-          <h2 className="section-title">{t('settings_profile')}</h2>
-        </div>
-        <div className="auth-form">
-          <div className="input-group">
-            <label>{t('auth_name')}</label>
-            <input className="input" value={name} onChange={(e) => setName(e.target.value)} />
-          </div>
-          <div className="input-group">
-            <label>Diagnóstico</label>
+      <div className="glass-card rounded-2xl p-5 mb-4">
+        <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary text-[20px]">person</span>
+          {t('settings_profile')}
+        </h2>
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs font-semibold text-slate-400 ml-1 mb-1.5 block">{t('auth_name')}</label>
             <input
-              className="input"
+              className="w-full h-12 pl-4 pr-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-slate-400 ml-1 mb-1.5 block">Diagnóstico</label>
+            <input
+              className="w-full h-12 pl-4 pr-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
               placeholder="Ej: Fibromialgia, Artritis reumatoide..."
               value={diagnosis}
               onChange={(e) => setDiagnosis(e.target.value)}
             />
           </div>
-          <button className="btn btn-primary btn-block" onClick={saveProfile} disabled={saving}>
+          <button
+            className="w-full h-12 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[0.99] transition-all duration-200 disabled:opacity-50 text-sm"
+            onClick={saveProfile}
+            disabled={saving}
+          >
             {t('settings_save')}
           </button>
         </div>
       </div>
 
       {/* Notifications */}
-      <div className="card animate-in" style={{ marginBottom: 'var(--space-lg)' }}>
-        <div className="section-header">
-          <h2 className="section-title">{t('settings_notifications')}</h2>
-        </div>
+      <div className="glass-card rounded-2xl p-5 mb-4">
+        <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary text-[20px]">notifications</span>
+          {t('settings_notifications')}
+        </h2>
 
         {notifPermission === 'default' && (
-          <div style={{ marginBottom: 'var(--space-lg)' }}>
+          <div className="mb-4">
             <button
-              className="btn btn-primary btn-block"
+              className="w-full h-12 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 text-sm"
               onClick={activateNotifications}
-              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
             >
               🔔 Activar notificaciones
             </button>
@@ -263,49 +259,39 @@ export default function Settings() {
         )}
 
         {notifPermission === 'denied' && (
-          <div style={{
-            marginBottom: 'var(--space-lg)',
-            padding: 'var(--space-md)',
-            background: 'rgba(239,68,68,0.08)',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid rgba(239,68,68,0.2)',
-          }}>
-            <div style={{ fontWeight: 600, marginBottom: 'var(--space-sm)', color: 'var(--danger)' }}>
-              🚫 Notificaciones bloqueadas
-            </div>
-            <p style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginBottom: 'var(--space-sm)', lineHeight: 1.5 }}>
+          <div className="mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+            <div className="font-semibold mb-2 text-red-400 text-sm">🚫 Notificaciones bloqueadas</div>
+            <p className="text-[10px] text-slate-500 mb-2 leading-relaxed">
               El navegador bloqueó las notificaciones. Para activarlas:
             </p>
-            <ol style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', paddingLeft: '1.2rem', lineHeight: 1.8 }}>
+            <ol className="text-[10px] text-slate-500 pl-4 leading-relaxed list-decimal">
               <li>Hacé clic en el 🔒 candado en la barra de direcciones</li>
-              <li>Buscá <strong>Notificaciones</strong></li>
-              <li>Cambialo a <strong>Permitir</strong></li>
+              <li>Buscá <strong className="text-slate-300">Notificaciones</strong></li>
+              <li>Cambialo a <strong className="text-slate-300">Permitir</strong></li>
               <li>Recargá la página</li>
             </ol>
           </div>
         )}
 
         {notifPermission === 'granted' && (
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 'var(--space-sm)',
-            marginBottom: 'var(--space-lg)', padding: 'var(--space-sm)',
-            background: 'rgba(34,197,94,0.1)', borderRadius: 'var(--radius-md)',
-            fontSize: 'var(--font-sm)', color: 'var(--success)',
-          }}>
-            ✅ Notificaciones activas
+          <div className="flex items-center gap-2 mb-4 p-2.5 rounded-xl bg-green-500/10 border border-green-500/20">
+            <span className="text-sm text-green-400">✅ Notificaciones activas</span>
           </div>
         )}
 
-        <label style={{ fontSize: 'var(--font-sm)', color: 'var(--text-secondary)', fontWeight: 500, display: 'block', marginBottom: 'var(--space-md)' }}>
+        <label className="text-xs font-semibold text-slate-400 mb-3 block">
           Frecuencia de recordatorios
         </label>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)', marginBottom: 'var(--space-lg)' }}>
+        <div className="flex flex-col gap-2 mb-4">
           {NOTIFICATION_LEVELS.map((level) => (
             <button
               key={level}
-              className={`chip ${notifLevel === level ? 'active' : ''}`}
-              style={{ justifyContent: 'flex-start', padding: 'var(--space-sm) var(--space-md)' }}
+              className={`w-full py-3 px-4 rounded-xl text-sm font-medium text-left transition-all duration-200 ${
+                notifLevel === level
+                  ? 'bg-primary/20 border border-primary/40 text-white'
+                  : 'bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10'
+              }`}
               onClick={() => setNotifLevel(level)}
             >
               {LEVEL_LABELS[level]}
@@ -313,32 +299,49 @@ export default function Settings() {
           ))}
         </div>
 
-        <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginBottom: 'var(--space-lg)' }}>
+        <div className="text-[10px] text-slate-500 mb-4">
           Horarios: {NOTIFICATION_SCHEDULES[notifLevel].join(', ')}
         </div>
 
-        <label style={{ fontSize: 'var(--font-sm)', color: 'var(--text-secondary)', fontWeight: 500, display: 'block', marginBottom: 'var(--space-md)' }}>
+        <label className="text-xs font-semibold text-slate-400 mb-3 block">
           Horas silenciosas
         </label>
 
-        <div style={{ display: 'flex', gap: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
-          <div className="input-group" style={{ flex: 1 }}>
-            <label>Desde</label>
-            <input className="input" type="time" value={quietStart} onChange={(e) => setQuietStart(e.target.value)} />
+        <div className="flex gap-3 mb-4">
+          <div className="flex-1">
+            <label className="text-[10px] text-slate-500 mb-1 block">Desde</label>
+            <input
+              className="w-full h-12 pl-4 pr-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
+              type="time"
+              value={quietStart}
+              onChange={(e) => setQuietStart(e.target.value)}
+            />
           </div>
-          <div className="input-group" style={{ flex: 1 }}>
-            <label>Hasta</label>
-            <input className="input" type="time" value={quietEnd} onChange={(e) => setQuietEnd(e.target.value)} />
+          <div className="flex-1">
+            <label className="text-[10px] text-slate-500 mb-1 block">Hasta</label>
+            <input
+              className="w-full h-12 pl-4 pr-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
+              type="time"
+              value={quietEnd}
+              onChange={(e) => setQuietEnd(e.target.value)}
+            />
           </div>
         </div>
 
-        <button className="btn btn-primary btn-block" onClick={saveNotifications} disabled={saving}>
+        <button
+          className="w-full h-12 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[0.99] transition-all duration-200 disabled:opacity-50 text-sm"
+          onClick={saveNotifications}
+          disabled={saving}
+        >
           {t('settings_save')}
         </button>
       </div>
 
       {/* Logout */}
-      <button className="btn btn-danger btn-block animate-in" onClick={logout}>
+      <button
+        className="w-full h-12 rounded-xl text-sm font-bold bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 active:scale-[0.99] transition-all duration-200"
+        onClick={logout}
+      >
         {t('settings_logout')}
       </button>
     </div>

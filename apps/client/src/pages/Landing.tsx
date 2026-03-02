@@ -119,11 +119,47 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ══ App Visualization (Stitch) ══ */}
+        {/* ══ App Preview (inline Stitch-styled mock matching real Dashboard) ══ */}
         <div className="w-full px-4 mb-12">
-          <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-700/50 shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent z-10" />
-            <img src="/dashboard-preview.png" alt="Zophiel Dashboard" className="w-full h-full object-cover" />
+          <div className="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-background-dark p-4">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 blur-[50px] rounded-full -mr-10 -mt-10" />
+            {/* Mock header */}
+            <div className="mb-4">
+              <div className="text-lg font-bold text-white">Hola, Sarah 👋</div>
+              <div className="text-[10px] text-slate-400">Resumen de tu semana</div>
+            </div>
+            {/* Mock 2x2 stats (matches real dashboard) */}
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <div className="glass-card p-3 rounded-xl">
+                <div className="text-[8px] text-slate-400 uppercase tracking-wide">Dolor Promedio</div>
+                <div className="text-xl font-bold text-white mt-1">6.2 <span className="text-[8px] text-slate-500">/10</span></div>
+                <div className="w-full bg-slate-700/30 h-1 mt-2 rounded-full overflow-hidden"><div className="bg-primary w-[62%] h-full rounded-full" /></div>
+              </div>
+              <div className="glass-card p-3 rounded-xl">
+                <div className="text-[8px] text-slate-400 uppercase tracking-wide">QoL Score</div>
+                <div className="text-xl font-bold text-white mt-1">74 <span className="text-[8px] text-slate-500">pts</span></div>
+                <div className="w-full bg-slate-700/30 h-1 mt-2 rounded-full overflow-hidden"><div className="bg-green-500 w-[74%] h-full rounded-full" /></div>
+              </div>
+            </div>
+            {/* Mock quick actions */}
+            <div className="flex flex-col gap-1.5">
+              <div className="glass-card p-2.5 rounded-lg flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="size-7 rounded-full bg-blue-500/10 flex items-center justify-center"><span className="material-symbols-outlined text-blue-400 text-[14px]">edit_square</span></div>
+                  <span className="text-[10px] text-white font-medium">Registrar dolor</span>
+                </div>
+                <span className="material-symbols-outlined text-slate-500 text-[14px]">chevron_right</span>
+              </div>
+              <div className="glass-card p-2.5 rounded-lg flex items-center justify-between border border-primary/30">
+                <div className="flex items-center gap-2">
+                  <div className="size-7 rounded-full bg-primary/20 flex items-center justify-center"><span className="material-symbols-outlined text-primary text-[14px]">quiz</span></div>
+                  <div><span className="text-[10px] text-white font-medium">Preguntas</span> <span className="text-[8px] text-primary">3</span></div>
+                </div>
+                <span className="material-symbols-outlined text-primary text-[14px]">chevron_right</span>
+              </div>
+            </div>
+            {/* Fade overlay */}
+            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-background-dark to-transparent z-10" />
           </div>
         </div>
 
