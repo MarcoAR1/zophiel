@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1e1b4b"/>
-      <stop offset="50%" stop-color="#4338ca"/>
-      <stop offset="100%" stop-color="#7c3aed"/>
+      <stop offset="0%" stop-color="#1d1625"/>
+      <stop offset="50%" stop-color="#8c25f4"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
     </linearGradient>
   </defs>
   <rect width="120" height="120" rx="26" fill="url(#bg)"/>
@@ -16,7 +16,7 @@
     <path d="M75 20 C95 20, 100 35, 100 50"/>
     <!-- Stethoscope earpiece -->
     <circle cx="100" cy="50" r="6" fill="white" stroke="none"/>
-    <circle cx="100" cy="50" r="3" fill="#4338ca" stroke="none"/>
+    <circle cx="100" cy="50" r="3" fill="#8c25f4" stroke="none"/>
     <!-- Heart -->
     <path d="M60 80 C60 72, 67 65, 75 65 C83 65, 90 72, 90 80 C90 95, 75 105, 60 115 C45 105, 30 95, 30 80 C30 72, 37 65, 45 65 C53 65, 60 72, 60 80 Z" fill="rgba(255,255,255,0.15)" stroke="white" stroke-width="5"/>
     <!-- Medical cross -->

@@ -183,7 +183,7 @@ export default function Landing() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-[50px] rounded-full" />
             <h2 className="text-2xl font-bold text-white mb-3 relative z-10">Empieza tu recuperación hoy</h2>
             <p className="text-slate-400 text-sm mb-6 max-w-xs mx-auto relative z-10">
-              Únete a más de 50,000 personas gestionando su dolor de forma inteligente.
+              Tomá el control de tu dolor crónico con herramientas clínicas potenciadas por inteligencia artificial.
             </p>
             <button
               className="relative z-10 w-full sm:w-auto px-8 h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold transition-colors shadow-lg shadow-primary/20"
