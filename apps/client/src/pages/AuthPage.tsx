@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { useAuth } from '../hooks/useAuth';
 import { useI18n } from '../i18n/index';
+import ZophielLogo from '../components/ZophielLogo';
 
 declare global {
   interface Window {
@@ -126,7 +127,7 @@ export default function AuthPage() {
   return (
     <div className="auth-page">
       <div className="auth-card card card-glow animate-in">
-        <div className="auth-logo">🩺 Zophiel</div>
+        <div className="auth-logo"><ZophielLogo size={32} /> Zophiel</div>
         <p className="auth-tagline">{t('auth_tagline')}</p>
 
         {error && (

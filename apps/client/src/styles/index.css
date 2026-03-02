@@ -441,6 +441,9 @@ input[type='range']::-webkit-slider-thumb:hover {
 }
 
 .sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0 var(--space-lg);
   margin-bottom: var(--space-2xl);
   font-size: var(--font-xl);
@@ -829,9 +832,12 @@ input[type='range']::-webkit-slider-thumb:hover {
 }
 
 .auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   font-size: var(--font-4xl);
   font-weight: 700;
-  text-align: center;
   margin-bottom: var(--space-xs);
   background: var(--accent-gradient);
   -webkit-background-clip: text;

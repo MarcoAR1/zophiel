@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { useI18n } from '../i18n/index';
+import ZophielLogo from './ZophielLogo';
 
 const NAV_ITEMS = [
   { to: '/app', key: 'nav_home' as const, icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
@@ -24,7 +25,7 @@ export function Sidebar() {
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-brand">🩺 Zophiel</div>
+      <div className="sidebar-brand"><ZophielLogo size={22} /> Zophiel</div>
       <nav className="sidebar-nav">
         {NAV_ITEMS.map((item) => (
           <NavLink

@@ -117,6 +117,9 @@
 }
 
 .landing-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 1.4rem;
   font-weight: 700;
   background: linear-gradient(135deg, var(--landing-accent), var(--landing-accent3));

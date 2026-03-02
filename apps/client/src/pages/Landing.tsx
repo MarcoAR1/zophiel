@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { useI18n, LOCALE_FLAGS, LOCALE_LABELS, type Locale } from '../i18n/index';
+import ZophielLogo from '../components/ZophielLogo';
 import '../styles/landing.css';
 
 const LOCALES: Locale[] = ['es', 'pt', 'fr'];
@@ -69,7 +70,7 @@ export default function Landing() {
         </div>
 
         <nav className="landing-nav">
-          <div className="landing-logo">🩺 Zophiel</div>
+          <div className="landing-logo"><ZophielLogo size={24} /> Zophiel</div>
           <div className="nav-links">
             <a href="#features" className="nav-link">Características</a>
             <a href="#how-it-works" className="nav-link">Cómo funciona</a>
@@ -240,7 +241,7 @@ export default function Landing() {
         <div className="section-container">
           <div className="footer-content">
             <div className="footer-brand">
-              <span className="landing-logo">🩺 Zophiel</span>
+              <span className="landing-logo"><ZophielLogo size={20} /> Zophiel</span>
               <p>Tu compañero en el manejo del dolor crónico</p>
             </div>
             <div className="footer-links">
