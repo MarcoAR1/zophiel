@@ -141,9 +141,9 @@
 .lang-btn {
   background: none;
   border: none;
-  font-size: 1.1rem;
+  font-size: 1.35rem;
   cursor: pointer;
-  padding: 0.3rem 0.5rem;
+  padding: 0.35rem 0.55rem;
   border-radius: 100px;
   transition: all 0.2s;
   opacity: 0.5;
