@@ -21,16 +21,42 @@ const LEVEL_LABELS: Record<NotificationLevel, string> = {
   high: '🔔🔔 Alto — 6 recordatorios/día',
 };
 
+const PAIN_DURATIONS = [
+  { value: '<1', label: '< 1 año' },
+  { value: '1-3', label: '1-3 años' },
+  { value: '3-5', label: '3-5 años' },
+  { value: '5+', label: '5+ años' },
+];
+
+const TREATMENTS = [
+  { key: 'medication', icon: '💊', label: 'Medicación' },
+  { key: 'physio', icon: '🏋️', label: 'Fisioterapia' },
+  { key: 'cbt', icon: '🧠', label: 'Terapia cognitiva' },
+  { key: 'acupuncture', icon: '📍', label: 'Acupuntura' },
+  { key: 'cannabis', icon: '🌿', label: 'Cannabis medicinal' },
+  { key: 'none', icon: '❌', label: 'Ninguno' },
+];
+
+const TOTAL_STEPS = 4;
+
 export default function Onboarding({ onComplete, userName }: OnboardingProps) {
   const [step, setStep] = useState(0);
   const [diagnosis, setDiagnosis] = useState<DiagnosisOption | ''>('');
   const [customDiagnosis, setCustomDiagnosis] = useState('');
+  const [painDuration, setPainDuration] = useState('');
+  const [treatments, setTreatments] = useState<string[]>([]);
   const [notifLevel, setNotifLevel] = useState<NotificationLevel>('medium');
   const [quietStart, setQuietStart] = useState('22:00');
   const [quietEnd, setQuietEnd] = useState('08:00');
   const [saving, setSaving] = useState(false);
 
   const finalDiagnosis = diagnosis === 'other' ? customDiagnosis : diagnosis ? DIAGNOSIS_LABELS[diagnosis] : '';
+
+  const toggleTreatment = (key: string) => {
+    setTreatments((prev) =>
+      prev.includes(key) ? prev.filter((t) => t !== key) : [...prev, key]
+    );
+  };
 
   const handleComplete = async () => {
     setSaving(true);
@@ -43,7 +69,6 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
       });
       onComplete(result);
     } catch {
-      // If offline, mark locally and proceed
       onComplete(null);
     } finally {
       setSaving(false);
@@ -54,22 +79,22 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
     <div className="onboarding-page">
       {/* Progress dots */}
       <div className="onboarding-progress">
-        {[0, 1, 2].map((i) => (
+        {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
           <div key={i} className={`progress-dot ${step === i ? 'active' : step > i ? 'done' : ''}`} />
         ))}
       </div>
 
-      {/* Step 0: About you */}
+      {/* Step 0: Welcome + Condition */}
       {step === 0 && (
         <div className="onboarding-step animate-in">
-          <div className="onboarding-icon">👤</div>
-          <h1 className="onboarding-title">Hola, {userName} 👋</h1>
+          <div className="onboarding-icon">🩺</div>
+          <h1 className="onboarding-title">Bienvenido, {userName} 👋</h1>
           <p className="onboarding-subtitle">
-            Contanos sobre tu condición para personalizar tu experiencia
+            Tu compañero inteligente en el manejo del dolor crónico. Contanos sobre tu condición para personalizar tu experiencia.
           </p>
 
           <div className="onboarding-card">
-            <label className="onboarding-label">¿Cuál es tu padecimiento principal?</label>
+            <label className="onboarding-label">¿Qué condición de dolor tenés?</label>
             <div className="diagnosis-grid">
               {DIAGNOSIS_OPTIONS.map((opt) => (
                 <button
@@ -101,23 +126,70 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
           >
             Continuar →
           </button>
-
-          <button
-            className="onboarding-skip"
-            onClick={() => setStep(1)}
-          >
+          <button className="onboarding-skip" onClick={() => setStep(1)}>
             Omitir por ahora
           </button>
         </div>
       )}
 
-      {/* Step 1: Notifications */}
+      {/* Step 1: Pain Profile */}
       {step === 1 && (
         <div className="onboarding-step animate-in">
-          <div className="onboarding-icon">🔔</div>
-          <h1 className="onboarding-title">Notificaciones</h1>
+          <div className="onboarding-icon">💪</div>
+          <h1 className="onboarding-title">Tu perfil de dolor</h1>
           <p className="onboarding-subtitle">
-            Te vamos a recordar registrar tu dolor durante el día
+            Esta información nos ayuda a personalizar tus reportes y detectar patrones relevantes.
+          </p>
+
+          <div className="onboarding-card">
+            <label className="onboarding-label">¿Hace cuánto convivís con dolor crónico?</label>
+            <div className="duration-options">
+              {PAIN_DURATIONS.map((d) => (
+                <button
+                  key={d.value}
+                  className={`duration-chip ${painDuration === d.value ? 'active' : ''}`}
+                  onClick={() => setPainDuration(painDuration === d.value ? '' : d.value)}
+                >
+                  {d.label}
+                </button>
+              ))}
+            </div>
+
+            <label className="onboarding-label" style={{ marginTop: 'var(--space-lg)' }}>
+              ¿Qué tratamientos probaste?
+            </label>
+            <div className="treatment-grid">
+              {TREATMENTS.map((t) => (
+                <button
+                  key={t.key}
+                  className={`treatment-chip ${treatments.includes(t.key) ? 'active' : ''}`}
+                  onClick={() => toggleTreatment(t.key)}
+                >
+                  <span>{t.icon}</span>
+                  <span>{t.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="onboarding-nav">
+            <button className="btn btn-secondary" onClick={() => setStep(0)}>
+              ← Atrás
+            </button>
+            <button className="btn btn-primary btn-lg" onClick={() => setStep(2)}>
+              Continuar →
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Step 2: Notifications */}
+      {step === 2 && (
+        <div className="onboarding-step animate-in">
+          <div className="onboarding-icon">🔔</div>
+          <h1 className="onboarding-title">Recordatorios</h1>
+          <p className="onboarding-subtitle">
+            Te ayudamos a mantener un registro consistente para que tu médico tenga datos reales.
           </p>
 
           <div className="onboarding-card">
@@ -153,18 +225,18 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
           </div>
 
           <div className="onboarding-nav">
-            <button className="btn btn-secondary" onClick={() => setStep(0)}>
+            <button className="btn btn-secondary" onClick={() => setStep(1)}>
               ← Atrás
             </button>
-            <button className="btn btn-primary btn-lg" onClick={() => setStep(2)}>
+            <button className="btn btn-primary btn-lg" onClick={() => setStep(3)}>
               Continuar →
             </button>
           </div>
         </div>
       )}
 
-      {/* Step 2: Ready */}
-      {step === 2 && (
+      {/* Step 3: Ready */}
+      {step === 3 && (
         <div className="onboarding-step animate-in">
           <div className="onboarding-icon" style={{ fontSize: '4rem' }}>🩺</div>
           <h1 className="onboarding-title">¡Todo listo!</h1>
@@ -180,6 +252,20 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
                   <span className="summary-value">{finalDiagnosis}</span>
                 </div>
               )}
+              {painDuration && (
+                <div className="summary-row">
+                  <span className="summary-label">Duración</span>
+                  <span className="summary-value">{PAIN_DURATIONS.find(d => d.value === painDuration)?.label}</span>
+                </div>
+              )}
+              {treatments.length > 0 && (
+                <div className="summary-row">
+                  <span className="summary-label">Tratamientos</span>
+                  <span className="summary-value">
+                    {treatments.map(t => TREATMENTS.find(tr => tr.key === t)?.label).join(', ')}
+                  </span>
+                </div>
+              )}
               <div className="summary-row">
                 <span className="summary-label">Recordatorios</span>
                 <span className="summary-value">{LEVEL_LABELS[notifLevel].split(' — ')[1]}</span>
@@ -192,7 +278,7 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
           </div>
 
           <div className="onboarding-nav">
-            <button className="btn btn-secondary" onClick={() => setStep(1)}>
+            <button className="btn btn-secondary" onClick={() => setStep(2)}>
               ← Atrás
             </button>
             <button

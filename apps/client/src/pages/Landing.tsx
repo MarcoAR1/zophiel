@@ -185,6 +185,44 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── Chronic Conditions ── */}
+      <section className="conditions">
+        <div className="section-container">
+          <div className="section-header fade-up">
+            <span className="section-tag">🏥 Condiciones</span>
+            <h2 className="section-title">Diseñado para quienes viven con dolor crónico</h2>
+            <p className="section-desc">Zophiel entiende las particularidades de cada condición y se adapta a tus necesidades.</p>
+          </div>
+          <div className="conditions-grid">
+            <div className="condition-card fade-up">
+              <div className="condition-icon">🦋</div>
+              <h3>Fibromialgia</h3>
+              <p>Registrá los puntos de dolor difusos, fatiga y niebla mental. Correlacioná síntomas con clima, sueño y estrés.</p>
+            </div>
+            <div className="condition-card fade-up">
+              <div className="condition-icon">🦴</div>
+              <h3>Artritis Reumatoide</h3>
+              <p>Seguí la rigidez matutina, inflamación articular y brotes. Llevá un registro preciso para tu reumatólogo.</p>
+            </div>
+            <div className="condition-card fade-up">
+              <div className="condition-icon">🧠</div>
+              <h3>Migraña Crónica</h3>
+              <p>Identificá triggers, registrá auras y medicación. Descubrí patrones que desencadenan tus episodios.</p>
+            </div>
+            <div className="condition-card fade-up">
+              <div className="condition-icon">⚡</div>
+              <h3>Dolor Neuropático</h3>
+              <p>Mapeá sensaciones eléctricas, hormigueo y ardor. Distinguí entre dolor constante e intermitente.</p>
+            </div>
+            <div className="condition-card fade-up">
+              <div className="condition-icon">🔄</div>
+              <h3>Dolor Lumbar Crónico</h3>
+              <p>Registrá intensidad según actividad y postura. Evaluá la efectividad de fisioterapia y ejercicios.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
       <section className="cta-section">
         <div className="section-container">
