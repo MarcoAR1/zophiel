@@ -11,6 +11,13 @@
     border: 1px solid rgba(140, 37, 244, 0.15);
   }
 
+  .glass-card-accent {
+    background: rgba(140, 37, 244, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(140, 37, 244, 0.3);
+  }
+
   .text-gradient {
     background: linear-gradient(to right, #a78bfa, #8c25f4);
     -webkit-background-clip: text;

@@ -30,7 +30,6 @@ export default function AuthPage() {
   const googleBtnRef = useRef<HTMLDivElement>(null);
   const isNative = Capacitor.isNativePlatform();
 
-  // Initialize native Google Auth
   useEffect(() => {
     if (isNative) {
       GoogleAuth.initialize({
@@ -57,9 +56,7 @@ export default function AuthPage() {
   );
 
   useEffect(() => {
-    // GIS only works on web, not in Capacitor WebView
     if (isNative) return;
-
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     if (!clientId) return;
 
@@ -83,9 +80,7 @@ export default function AuthPage() {
       }
     };
     document.head.appendChild(script);
-    return () => {
-      document.head.removeChild(script);
-    };
+    return () => { document.head.removeChild(script); };
   }, [handleGoogleResponse, isNative]);
 
   const handleGoogleNative = async () => {
@@ -125,97 +120,172 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card card card-glow animate-in">
-        <div className="auth-logo"><ZophielLogo size={32} /> Zophiel</div>
-        <p className="auth-tagline">{t('auth_tagline')}</p>
+    <div className="dark">
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
-        {error && (
-          <div className="toast toast-error toast-inline">
-            {error}
+      <div className="bg-background-dark font-display antialiased text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden">
+        {/* ══ Main Content (Stitch) ══ */}
+        <div className="flex-1 flex flex-col w-full max-w-md mx-auto relative px-6 py-8">
+
+          {/* ══ Header (Stitch) ══ */}
+          <header className="flex flex-col items-center justify-center pt-8 pb-6 space-y-4">
+            <div className="relative flex items-center justify-center size-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 shadow-inner shadow-primary/20 ring-1 ring-white/10 backdrop-blur-sm">
+              <ZophielLogo size={40} />
+              <div className="absolute -bottom-1 -right-1 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-background-dark">Z</div>
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+              Zophiel
+            </h1>
+            <p className="text-slate-400 text-center text-sm font-medium max-w-[280px] leading-relaxed">
+              {t('auth_tagline')}
+            </p>
+          </header>
+
+          {/* ══ Tabs (Stitch) ══ */}
+          <div className="mt-4 mb-8">
+            <div className="flex border-b border-white/10 w-full">
+              <button
+                className={`flex-1 pb-3 text-center text-sm font-semibold transition-colors duration-200 ${
+                  isLogin
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-slate-500 hover:text-slate-300 border-b-2 border-transparent hover:border-slate-700'
+                }`}
+                onClick={() => { setIsLogin(true); setError(''); }}
+              >
+                {t('auth_signin')}
+              </button>
+              <button
+                className={`flex-1 pb-3 text-center text-sm font-semibold transition-colors duration-200 ${
+                  !isLogin
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-slate-500 hover:text-slate-300 border-b-2 border-transparent hover:border-slate-700'
+                }`}
+                onClick={() => { setIsLogin(false); setError(''); }}
+              >
+                {t('auth_signup')}
+              </button>
+            </div>
           </div>
-        )}
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          {!isLogin && (
-            <div className="input-group">
-              <label htmlFor="name">{t('auth_name')}</label>
-              <input
-                id="name"
-                className="input"
-                type="text"
-                placeholder={t('auth_name_placeholder')}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+          {/* ══ Error ══ */}
+          {error && (
+            <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+              {error}
             </div>
           )}
 
-          <div className="input-group">
-            <label htmlFor="email">{t('auth_email')}</label>
-            <input
-              id="email"
-              className="input"
-              type="email"
-              placeholder={t('auth_email_placeholder')}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+          {/* ══ Form (Stitch) ══ */}
+          <form className="space-y-5 w-full" onSubmit={handleSubmit}>
+            {!isLogin && (
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-400 ml-1" htmlFor="name">{t('auth_name')}</label>
+                <div className="relative group">
+                  <input
+                    className="w-full h-14 pl-4 pr-12 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300"
+                    id="name"
+                    placeholder={t('auth_name_placeholder')}
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors">
+                    <span className="material-symbols-outlined text-[20px]">person</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-400 ml-1" htmlFor="email">{t('auth_email')}</label>
+              <div className="relative group">
+                <input
+                  className="w-full h-14 pl-4 pr-12 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300"
+                  id="email"
+                  placeholder={t('auth_email_placeholder')}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors">
+                  <span className="material-symbols-outlined text-[20px]">mail</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-400 ml-1" htmlFor="password">{t('auth_password')}</label>
+              <div className="relative group">
+                <input
+                  className="w-full h-14 pl-4 pr-12 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300"
+                  id="password"
+                  placeholder="••••••••"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary cursor-pointer hover:text-slate-300 transition-colors">
+                  <span className="material-symbols-outlined text-[20px]">visibility_off</span>
+                </div>
+              </div>
+            </div>
+
+            {/* ══ Submit Button (Stitch) ══ */}
+            <button
+              className="w-full h-14 mt-4 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
+              type="submit"
+              disabled={loading}
+            >
+              <span>{loading ? t('auth_loading') : isLogin ? t('auth_login') : t('auth_register')}</span>
+              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </button>
+          </form>
+
+          {/* ══ Divider (Stitch) ══ */}
+          <div className="relative flex py-8 items-center">
+            <div className="flex-grow border-t border-white/10" />
+            <span className="flex-shrink-0 mx-4 text-slate-500 text-xs font-medium">{t('auth_or')}</span>
+            <div className="flex-grow border-t border-white/10" />
           </div>
 
-          <div className="input-group">
-            <label htmlFor="password">{t('auth_password')}</label>
-            <input
-              id="password"
-              className="input"
-              type="password"
-              placeholder={t('auth_password_placeholder')}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
-
-          <button className="btn btn-primary btn-lg btn-block" type="submit" disabled={loading}>
-            {loading ? t('auth_loading') : isLogin ? t('auth_login') : t('auth_register')}
-          </button>
-        </form>
-
-        <div className="auth-divider">
-          <span>{t('auth_or')}</span>
+          {/* ══ Google Auth (Stitch) ══ */}
+          {isNative ? (
+            <button
+              type="button"
+              className="w-full h-14 bg-white text-slate-900 font-semibold rounded-xl flex items-center justify-center gap-3 hover:bg-slate-100 transition-colors duration-200"
+              onClick={handleGoogleNative}
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Continuar con Google
+            </button>
+          ) : (
+            import.meta.env.VITE_GOOGLE_CLIENT_ID && (
+              <div ref={googleBtnRef} className="w-full" />
+            )
+          )}
         </div>
 
-        {isNative ? (
-          <button
-            type="button"
-            className="btn btn-lg btn-block btn-google-native"
-            onClick={handleGoogleNative}
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18">
-              <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84c-.21 1.13-.85 2.09-1.81 2.73v2.27h2.93c1.71-1.58 2.7-3.9 2.7-6.64z"/>
-              <path fill="#34A853" d="M9 18c2.43 0 4.47-.81 5.96-2.18l-2.93-2.27c-.81.54-1.84.86-3.03.86-2.34 0-4.32-1.58-5.02-3.71H.96v2.34C2.44 15.98 5.48 18 9 18z"/>
-              <path fill="#FBBC05" d="M3.98 10.7c-.18-.54-.28-1.11-.28-1.7s.1-1.17.28-1.7V4.96H.96C.35 6.18 0 7.55 0 9s.35 2.82.96 4.04l3.02-2.34z"/>
-              <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l3.02 2.34c.7-2.13 2.68-3.72 5.02-3.72z"/>
-            </svg>
-            Continuar con Google
-          </button>
-        ) : (
-          import.meta.env.VITE_GOOGLE_CLIENT_ID && (
-            <div ref={googleBtnRef} className="google-btn-container" />
-          )
-        )}
-
-        <div className="auth-toggle">
-          {isLogin ? t('auth_no_account') : t('auth_has_account')}{' '}
-          <button onClick={() => { setIsLogin(!isLogin); setError(''); }}>
-            {isLogin ? t('auth_signup') : t('auth_signin')}
-          </button>
+        {/* ══ Footer (Stitch) ══ */}
+        <div className="w-full py-6 text-center border-t border-white/5 bg-[#140d1c]">
+          <p className="text-sm text-slate-400">
+            {isLogin ? t('auth_no_account') : t('auth_has_account')}{' '}
+            <button
+              className="text-primary font-bold hover:underline bg-transparent border-none cursor-pointer font-[inherit]"
+              onClick={() => { setIsLogin(!isLogin); setError(''); }}
+            >
+              {isLogin ? t('auth_signup') : t('auth_signin')}
+            </button>
+          </p>
         </div>
       </div>
     </div>
   );
 }
-
