@@ -6,6 +6,29 @@ import '../styles/landing.css';
 
 const LOCALES: Locale[] = ['es', 'pt', 'fr'];
 
+const FEATURES = [
+  { icon: 'accessibility_new', title: 'Mapa Corporal Interactivo', desc: 'Visualizá y localizá tu dolor con precisión anatómica en un modelo detallado del cuerpo humano.' },
+  { icon: 'query_stats', title: 'Tendencias y Análisis', desc: 'Identificá patrones estacionales y disparadores con gráficos impulsados por inteligencia artificial.' },
+  { icon: 'favorite', title: 'Calidad de Vida (QoL)', desc: 'Medí el impacto real del dolor en tu rutina diaria mediante métricas médicas estandarizadas.' },
+  { icon: 'notifications_active', title: 'Recordatorios Inteligentes', desc: 'Nunca olvides registrar tus síntomas con alertas contextuales personalizadas a tu rutina.' },
+  { icon: 'cloud_off', title: 'Modo Offline', desc: 'Registrá tus datos incluso sin conexión. Sincronización automática cuando vuelvas a estar online.' },
+  { icon: 'encrypted', title: 'Privacidad Total', desc: 'Tus datos médicos están encriptados de extremo a extremo y bajo tu control absoluto.' },
+];
+
+const CONDITIONS = [
+  { icon: '🦋', name: 'Fibromialgia', desc: 'Registrá puntos de dolor difusos, fatiga y niebla mental. Correlacioná con clima y sueño.' },
+  { icon: '🦴', name: 'Artritis Reumatoide', desc: 'Seguí rigidez matutina, inflamación articular y brotes. Registro preciso para tu reumatólogo.' },
+  { icon: '🧠', name: 'Migraña Crónica', desc: 'Identificá triggers, registrá auras y medicación. Descubrí patrones que desencadenan episodios.' },
+  { icon: '⚡', name: 'Dolor Neuropático', desc: 'Mapeá sensaciones eléctricas, hormigueo y ardor. Distinguí dolor constante de intermitente.' },
+  { icon: '🔄', name: 'Lumbalgia Crónica', desc: 'Registrá intensidad según actividad y postura. Evaluá efectividad de fisioterapia y ejercicios.' },
+];
+
+const STEPS = [
+  { num: '1', title: 'Registrá', desc: 'Anotá tus síntomas y niveles de dolor en segundos usando nuestro mapa interactivo.' },
+  { num: '2', title: 'Descubrí', desc: 'Nuestra IA analiza tus datos para encontrar qué actividades o climas disparan tu dolor.' },
+  { num: '3', title: 'Mejorá', desc: 'Ajustá tu tratamiento basándote en evidencia real y compartí reportes con tu médico.' },
+];
+
 export default function Landing() {
   const navigate = useNavigate();
   const { t, locale, setLocale } = useI18n();
@@ -25,10 +48,6 @@ export default function Landing() {
     return () => observer.disconnect();
   }, []);
 
-  const scrollToFeatures = () => {
-    featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   // In native app, skip landing and go to auth/app
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
@@ -38,6 +57,9 @@ export default function Landing() {
 
   return (
     <div className="landing">
+      {/* Material Symbols font */}
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet" />
+
       {/* ── Hero ── */}
       <section className="hero">
         <div className="hero-bg">
@@ -48,7 +70,12 @@ export default function Landing() {
 
         <nav className="landing-nav">
           <div className="landing-logo">🩺 Zophiel</div>
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <div className="nav-links">
+            <a href="#features" className="nav-link">Características</a>
+            <a href="#how-it-works" className="nav-link">Cómo funciona</a>
+            <a href="#conditions" className="nav-link">Condiciones</a>
+          </div>
+          <div className="nav-right">
             <div className="lang-switcher">
               {LOCALES.map((loc) => (
                 <button
@@ -68,157 +95,107 @@ export default function Landing() {
         </nav>
 
         <div className="hero-content">
-          <div className="hero-badge">{t('landing_badge')}</div>
+          <div className="hero-badge">
+            <span className="material-symbols-rounded">neurology</span>
+            Inteligencia Médica Avanzada
+          </div>
           <h1 className="hero-title">
-            {t('landing_title_1')}<span className="text-gradient">{t('landing_title_highlight')}</span>{t('landing_title_2')}
+            Gestioná tu <span className="text-gradient">dolor crónico</span> con inteligencia
           </h1>
-          <p className="hero-subtitle">{t('landing_subtitle')}</p>
+          <p className="hero-subtitle">
+            Seguí tus síntomas, descubrí patrones y mejorá tu calidad de vida con tecnología avanzada de mapeo y análisis biométrico.
+          </p>
           <div className="hero-cta">
             <button className="btn btn-primary btn-lg btn-glow" onClick={() => navigate('/app')}>
-              {t('landing_cta_start')}
+              Empezar Gratis
             </button>
-            <a
-              href="/downloads/zophiel.apk"
-              download
-              className="btn btn-lg btn-android"
-            >
-              📱 Android APK
+            <a href="/downloads/zophiel.apk" download className="btn btn-lg btn-android">
+              <span className="material-symbols-rounded">smartphone</span>
+              Android APK
             </a>
-            <button className="btn btn-outline btn-lg" onClick={scrollToFeatures}>
-              {t('landing_cta_learn')}
-            </button>
           </div>
           <div className="hero-stats">
             <div className="stat">
               <span className="stat-number">360°</span>
-              <span className="stat-label">{t('landing_stat_map')}</span>
+              <span className="stat-label">Mapa corporal</span>
             </div>
             <div className="stat-divider" />
             <div className="stat">
               <span className="stat-number">24/7</span>
-              <span className="stat-label">{t('landing_stat_tracking')}</span>
+              <span className="stat-label">Seguimiento</span>
             </div>
             <div className="stat-divider" />
             <div className="stat">
               <span className="stat-number">100%</span>
-              <span className="stat-label">{t('landing_stat_private')}</span>
+              <span className="stat-label">Privacidad</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* ── Features ── */}
-      <section className="features" ref={featuresRef}>
+      <section className="features" id="features" ref={featuresRef}>
         <div className="section-container">
           <div className="section-header fade-up">
-            <span className="section-tag">{t('landing_features_tag')}</span>
-            <h2 className="section-title">{t('landing_features_title')}</h2>
-            <p className="section-desc">{t('landing_features_desc')}</p>
+            <span className="section-tag">✨ Funcionalidades</span>
+            <h2 className="section-title">Todo lo que necesitás para tu bienestar</h2>
+            <p className="section-desc">Herramientas diseñadas por expertos médicos para el manejo integral del dolor crónico.</p>
           </div>
           <div className="features-grid">
-            <div className="feature-card fade-up">
-              <div className="feature-icon">🫀</div>
-              <h3>{t('landing_feat_body')}</h3>
-              <p>{t('landing_feat_body_desc')}</p>
-            </div>
-            <div className="feature-card fade-up">
-              <div className="feature-icon">📊</div>
-              <h3>{t('landing_feat_analytics')}</h3>
-              <p>{t('landing_feat_analytics_desc')}</p>
-            </div>
-            <div className="feature-card fade-up">
-              <div className="feature-icon">🧠</div>
-              <h3>{t('landing_feat_qol')}</h3>
-              <p>{t('landing_feat_qol_desc')}</p>
-            </div>
-            <div className="feature-card fade-up">
-              <div className="feature-icon">🔔</div>
-              <h3>{t('landing_feat_notifications')}</h3>
-              <p>{t('landing_feat_notifications_desc')}</p>
-            </div>
-            <div className="feature-card fade-up">
-              <div className="feature-icon">📴</div>
-              <h3>{t('landing_feat_offline')}</h3>
-              <p>{t('landing_feat_offline_desc')}</p>
-            </div>
-            <div className="feature-card fade-up">
-              <div className="feature-icon">🔒</div>
-              <h3>{t('landing_feat_privacy')}</h3>
-              <p>{t('landing_feat_privacy_desc')}</p>
-            </div>
+            {FEATURES.map((f) => (
+              <div className="feature-card fade-up" key={f.icon}>
+                <div className="feature-icon">
+                  <span className="material-symbols-rounded">{f.icon}</span>
+                </div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ── How it works ── */}
-      <section className="how-it-works">
+      <section className="how-it-works" id="how-it-works">
         <div className="section-container">
           <div className="section-header fade-up">
-            <span className="section-tag">{t('landing_how_tag')}</span>
-            <h2 className="section-title">{t('landing_how_title')}</h2>
+            <span className="section-tag">🔬 ¿Cómo funciona?</span>
+            <h2 className="section-title">Tres pasos para retomar el control</h2>
+            <p className="section-desc">Un proceso simple respaldado por ciencia e inteligencia artificial.</p>
           </div>
           <div className="steps">
-            <div className="step fade-up">
-              <div className="step-number">1</div>
-              <div className="step-content">
-                <h3>{t('landing_step1_title')}</h3>
-                <p>{t('landing_step1_desc')}</p>
+            {STEPS.map((s, i) => (
+              <div key={s.num}>
+                <div className="step fade-up">
+                  <div className="step-number">{s.num}</div>
+                  <div className="step-content">
+                    <h3>{s.title}</h3>
+                    <p>{s.desc}</p>
+                  </div>
+                </div>
+                {i < STEPS.length - 1 && <div className="step-connector" />}
               </div>
-            </div>
-            <div className="step-connector" />
-            <div className="step fade-up">
-              <div className="step-number">2</div>
-              <div className="step-content">
-                <h3>{t('landing_step2_title')}</h3>
-                <p>{t('landing_step2_desc')}</p>
-              </div>
-            </div>
-            <div className="step-connector" />
-            <div className="step fade-up">
-              <div className="step-number">3</div>
-              <div className="step-content">
-                <h3>{t('landing_step3_title')}</h3>
-                <p>{t('landing_step3_desc')}</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ── Chronic Conditions ── */}
-      <section className="conditions">
+      <section className="conditions" id="conditions">
         <div className="section-container">
           <div className="section-header fade-up">
-            <span className="section-tag">🏥 Condiciones</span>
-            <h2 className="section-title">Diseñado para quienes viven con dolor crónico</h2>
-            <p className="section-desc">Zophiel entiende las particularidades de cada condición y se adapta a tus necesidades.</p>
+            <span className="section-tag">🏥 Especializado</span>
+            <h2 className="section-title">Optimizado para condiciones complejas</h2>
+            <p className="section-desc">Zophiel entiende las particularidades de cada diagnóstico crónico y se adapta a tus necesidades.</p>
           </div>
           <div className="conditions-grid">
-            <div className="condition-card fade-up">
-              <div className="condition-icon">🦋</div>
-              <h3>Fibromialgia</h3>
-              <p>Registrá los puntos de dolor difusos, fatiga y niebla mental. Correlacioná síntomas con clima, sueño y estrés.</p>
-            </div>
-            <div className="condition-card fade-up">
-              <div className="condition-icon">🦴</div>
-              <h3>Artritis Reumatoide</h3>
-              <p>Seguí la rigidez matutina, inflamación articular y brotes. Llevá un registro preciso para tu reumatólogo.</p>
-            </div>
-            <div className="condition-card fade-up">
-              <div className="condition-icon">🧠</div>
-              <h3>Migraña Crónica</h3>
-              <p>Identificá triggers, registrá auras y medicación. Descubrí patrones que desencadenan tus episodios.</p>
-            </div>
-            <div className="condition-card fade-up">
-              <div className="condition-icon">⚡</div>
-              <h3>Dolor Neuropático</h3>
-              <p>Mapeá sensaciones eléctricas, hormigueo y ardor. Distinguí entre dolor constante e intermitente.</p>
-            </div>
-            <div className="condition-card fade-up">
-              <div className="condition-icon">🔄</div>
-              <h3>Dolor Lumbar Crónico</h3>
-              <p>Registrá intensidad según actividad y postura. Evaluá la efectividad de fisioterapia y ejercicios.</p>
-            </div>
+            {CONDITIONS.map((c) => (
+              <div className="condition-card fade-up" key={c.name}>
+                <div className="condition-icon">{c.icon}</div>
+                <h3>{c.name}</h3>
+                <p>{c.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -227,18 +204,15 @@ export default function Landing() {
       <section className="cta-section">
         <div className="section-container">
           <div className="cta-card fade-up">
-            <h2>{t('landing_cta_ready')}</h2>
-            <p>{t('landing_cta_join')}</p>
+            <h2>¿Listo para transformar tu gestión del dolor?</h2>
+            <p>Unite a las personas que ya usan Zophiel para entender mejor su cuerpo y mejorar su calidad de vida.</p>
             <div className="cta-buttons">
               <button className="btn btn-primary btn-lg btn-glow" onClick={() => navigate('/app')}>
-                {t('landing_cta_create')}
+                Crear cuenta gratis
               </button>
-              <a
-                href="/downloads/zophiel.apk"
-                download
-                className="btn btn-lg btn-android"
-              >
-                📱 Android APK
+              <a href="/downloads/zophiel.apk" download className="btn btn-lg btn-android">
+                <span className="material-symbols-rounded">smartphone</span>
+                Android APK
               </a>
             </div>
             <p className="cta-note">
@@ -254,15 +228,16 @@ export default function Landing() {
           <div className="footer-content">
             <div className="footer-brand">
               <span className="landing-logo">🩺 Zophiel</span>
-              <p>{t('auth_tagline')}</p>
+              <p>Tu compañero en el manejo del dolor crónico</p>
             </div>
             <div className="footer-links">
-              <button onClick={() => navigate('/app')}>{t('landing_signin')}</button>
-              <button onClick={scrollToFeatures}>{t('landing_features_link')}</button>
+              <button onClick={() => navigate('/app')}>Iniciar Sesión</button>
+              <a href="#features">Funcionalidades</a>
+              <a href="#conditions">Condiciones</a>
             </div>
           </div>
           <div className="footer-bottom">
-            <p>{t('landing_footer')}</p>
+            <p>© 2026 Zophiel — Hecho con 💜 para quienes viven con dolor</p>
           </div>
         </div>
       </footer>
