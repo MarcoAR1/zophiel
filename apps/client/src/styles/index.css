@@ -1,3 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Stitch utility classes ── */
+@layer utilities {
+  .glass-card {
+    background: rgba(29, 22, 37, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(140, 37, 244, 0.15);
+  }
+
+  .text-gradient {
+    background: linear-gradient(to right, #a78bfa, #8c25f4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 /* ─────────────────────────────────────────────────────────
    Zophiel Design System — Dark Mode, Glassmorphism, Premium
    ───────────────────────────────────────────────────────── */
