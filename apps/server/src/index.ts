@@ -13,6 +13,7 @@ import { onboardingRouter } from './routes/onboarding.js';
 import { settingsRouter } from './routes/settings.js';
 import { pushRouter } from './routes/push.js';
 import { healthRouter } from './routes/health.js';
+import { downloadRouter } from './routes/download.js';
 import { startNotificationCron } from './services/notificationCron.js';
 
 export const prisma = new PrismaClient();
@@ -68,6 +69,9 @@ const authLimiter = rateLimit({
 app.use('/api/auth', authLimiter);
 
 app.use(express.json({ limit: '1mb' }));
+
+// ── Download route (before auth middleware, binary upload) ──
+app.use('/api/download', downloadRouter);
 
 // ── Routes ──
 app.use('/api/auth', authRouter);
