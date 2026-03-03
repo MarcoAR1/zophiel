@@ -268,13 +268,13 @@ export const SYMPTOM_LABELS: Record<Symptom, string> = {
 };
 
 // ── Notification levels ──
-export const NOTIFICATION_LEVELS = ['low', 'medium', 'high'] as const;
+export const NOTIFICATION_LEVELS = ['all', 'important', 'none'] as const;
 export type NotificationLevel = (typeof NOTIFICATION_LEVELS)[number];
 
 export const NOTIFICATION_SCHEDULES: Record<NotificationLevel, string[]> = {
-  low: ['09:00', '20:00'],
-  medium: ['08:00', '12:00', '17:00', '21:00'],
-  high: ['07:00', '10:00', '13:00', '16:00', '19:00', '22:00'],
+  all: ['07:00', '10:00', '13:00', '16:00', '19:00', '22:00'],
+  important: ['08:00', '12:00', '17:00', '21:00'],
+  none: [],
 };
 
 // ── Question categories ──

@@ -20,6 +20,7 @@ export default function Dashboard() {
     heartRateAvg: number | null;
   } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showNotifs, setShowNotifs] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -110,12 +111,35 @@ export default function Dashboard() {
               Hola, {name} 👋
             </h1>
           </div>
-          <Link to="/app/settings" className="flex items-center justify-center w-10 h-10 rounded-full bg-surface-dark border border-white/10 text-white hover:bg-surface-light transition-colors no-underline">
+          <button
+            onClick={() => setShowNotifs(!showNotifs)}
+            className="relative flex items-center justify-center w-10 h-10 rounded-full bg-surface-dark border border-white/10 text-white hover:bg-surface-light transition-colors cursor-pointer"
+          >
             <span className="material-symbols-outlined text-[24px]">notifications</span>
-          </Link>
+          </button>
         </div>
         <p className="text-slate-400 text-sm font-normal mt-1">Resumen de los últimos 7 días</p>
       </header>
+
+      {/* ── Notification Panel ── */}
+      {showNotifs && (
+        <>
+          <div className="fixed inset-0 bg-black/40 z-40" onClick={() => setShowNotifs(false)} />
+          <div className="absolute top-20 right-4 left-4 z-50 glass-card rounded-2xl p-5 border border-white/10 shadow-2xl max-h-[60vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-bold text-white">Notificaciones</h3>
+              <button onClick={() => setShowNotifs(false)} className="size-7 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 cursor-pointer border-none">
+                <span className="material-symbols-outlined text-[16px]">close</span>
+              </button>
+            </div>
+            <div className="text-center py-8">
+              <span className="material-symbols-outlined text-3xl text-slate-600 mb-2 block">notifications_none</span>
+              <p className="text-slate-500 text-sm">No tenés notificaciones aún</p>
+              <p className="text-slate-600 text-xs mt-1">Acá vas a ver tus recordatorios y alertas</p>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* ── Main Content ── */}
       <main className="flex-1 flex flex-col gap-6 p-4 pb-24">

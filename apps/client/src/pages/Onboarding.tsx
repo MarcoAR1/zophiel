@@ -26,15 +26,15 @@ interface OnboardingProps {
 }
 
 const LEVEL_DESC: Record<NotificationLevel, string> = {
-  low: '2 recordatorios/día',
-  medium: '4 recordatorios/día',
-  high: '6 recordatorios/día',
+  all: '6 recordatorios/día',
+  important: '4 recordatorios/día',
+  none: 'Sin notificaciones',
 };
 
 const LEVEL_ICONS: Record<NotificationLevel, string> = {
-  low: 'notifications_paused',
-  medium: 'edit_notifications',
-  high: 'notifications_active',
+  all: 'notifications_active',
+  important: 'edit_notifications',
+  none: 'notifications_off',
 };
 
 const PAIN_DURATIONS = [
@@ -73,7 +73,7 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
   const [customDiagnosis, setCustomDiagnosis] = useState('');
   const [painDuration, setPainDuration] = useState('');
   const [treatments, setTreatments] = useState<string[]>([]);
-  const [notifLevel, setNotifLevel] = useState<NotificationLevel>('medium');
+  const [notifLevel, setNotifLevel] = useState<NotificationLevel>('all');
   const [quietStart, setQuietStart] = useState('22:00');
   const [quietEnd, setQuietEnd] = useState('08:00');
   const [saving, setSaving] = useState(false);
