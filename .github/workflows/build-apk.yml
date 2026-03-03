@@ -109,17 +109,27 @@ jobs:
         working-directory: apps/client/android
         run: chmod +x gradlew && ./gradlew assembleDebug
 
-      - name: Copy APK to public
-        run: |
-          mkdir -p apps/client/public/downloads
-          cp apps/client/android/app/build/outputs/apk/debug/app-debug.apk apps/client/public/downloads/zophiel.apk
+
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: zophiel-apk
-          path: apps/client/public/downloads/zophiel.apk
+          path: apps/client/android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
+
+      - name: Create GitHub Release with APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest-apk
+          name: Zophiel APK (Latest)
+          body: |
+            📱 Latest Zophiel APK build
+            Built from commit ${{ github.sha }}
+          files: apps/client/android/app/build/outputs/apk/debug/app-debug.apk
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Persist debug keystore to repo
         run: |
