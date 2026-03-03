@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zophiel Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8c24f5", // As requested for active state
+                        "background-light": "#f7f5f8", // Fallback light
+                        "background-dark": "#0f0b15", // Main background as requested
+                        "sidebar-dark": "#1d1924", // Sidebar background as requested
+                        "card-glass": "rgba(29, 25, 36, 0.6)",
+                        "card-border": "rgba(255, 255, 255, 0.1)",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        lg: "1rem",
+                        xl: "1.5rem",
+                        "2xl": "2rem", // For premium rounded look
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f0b15;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #302839;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a4158;
+        }
+        
+        /* Glassmorphism utilities */
+        .glass-panel {
+            background: rgba(29, 25, 36, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-card-hover:hover {
+            background: rgba(29, 25, 36, 0.7);
+            border-color: rgba(140, 36, 245, 0.3);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-[280px] h-screen flex flex-col justify-between dark:bg-sidebar-dark border-r border-white/5 fixed left-0 top-0 z-50 transition-transform">
+<div class="p-6 flex flex-col gap-8">
+<!-- Logo Area -->
+<div class="flex items-center gap-3">
+<div class="bg-gradient-to-br from-primary to-purple-800 p-2 rounded-xl shadow-lg shadow-purple-900/20">
+<span class="material-symbols-outlined text-white" style="font-size: 28px;">stethoscope</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-xl font-bold tracking-tight">Zophiel</h1>
+<p class="text-slate-400 text-xs font-medium">Pain Management</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-2">
+<!-- Active Item -->
+<a class="flex items-center gap-4 px-4 py-3.5 rounded-xl bg-primary shadow-lg shadow-primary/25 group transition-all" href="#">
+<span class="material-symbols-outlined text-white">home</span>
+<span class="text-white font-semibold">Inicio</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">ecg_heart</span>
+<span class="font-medium">Dolor</span>
+</a>
+<a class="flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="#">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">help</span>
+<span class="font-medium">Preguntas</span>
+</div>
+<span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg shadow-red-500/30">3</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">volunteer_activism</span>
+<span class="font-medium">Calidad</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">history</span>
+<span class="font-medium">Historial</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Actions -->
+<div class="p-6">
+<a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all group mb-4" href="#">
+<span class="material-symbols-outlined group-hover:rotate-45 transition-transform">settings</span>
+<span class="font-medium">Ajustes</span>
+</a>
+<div class="glass-panel rounded-xl p-4 flex items-center gap-3 mt-auto">
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-slate-700 bg-cover bg-center" data-alt="Portrait of Sarah user" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBsrpl9EdFXH7UmL4ziH5iUTfc7yTWfr0tI3NvVO9NVBWHAqnCtqE7nDMEee6iRIib6kmDG0r6ZVmBQOzGzYKVHtGv7eiSf5KSIhyEIvB_U-LakfsmBjm_TFSFDFuOorId8-wsv3h5ctIMWBW0qFIhEHsRZkFQWO827N_53IpgBcAn8YuG3C8nTqMEqANIsj7_eFGIzqeM7gZenjW8FQogYUgiSxqdfR2-TAOcAEgxfKzWMisR-nVkPO6ZFt37XM5rSJJ7jv2GCag');"></div>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-sidebar-dark"></div>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-white">Sarah Connor</span>
+<span class="text-xs text-slate-400">Premium Plan</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-[280px] p-8 lg:p-12 overflow-y-auto h-screen relative">
+<!-- Header -->
+<header class="flex justify-between items-center mb-10">
+<div>
+<h2 class="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+                    Hola, Sarah <span class="animate-pulse inline-block">👋</span>
+</h2>
+<p class="text-slate-400 mt-2 font-medium">Welcome back to your health dashboard</p>
+</div>
+<div class="relative">
+<button class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-background-dark"></span>
+</div>
+</header>
+<!-- Google Fit Banner -->
+<section class="mb-8">
+<div class="glass-panel rounded-2xl p-6 lg:p-8 relative overflow-hidden group">
+<!-- Decorative background elements -->
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700"></div>
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 relative z-10">
+<!-- Title & Status -->
+<div class="flex flex-col gap-2 min-w-[200px]">
+<div class="flex items-center gap-2">
+<span class="bg-green-500/10 text-green-400 text-xs font-bold px-2 py-1 rounded-md border border-green-500/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">sync</span> Auto-sync
+                            </span>
+<span class="text-slate-500 text-xs font-medium">Updated 5m ago</span>
+</div>
+<h3 class="text-xl font-bold text-white">Google Fit Connected</h3>
+<p class="text-slate-400 text-sm">Your daily activity metrics</p>
+</div>
+<!-- Metrics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full lg:max-w-3xl">
+<!-- Steps -->
+<div class="flex flex-col gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 text-slate-300 text-sm font-medium">
+<span class="material-symbols-outlined text-blue-400">directions_walk</span>
+                                    Steps
+                                </div>
+<span class="text-white font-bold text-lg">8,421</span>
+</div>
+<div class="w-full bg-slate-700/50 rounded-full h-1.5">
+<div class="bg-blue-500 h-1.5 rounded-full" style="width: 84%"></div>
+</div>
+<div class="text-right text-xs text-blue-400 font-medium">84% of goal</div>
+</div>
+<!-- Sleep -->
+<div class="flex flex-col gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 text-slate-300 text-sm font-medium">
+<span class="material-symbols-outlined text-purple-400">bedtime</span>
+                                    Sleep
+                                </div>
+<span class="text-white font-bold text-lg">7h 20m</span>
+</div>
+<div class="w-full bg-slate-700/50 rounded-full h-1.5">
+<div class="bg-purple-500 h-1.5 rounded-full" style="width: 92%"></div>
+</div>
+<div class="text-right text-xs text-purple-400 font-medium">Optimal</div>
+</div>
+<!-- Pulse -->
+<div class="flex flex-col gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 text-slate-300 text-sm font-medium">
+<span class="material-symbols-outlined text-red-400">favorite</span>
+                                    Pulse
+                                </div>
+<span class="text-white font-bold text-lg">72 <span class="text-xs font-normal text-slate-400">bpm</span></span>
+</div>
+<div class="w-full bg-slate-700/50 rounded-full h-1.5">
+<div class="bg-red-500 h-1.5 rounded-full" style="width: 60%"></div>
+</div>
+<div class="text-right text-xs text-red-400 font-medium">Resting</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Row -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<!-- Card 1 -->
+<div class="glass-panel glass-card-hover rounded-2xl p-6 flex flex-col justify-between h-[160px] relative overflow-hidden">
+<div class="absolute right-0 top-0 w-24 h-24 bg-orange-500/10 rounded-full blur-2xl -mr-6 -mt-6"></div>
+<div class="flex justify-between items-start">
+<p class="text-slate-300 font-medium text-sm">Dolor Promedio</p>
+<span class="bg-green-500/20 text-green-400 text-xs font-bold px-2 py-1 rounded-md">-10%</span>
+</div>
+<div>
+<h3 class="text-3xl font-bold text-white mb-1">4.2<span class="text-lg text-slate-500 font-normal">/10</span></h3>
+<p class="text-slate-400 text-xs">Last 7 days average</p>
+</div>
+<div class="w-full h-1 mt-auto bg-slate-800 rounded-full overflow-hidden">
+<div class="bg-orange-500 h-full w-[42%]"></div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel glass-card-hover rounded-2xl p-6 flex flex-col justify-between h-[160px] relative overflow-hidden">
+<div class="absolute right-0 top-0 w-24 h-24 bg-green-500/10 rounded-full blur-2xl -mr-6 -mt-6"></div>
+<div class="flex justify-between items-start">
+<p class="text-slate-300 font-medium text-sm">Calidad de Vida</p>
+<span class="bg-green-500/20 text-green-400 text-xs font-bold px-2 py-1 rounded-md">+5%</span>
+</div>
+<div>
+<h3 class="text-3xl font-bold text-white mb-1">74 <span class="text-lg text-slate-500 font-normal">pts</span></h3>
+<p class="text-slate-400 text-xs">Improved significantly</p>
+</div>
+<div class="w-full h-1 mt-auto bg-slate-800 rounded-full overflow-hidden">
+<div class="bg-green-500 h-full w-[74%]"></div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel glass-card-hover rounded-2xl p-6 flex flex-col justify-between h-[160px] relative overflow-hidden">
+<div class="absolute right-0 top-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl -mr-6 -mt-6"></div>
+<div class="flex justify-between items-start">
+<p class="text-slate-300 font-medium text-sm">Registros</p>
+<span class="bg-green-500/20 text-green-400 text-xs font-bold px-2 py-1 rounded-md">+2</span>
+</div>
+<div>
+<h3 class="text-3xl font-bold text-white mb-1">12</h3>
+<p class="text-slate-400 text-xs">Entries this week</p>
+</div>
+<div class="flex items-center gap-1 mt-auto">
+<div class="h-1 w-full bg-blue-500 rounded-full"></div>
+<div class="h-1 w-full bg-blue-500 rounded-full"></div>
+<div class="h-1 w-full bg-blue-500 rounded-full"></div>
+<div class="h-1 w-full bg-slate-700 rounded-full"></div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-panel glass-card-hover rounded-2xl p-6 flex flex-col justify-between h-[160px] border border-primary/30 shadow-[0_0_15px_rgba(140,36,245,0.15)] relative overflow-hidden">
+<div class="absolute right-0 top-0 w-32 h-32 bg-primary/20 rounded-full blur-2xl -mr-10 -mt-10"></div>
+<div class="flex justify-between items-start">
+<p class="text-white font-semibold text-sm">Pendientes</p>
+<span class="bg-primary text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg shadow-primary/40">Urgent</span>
+</div>
+<div>
+<h3 class="text-3xl font-bold text-white mb-1">3 <span class="text-lg text-slate-400 font-normal">Tasks</span></h3>
+<p class="text-slate-300 text-xs">Doctor's review required</p>
+</div>
+<div class="mt-auto flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-slate-700 border-2 border-slate-800"></div>
+<div class="w-6 h-6 rounded-full bg-slate-600 border-2 border-slate-800"></div>
+<div class="w-6 h-6 rounded-full bg-slate-500 border-2 border-slate-800 flex items-center justify-center text-[8px] text-white font-bold">+1</div>
+</div>
+</div>
+</section>
+<!-- Quick Actions Grid -->
+<section>
+<h2 class="text-xl font-bold text-white mb-6">Quick Actions</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Action 1 -->
+<button class="glass-panel group rounded-2xl p-6 text-left hover:bg-white/5 transition-all relative overflow-hidden">
+<div class="absolute right-0 bottom-0 w-32 h-32 bg-blue-600/10 rounded-full blur-2xl -mr-10 -mb-10 group-hover:bg-blue-600/20 transition-colors"></div>
+<div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-blue-400" style="font-size: 28px;">medication</span>
+</div>
+<h3 class="text-lg font-bold text-white mb-1">Registrar Dolor</h3>
+<p class="text-slate-400 text-sm">Log current pain levels</p>
+</button>
+<!-- Action 2 -->
+<button class="glass-panel group rounded-2xl p-6 text-left hover:bg-white/5 transition-all relative overflow-hidden">
+<div class="absolute right-0 bottom-0 w-32 h-32 bg-orange-600/10 rounded-full blur-2xl -mr-10 -mb-10 group-hover:bg-orange-600/20 transition-colors"></div>
+<div class="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-orange-400" style="font-size: 28px;">thermometer</span>
+</div>
+<h3 class="text-lg font-bold text-white mb-1">Registrar Síntomas</h3>
+<p class="text-slate-400 text-sm">Update new conditions</p>
+</button>
+<!-- Action 3 -->
+<button class="glass-panel group rounded-2xl p-6 text-left bg-primary/10 border-primary/40 hover:bg-primary/20 transition-all relative overflow-hidden">
+<div class="absolute right-0 bottom-0 w-32 h-32 bg-primary/20 rounded-full blur-2xl -mr-10 -mb-10"></div>
+<span class="absolute top-4 right-4 w-2 h-2 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.8)] animate-pulse"></span>
+<div class="w-12 h-12 rounded-xl bg-primary/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary-300 text-white" style="font-size: 28px;">quiz</span>
+</div>
+<h3 class="text-lg font-bold text-white mb-1">Responder Preguntas</h3>
+<p class="text-slate-300 text-sm">Daily check-in pending</p>
+</button>
+<!-- Action 4 -->
+<button class="glass-panel group rounded-2xl p-6 text-left hover:bg-white/5 transition-all relative overflow-hidden">
+<div class="absolute right-0 bottom-0 w-32 h-32 bg-slate-600/10 rounded-full blur-2xl -mr-10 -mb-10 group-hover:bg-slate-600/20 transition-colors"></div>
+<div class="w-12 h-12 rounded-xl bg-slate-700/50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-slate-300" style="font-size: 28px;">calendar_month</span>
+</div>
+<h3 class="text-lg font-bold text-white mb-1">Ver Historial</h3>
+<p class="text-slate-400 text-sm">Review past logs</p>
+</button>
+</div>
+</section>
+<!-- Decorative subtle background glow -->
+<div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+</main>
+</body></html>

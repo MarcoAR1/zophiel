@@ -7,6 +7,7 @@ export default {
       colors: {
         /* ─ Stitch PRO design tokens (exact) ─ */
         'primary': '#8c25f4',
+        'primary-dark': '#701ec2',
         'background-light': '#f7f5f8',
         'background-dark': '#0f0b15',
         'surface-dark': '#1d1924',

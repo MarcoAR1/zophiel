@@ -1,352 +1,173 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Capacitor } from '@capacitor/core';
-import { useI18n, type Locale } from '../i18n/index';
+import { Link } from 'react-router-dom';
 import ZophielLogo from '../components/ZophielLogo';
+import { useI18n } from '../i18n/index';
 
-/* ── Stitch data arrays ── */
-const FEATURES = [
-  { icon: 'body_system', title: 'Mapa Corporal', desc: 'Mapeo de dolor preciso' },
-  { icon: 'bar_chart_4_bars', title: 'Historial', desc: 'Gráficos y tendencias' },
-  { icon: 'cardiology', title: 'Signos Vitales', desc: 'Integración wearables' },
-  { icon: 'notifications_active', title: 'Alertas', desc: 'Recordatorios diarios' },
-  { icon: 'wifi_off', title: 'Offline', desc: 'Funciona sin red' },
-  { icon: 'lock', title: 'Seguridad', desc: 'Seguridad grado médico' },
-];
-
-const CONDITIONS = [
-  { name: 'Fibromialgia', desc: 'Seguimiento detallado de puntos sensibles y fatiga.' },
-  { name: 'Artritis', desc: 'Monitoreo de rigidez matutina y movilidad articular.' },
-  { name: 'Migraña', desc: 'Registro de desencadenantes, aura y duración.' },
-  { name: 'Dolor Lumbar', desc: 'Correlación con actividad diaria y postura.' },
-];
-
-const STEPS = [
-  { title: 'Registra tus síntomas', desc: 'Usa el mapa corporal interactivo para marcar las zonas de dolor e intensidad en segundos.' },
-  { title: 'Visualizá tus patrones', desc: 'Gráficos de tendencias, heatmaps semanales y estadísticas detalladas de tu historial de dolor.' },
-  { title: 'Compartí con tu médico', desc: 'Generá reportes claros con datos reales de tu día a día para llevar a tu consulta.' },
-];
-
+/**
+ * Landing page — faithfully reproduced from Stitch PRO mobile landing HTML
+ * Using exact same Tailwind classes from stitch/landing-mobile.html
+ */
 export default function Landing() {
-  const navigate = useNavigate();
   const { t } = useI18n();
 
-  useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      navigate('/app', { replace: true });
-    }
-  }, [navigate]);
-
   return (
-    <div className="dark">
-      {/* Fonts */}
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
-      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-
-      <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
-
-        {/* ══ Top AppBar (Stitch) ══ */}
-        <header className="sticky top-0 z-50 glass-card px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-primary">
-            <ZophielLogo size={28} />
+    <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col antialiased selection:bg-primary selection:text-white">
+      {/* ── Navbar (exact Stitch) ── */}
+      <nav className="sticky top-0 z-50 w-full glass-card border-b border-white/5">
+        <div className="flex items-center justify-between px-4 py-3 max-w-7xl mx-auto">
+          <Link to="/" className="flex items-center gap-2 no-underline text-inherit">
+            <ZophielLogo size={40} variant="icon" className="rounded-xl shadow-lg shadow-primary/20" />
             <span className="text-xl font-bold tracking-tight text-white">Zophiel</span>
+          </Link>
+          {/* Desktop nav links */}
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#features" className="text-sm font-medium text-slate-400 hover:text-white transition-colors no-underline">{t('landing_features_link')}</a>
+            <a href="#how" className="text-sm font-medium text-slate-400 hover:text-white transition-colors no-underline">Cómo funciona</a>
           </div>
-          <button
-            className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-white rounded-xl transition-colors"
-            onClick={() => navigate('/app')}
-          >
-            {t('landing_signin')}
-          </button>
-        </header>
+          <div className="flex items-center gap-3">
+            <Link to="/auth" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors no-underline">
+              Login
+            </Link>
+            <Link to="/auth" className="hidden md:inline-flex px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold no-underline hover:bg-primary/90 transition-colors">
+              Crear Cuenta
+            </Link>
+          </div>
+        </div>
+      </nav>
 
-        {/* ══ Hero Section (Stitch) ══ */}
-        <section className="relative px-4 pt-10 pb-12 flex flex-col items-center text-center">
-          {/* Abstract Background Glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-primary/20 blur-[100px] rounded-full -z-10 pointer-events-none" />
+      {/* ── Hero Section (exact Stitch) ── */}
+      <header className="relative overflow-hidden px-4 pt-8 pb-12 md:pt-20 md:pb-24">
+        {/* Background Ambient Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-primary/10 blur-[100px] rounded-full pointer-events-none -z-10" />
 
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-6">
-            <span className="material-symbols-outlined text-sm">biotech</span>
-            Inteligencia Médica Avanzada
+        <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+          {/* Version Badge */}
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 mb-6 backdrop-blur-md">
+            <span className="flex size-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-xs font-medium text-purple-200">Nueva Versión 2.0 Disponible</span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black leading-tight tracking-tight mb-4">
-            Gestioná tu <br />
-            <span className="text-gradient">dolor crónico</span> <br />
-            con inteligencia
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.15] mb-4 text-white">
+            {t('landing_title_1')} <br />
+            <span className="text-gradient-primary">{t('landing_title_highlight')}</span> <br />
+            {t('landing_title_2')}
           </h1>
 
-          <p className="text-slate-400 max-w-md mx-auto mb-8 text-base font-normal leading-relaxed">
-            Una solución integral potenciada por IA para monitorear, entender y aliviar tus síntomas diarios.
+          <p className="text-slate-400 text-lg leading-relaxed max-w-md mx-auto mb-8 font-light">
+            {t('landing_subtitle')}
           </p>
 
-          <div className="flex flex-col w-full max-w-xs gap-3 sm:flex-row sm:justify-center">
-            <button
-              className="flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-gradient-to-r from-violet-600 to-primary text-white font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"
-              onClick={() => navigate('/app')}
-            >
-              <span>Empezar Gratis</span>
-              <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </button>
-            <a
-              href="/downloads/zophiel.apk"
-              download
-              className="flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-[#1e2a23] border border-green-500/30 text-green-400 font-bold hover:bg-[#1e2a23]/80 transition-all"
-            >
-              <span className="material-symbols-outlined text-sm">android</span>
-              <span>Android APK</span>
-            </a>
-          </div>
-        </section>
-
-        {/* ══ Stats Bar (Stitch 3-col glass grid) ══ */}
-        <section className="px-4 pb-8">
-          <div className="grid grid-cols-3 gap-2 sm:gap-4">
-            <div className="glass-card p-3 rounded-xl flex flex-col items-center text-center gap-1">
-              <span className="material-symbols-outlined text-primary mb-1">accessibility_new</span>
-              <span className="text-lg font-bold text-white leading-none">360°</span>
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Mapa Corporal</span>
+          {/* CTA Button (exact Stitch) */}
+          <Link
+            to="/auth"
+            className="group relative flex w-full max-w-[320px] items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-primary to-purple-600 p-[1px] shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40 active:scale-95 no-underline"
+          >
+            <div className="relative flex h-12 w-full items-center justify-center rounded-xl bg-transparent px-6 transition-all group-hover:bg-white/5">
+              <span className="text-base font-bold text-white">{t('landing_cta_start')}</span>
+              <span className="material-symbols-outlined ml-2 text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </div>
-            <div className="glass-card p-3 rounded-xl flex flex-col items-center text-center gap-1">
-              <span className="material-symbols-outlined text-primary mb-1">monitoring</span>
-              <span className="text-lg font-bold text-white leading-none">24/7</span>
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Seguimiento</span>
+          </Link>
+
+          {/* Trust Indicators (exact Stitch) */}
+          <div className="mt-12 grid grid-cols-3 gap-3 w-full max-w-lg">
+            <div className="glass-card flex flex-col items-center justify-center p-3 rounded-xl gap-2 text-center">
+              <span className="material-symbols-outlined text-primary text-2xl">body_system</span>
+              <span className="text-[11px] font-medium leading-tight text-slate-300">{t('landing_stat_map')}</span>
             </div>
-            <div className="glass-card p-3 rounded-xl flex flex-col items-center text-center gap-1">
-              <span className="material-symbols-outlined text-primary mb-1">encrypted</span>
-              <span className="text-lg font-bold text-white leading-none">100%</span>
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Privacidad</span>
+            <div className="glass-card flex flex-col items-center justify-center p-3 rounded-xl gap-2 text-center">
+              <span className="material-symbols-outlined text-primary text-2xl">monitoring</span>
+              <span className="text-[11px] font-medium leading-tight text-slate-300">{t('landing_stat_tracking')}</span>
             </div>
-          </div>
-        </section>
-
-        {/* ══ App Preview — FAITHFUL miniature of real Dashboard ══ */}
-        <div className="w-full px-4 mb-12">
-          <div className="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-background-dark" style={{ fontSize: '85%' }}>
-            {/* Glow */}
-            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 blur-[50px] rounded-full -mr-10 -mt-10" />
-
-            <div className="p-4 pb-0">
-              {/* Greeting (matches Dashboard) */}
-              <div className="mb-4">
-                <div className="text-lg font-bold text-white tracking-tight">Hola, Sarah 👋</div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Resumen de los últimos 7 días</div>
-              </div>
-
-              {/* Google Fit Banner (matches Dashboard glass-card, 3-col) */}
-              <div className="glass-card rounded-xl p-3 mb-3 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-primary/20 blur-[30px] rounded-full -mr-8 -mt-8" />
-                <div className="flex items-center justify-between mb-2.5">
-                  <div className="flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-white text-[14px]">phone_iphone</span>
-                    <span className="text-white font-semibold text-[10px]">Google Fit — Hoy</span>
-                  </div>
-                  <span className="px-1.5 py-0.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-[8px] font-bold uppercase tracking-wider">Auto-sync</span>
-                </div>
-                <div className="grid grid-cols-3 gap-2 divide-x divide-white/10">
-                  <div className="flex flex-col items-center gap-0.5 pr-2">
-                    <div className="flex items-center gap-1 text-slate-400 text-[8px]">
-                      <span className="material-symbols-outlined text-[12px]">directions_walk</span>
-                      <span>Pasos</span>
-                    </div>
-                    <span className="text-sm font-bold text-white">8,421</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-0.5 px-2">
-                    <div className="flex items-center gap-1 text-slate-400 text-[8px]">
-                      <span className="material-symbols-outlined text-[12px]">bedtime</span>
-                      <span>Sueño</span>
-                    </div>
-                    <span className="text-sm font-bold text-white">7h20m</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-0.5 pl-2">
-                    <div className="flex items-center gap-1 text-slate-400 text-[8px]">
-                      <span className="material-symbols-outlined text-[12px]">favorite</span>
-                      <span>Ritmo</span>
-                    </div>
-                    <span className="text-sm font-bold text-white">72 <span className="text-[7px] text-slate-500 font-normal">bpm</span></span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 2x2 Stats Grid (matches Dashboard exactly) */}
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                {/* Pain Average */}
-                <div className="glass-card p-3 rounded-xl relative overflow-hidden">
-                  <div className="absolute bottom-0 right-0 p-2 opacity-5"><span className="material-symbols-outlined text-3xl">sentiment_dissatisfied</span></div>
-                  <span className="text-slate-400 text-[8px] font-medium uppercase tracking-wide">Dolor promedio</span>
-                  <div className="mt-1">
-                    <span className="text-xl font-bold text-white">4.2</span>
-                    <span className="text-[8px] text-slate-500 ml-0.5">/10</span>
-                  </div>
-                  <div className="w-full bg-slate-700/30 h-1 mt-1.5 rounded-full overflow-hidden"><div className="bg-primary w-[42%] h-full rounded-full" /></div>
-                </div>
-                {/* QoL Score */}
-                <div className="glass-card p-3 rounded-xl relative overflow-hidden">
-                  <div className="absolute bottom-0 right-0 p-2 opacity-5"><span className="material-symbols-outlined text-3xl">spa</span></div>
-                  <span className="text-slate-400 text-[8px] font-medium uppercase tracking-wide">Calidad de vida</span>
-                  <div className="mt-1">
-                    <span className="text-xl font-bold text-white">74</span>
-                    <span className="text-[8px] text-slate-500 ml-0.5">pts</span>
-                  </div>
-                  <div className="w-full bg-slate-700/30 h-1 mt-1.5 rounded-full overflow-hidden"><div className="bg-green-500 w-[74%] h-full rounded-full" /></div>
-                </div>
-                {/* Records */}
-                <div className="glass-card p-3 rounded-xl relative overflow-hidden">
-                  <div className="absolute bottom-0 right-0 p-2 opacity-5"><span className="material-symbols-outlined text-3xl">history</span></div>
-                  <span className="text-slate-400 text-[8px] font-medium uppercase tracking-wide">Registros</span>
-                  <div className="mt-1">
-                    <span className="text-xl font-bold text-white">12</span>
-                    <span className="text-[8px] text-slate-500 ml-0.5">esta sem.</span>
-                  </div>
-                </div>
-                {/* Pending (accent card) */}
-                <div className="glass-card-accent p-3 rounded-xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-10 h-10 bg-primary/30 blur-[20px] rounded-full -mr-4 -mt-4" />
-                  <span className="text-purple-300 text-[8px] font-medium uppercase tracking-wide">Pendientes</span>
-                  <div className="mt-1">
-                    <span className="text-xl font-bold text-white">3</span>
-                    <span className="text-[8px] text-purple-200/60 ml-0.5">tareas</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Actions (matches Dashboard) */}
-              <div className="mb-1">
-                <h3 className="text-white text-xs font-bold mb-2">Acciones rápidas</h3>
-                <div className="flex flex-col gap-1.5">
-                  <div className="glass-card p-2.5 rounded-lg flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full bg-blue-500/10 flex items-center justify-center"><span className="material-symbols-outlined text-blue-400 text-[14px]">edit_square</span></div>
-                      <div><span className="text-[10px] text-white font-medium">Registrar dolor</span><br/><span className="text-[8px] text-slate-400">Agregá una nueva entrada</span></div>
-                    </div>
-                    <span className="material-symbols-outlined text-slate-500 text-[14px]">chevron_right</span>
-                  </div>
-                  <div className="glass-card p-2.5 rounded-lg flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full bg-orange-500/10 flex items-center justify-center"><span className="material-symbols-outlined text-orange-400 text-[14px]">medical_services</span></div>
-                      <div><span className="text-[10px] text-white font-medium">Registrar síntomas</span><br/><span className="text-[8px] text-slate-400">Anotá los síntomas de hoy</span></div>
-                    </div>
-                    <span className="material-symbols-outlined text-slate-500 text-[14px]">chevron_right</span>
-                  </div>
-                  <div className="glass-card p-2.5 rounded-lg flex items-center justify-between border border-primary/30 shadow-[0_0_10px_rgba(140,37,244,0.1)]">
-                    <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full bg-primary/20 flex items-center justify-center ring-1 ring-primary/20"><span className="material-symbols-outlined text-primary text-[14px]">quiz</span></div>
-                      <div><span className="text-[10px] text-white font-medium">Responder preguntas (3)</span><br/><span className="text-[8px] text-primary">3 pendientes</span></div>
-                    </div>
-                    <span className="material-symbols-outlined text-primary text-[14px]">chevron_right</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom nav bar (matches app layout) */}
-            <div className="grid grid-cols-5 border-t border-white/5 mt-2">
-              <div className="flex flex-col items-center gap-0.5 py-2 text-primary">
-                <span className="material-symbols-outlined text-[16px]">home</span>
-                <span className="text-[7px] font-medium">Inicio</span>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 py-2 text-slate-500">
-                <span className="material-symbols-outlined text-[16px]">favorite</span>
-                <span className="text-[7px]">Dolor</span>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 py-2 text-slate-500">
-                <span className="material-symbols-outlined text-[16px]">help</span>
-                <span className="text-[7px]">Preguntas</span>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 py-2 text-slate-500">
-                <span className="material-symbols-outlined text-[16px]">monitoring</span>
-                <span className="text-[7px]">Calidad</span>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 py-2 text-slate-500">
-                <span className="material-symbols-outlined text-[16px]">settings</span>
-                <span className="text-[7px]">Config</span>
-              </div>
+            <div className="glass-card flex flex-col items-center justify-center p-3 rounded-xl gap-2 text-center">
+              <span className="material-symbols-outlined text-primary text-2xl">encrypted</span>
+              <span className="text-[11px] font-medium leading-tight text-slate-300">{t('landing_stat_private')}</span>
             </div>
           </div>
         </div>
+      </header>
 
-        {/* ══ Features Grid (Stitch 2-col glass cards) ══ */}
-        <section className="px-4 py-8" id="features">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-white">Características</h3>
-            <span className="text-xs font-semibold text-primary">Ver todas</span>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            {FEATURES.map((f) => (
-              <div key={f.icon} className="glass-card p-4 rounded-xl flex flex-col gap-3 hover:bg-white/5 transition-colors group">
-                <div className="w-10 h-10 rounded-lg bg-surface-dark flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                  <span className="material-symbols-outlined">{f.icon}</span>
+      {/* ── Features Section (exact Stitch) ── */}
+      <section id="features" className="px-4 py-8 bg-gradient-to-b from-transparent to-surface-dark/30 md:py-16">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 px-2 text-center md:text-left max-w-4xl mx-auto">{t('landing_features_title')}</h2>
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+          {/* Feature cards (exact Stitch classes) */}
+          {[
+            { icon: 'accessibility_new', title: t('landing_feat_body'), desc: t('landing_feat_body_desc') },
+            { icon: 'trending_up', title: t('landing_feat_analytics'), desc: t('landing_feat_analytics_desc') },
+            { icon: 'vital_signs', title: t('landing_feat_qol'), desc: t('landing_feat_qol_desc') },
+            { icon: 'cloud_off', title: t('landing_feat_offline'), desc: t('landing_feat_offline_desc') },
+          ].map((f) => (
+            <div key={f.icon} className="glass-card rounded-2xl p-5 flex items-start gap-4 cursor-pointer group hover:bg-[rgba(48,40,57,0.6)] hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300">
+              <div className="size-12 rounded-xl bg-surface-dark flex items-center justify-center shrink-0 border border-white/5 group-hover:border-primary/50 transition-colors">
+                <span className="material-symbols-outlined text-primary text-2xl">{f.icon}</span>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-white font-semibold text-lg mb-1 group-hover:text-purple-300 transition-colors">{f.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{f.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── How It Works (exact Stitch) ── */}
+      <section id="how" className="px-4 py-12 relative overflow-hidden md:py-20">
+        {/* Abstract decoration */}
+        <div className="absolute right-0 top-1/3 w-64 h-64 bg-primary/5 blur-[80px] rounded-full pointer-events-none" />
+
+        <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-10">Cómo funciona Zophiel</h2>
+
+        <div className="relative max-w-md mx-auto md:max-w-4xl">
+          {/* Mobile: vertical connecting line | Desktop: hidden */}
+          <div className="absolute left-[27px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-primary/80 via-primary/30 to-transparent md:hidden" />
+
+          <div className="flex flex-col gap-10 md:flex-row md:gap-8">
+            {[
+              { num: '1', title: t('landing_step1_title'), desc: t('landing_step1_desc'), border: 'border-primary', glow: 'shadow-[0_0_15px_rgba(140,37,244,0.3)]' },
+              { num: '2', title: t('landing_step2_title'), desc: t('landing_step2_desc'), border: 'border-primary/60', glow: '' },
+              { num: '3', title: t('landing_step3_title'), desc: t('landing_step3_desc'), border: 'border-primary/30', glow: '' },
+            ].map((step) => (
+              <div key={step.num} className="relative flex gap-6 md:flex-col md:items-center md:text-center md:flex-1">
+                <div className={`relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full bg-surface-dark border-2 ${step.border} text-white ${step.glow}`}>
+                  <span className="font-bold text-xl">{step.num}</span>
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white">{f.title}</h4>
-                  <p className="text-xs text-slate-400 mt-1">{f.desc}</p>
+                <div className="flex flex-col pt-1 md:pt-3">
+                  <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
+                  <p className="text-slate-400 text-sm leading-relaxed">{step.desc}</p>
                 </div>
               </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ══ How It Works Timeline (Stitch border-line) ══ */}
-        <section className="px-4 py-10 bg-surface-dark/30" id="how-it-works">
-          <h3 className="text-xl font-bold text-white mb-8">Cómo funciona</h3>
-          <div className="relative pl-4 space-y-8 border-l-2 border-slate-700 ml-2">
-            {STEPS.map((s) => (
-              <div key={s.title} className="relative pl-6">
-                <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-background-dark border-2 border-primary" />
-                <h4 className="text-lg font-bold text-white mb-1">{s.title}</h4>
-                <p className="text-sm text-slate-400 leading-relaxed">{s.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ══ Conditions Horizontal Scroll (Stitch border-left cards) ══ */}
-        <section className="py-10 overflow-hidden" id="conditions">
-          <div className="px-4 mb-4">
-            <h3 className="text-xl font-bold text-white">Especializado en</h3>
-          </div>
-          <div className="flex overflow-x-auto gap-4 px-4 pb-4 snap-x snap-mandatory scrollbar-hide">
-            {CONDITIONS.map((c) => (
-              <div key={c.name} className="snap-center shrink-0 w-64 glass-card p-5 rounded-xl border-l-4 border-l-primary">
-                <h4 className="text-white font-bold text-lg mb-2">{c.name}</h4>
-                <p className="text-sm text-slate-400">{c.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ══ CTA Section (Stitch gradient card) ══ */}
-        <section className="px-4 py-12 mb-8">
-          <div className="rounded-2xl bg-gradient-to-br from-[#2a1e38] to-background-dark border border-white/10 p-6 sm:p-8 text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-[50px] rounded-full" />
-            <h2 className="text-2xl font-bold text-white mb-3 relative z-10">Empieza tu recuperación hoy</h2>
-            <p className="text-slate-400 text-sm mb-6 max-w-xs mx-auto relative z-10">
-              Tomá el control de tu dolor crónico con herramientas clínicas potenciadas por inteligencia artificial.
-            </p>
-            <button
-              className="relative z-10 w-full sm:w-auto px-8 h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold transition-colors shadow-lg shadow-primary/20"
-              onClick={() => navigate('/app')}
+      {/* ── Final CTA (exact Stitch) ── */}
+      <section className="px-4 py-8 mb-4 md:py-16 max-w-4xl mx-auto w-full">
+        <div className="glass-card rounded-3xl p-8 md:p-12 text-center relative overflow-hidden border border-primary/20">
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="size-16 bg-gradient-to-tr from-primary to-purple-500 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-primary/30">
+              <span className="material-symbols-outlined text-white text-3xl">favorite</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">{t('landing_cta_ready')}</h2>
+            <p className="text-slate-300 mb-8 max-w-xs mx-auto">{t('landing_cta_join')}</p>
+            <Link
+              to="/auth"
+              className="w-full max-w-[280px] py-4 bg-white text-[#701ec2] font-bold text-lg rounded-xl shadow-lg hover:bg-slate-50 transition-colors active:scale-95 no-underline text-center inline-block"
             >
-              Crear Cuenta Gratis
-            </button>
+              {t('landing_cta_create')}
+            </Link>
+            <p className="mt-4 text-xs text-slate-500">Sin tarjeta de crédito requerida.</p>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ══ Footer (Stitch centered minimal) ══ */}
-        <footer className="mt-auto border-t border-slate-800 bg-background-dark py-8 px-4">
-          <div className="flex flex-col items-center gap-6 text-center">
-            <div className="flex items-center gap-2 text-white/50">
-              <ZophielLogo size={22} />
-              <span className="font-bold text-lg">Zophiel</span>
-            </div>
-            <div className="flex gap-6 text-sm text-slate-400">
-              <button className="hover:text-white transition-colors bg-transparent border-none cursor-pointer font-[inherit]" onClick={() => navigate('/app')}>Iniciar Sesión</button>
-              <a className="hover:text-white transition-colors" href="#features">Funcionalidades</a>
-              <a className="hover:text-white transition-colors" href="#conditions">Condiciones</a>
-            </div>
-            <p className="text-xs text-slate-600 mt-2">© 2026 Zophiel Health Technologies.</p>
-          </div>
-        </footer>
-      </div>
+      {/* ── Footer (exact Stitch) ── */}
+      <footer className="mt-auto py-8 text-center px-6">
+        <p className="text-xs text-slate-500 font-medium">
+          {t('landing_footer')}
+        </p>
+      </footer>
     </div>
   );
 }
