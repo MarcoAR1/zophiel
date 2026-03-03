@@ -95,8 +95,11 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
         quietHoursStart: quietStart,
         quietHoursEnd: quietEnd,
       });
+      console.log('[Onboarding] API success:', result);
       onComplete(result);
-    } catch {
+    } catch (err) {
+      console.error('[Onboarding] API error:', err);
+      // Still complete onboarding on error — user can configure later
       onComplete(null);
     } finally {
       setSaving(false);
@@ -346,7 +349,7 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
           </main>
 
           {/* Fixed bottom */}
-          <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-dark via-background-dark to-transparent pt-12">
+          <div className="fixed bottom-0 left-0 right-0 z-50 p-6 bg-gradient-to-t from-background-dark via-background-dark to-transparent pt-12">
             <div className="max-w-md mx-auto w-full space-y-2">
               <StitchButton onClick={handleComplete} disabled={saving} icon="check">
                 {saving ? 'Guardando...' : 'Finalizar configuración'}
