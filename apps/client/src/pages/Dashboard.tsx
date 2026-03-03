@@ -78,7 +78,7 @@ export default function Dashboard() {
           const lastScore = qolData[qolData.length - 1];
           setQol(lastScore?.score != null ? Math.round(lastScore.score) : null);
         } else if (qolData && typeof qolData === 'object' && 'score' in qolData) {
-          setQol(Math.round(qolData.score));
+          setQol(Math.round(qolData.score as number));
         }
       } catch {
         // silently fail
