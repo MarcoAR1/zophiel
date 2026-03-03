@@ -18,10 +18,10 @@ const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     icon: 'local_fire_department',
     accentClass: 'text-red-400',
     bgClass: 'bg-red-500/10',
-    gradient: 'linear-gradient(to right, #22c55e, #84cc16, #eab308, #f97316, #ef4444)',
-    minLabel: 'Sin dolor',
-    maxLabel: 'Insoportable',
-    labels: ['', 'Ninguno', 'Mínimo', 'Leve', 'Moderado', 'Medio', 'Significativo', 'Alto', 'Severo', 'Muy severo', 'Insoportable'],
+    gradient: 'linear-gradient(to right, #ef4444, #f97316, #eab308, #84cc16, #22c55e)',
+    minLabel: 'Insoportable',
+    maxLabel: 'Sin dolor',
+    labels: ['', 'Insoportable', 'Muy severo', 'Severo', 'Alto', 'Significativo', 'Moderado', 'Leve', 'Mínimo', 'Casi nada', 'Sin dolor'],
   },
   sleep: {
     icon: 'bedtime',
@@ -45,7 +45,7 @@ const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     icon: 'bolt',
     accentClass: 'text-yellow-400',
     bgClass: 'bg-yellow-500/10',
-    gradient: 'linear-gradient(to right, #94a3b8, #eab308, #f59e0b, #f97316, #ef4444)',
+    gradient: 'linear-gradient(to right, #ef4444, #f97316, #eab308, #84cc16, #22c55e)',
     minLabel: 'Sin energía',
     maxLabel: 'Máxima',
     labels: ['', 'Agotado', 'Exhausto', 'Cansado', 'Bajo', 'Normal', 'Activo', 'Energético', 'Muy activo', 'Pura energía', 'Imparable'],
@@ -54,10 +54,10 @@ const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     icon: 'psychology',
     accentClass: 'text-purple-400',
     bgClass: 'bg-purple-500/10',
-    gradient: 'linear-gradient(to right, #22c55e, #84cc16, #eab308, #f97316, #ef4444)',
-    minLabel: 'Relajado',
-    maxLabel: 'Muy estresado',
-    labels: ['', 'Zen', 'Tranquilo', 'Relajado', 'Normal', 'Algo tenso', 'Tenso', 'Estresado', 'Muy estresado', 'Abrumado', 'Límite'],
+    gradient: 'linear-gradient(to right, #ef4444, #f97316, #eab308, #84cc16, #22c55e)',
+    minLabel: 'Límite',
+    maxLabel: 'Zen',
+    labels: ['', 'Límite', 'Abrumado', 'Muy estresado', 'Estresado', 'Tenso', 'Algo tenso', 'Normal', 'Relajado', 'Tranquilo', 'Zen'],
   },
   functionality: {
     icon: 'accessibility_new',
@@ -65,7 +65,7 @@ const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     bgClass: 'bg-cyan-500/10',
     gradient: 'linear-gradient(to right, #ef4444, #f97316, #eab308, #84cc16, #22c55e)',
     minLabel: 'Imposible',
-    maxLabel: 'Normal',
+    maxLabel: 'Perfecto',
     labels: ['', 'Imposible', 'Muy limitado', 'Limitado', 'Difícil', 'Con esfuerzo', 'Regular', 'Bien', 'Muy bien', 'Normal', 'Perfecto'],
   },
 };
@@ -74,9 +74,9 @@ const DEFAULT_CONFIG: CategoryConfig = {
   icon: 'help_outline',
   accentClass: 'text-slate-400',
   bgClass: 'bg-slate-500/10',
-  gradient: 'linear-gradient(to right, #64748b, #8b5cf6, #6366f1)',
-  minLabel: 'Mínimo',
-  maxLabel: 'Máximo',
+  gradient: 'linear-gradient(to right, #ef4444, #f97316, #eab308, #84cc16, #22c55e)',
+  minLabel: 'Malo',
+  maxLabel: 'Bueno',
   labels: ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
 };
 
@@ -84,22 +84,12 @@ function getConfig(category: string): CategoryConfig {
   return CATEGORY_CONFIG[category?.toLowerCase()] || DEFAULT_CONFIG;
 }
 
-// Value badge color based on category and value
-function getValueColor(category: string, val: number, max: number): string {
+// Value badge color — consistent: higher = better = green
+function getValueColor(val: number, max: number): string {
   const ratio = (val - 1) / (max - 1); // 0 to 1
-  const isPositive = ['sleep', 'mood', 'energy', 'functionality'].includes(category?.toLowerCase());
-
-  if (isPositive) {
-    // High value = good (green)
-    if (ratio >= 0.7) return 'bg-green-500';
-    if (ratio >= 0.4) return 'bg-yellow-500';
-    return 'bg-red-500';
-  } else {
-    // High value = bad (red) — pain, stress
-    if (ratio >= 0.7) return 'bg-red-500';
-    if (ratio >= 0.4) return 'bg-yellow-500';
-    return 'bg-green-500';
-  }
+  if (ratio >= 0.7) return 'bg-green-500';
+  if (ratio >= 0.4) return 'bg-yellow-500';
+  return 'bg-red-500';
 }
 
 export default function Questions() {
@@ -175,7 +165,7 @@ export default function Questions() {
             const max = q.scaleMax ?? 10;
             const val = answers[q.id] ?? q.defaultValue ?? Math.round((min + max) / 2);
             const isSaved = saved[q.id];
-            const valueColor = getValueColor(q.category, val, max);
+            const valueColor = getValueColor(val, max);
             const label = config.labels[val] || `${val}`;
 
             return (
