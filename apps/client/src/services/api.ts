@@ -25,8 +25,21 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
-  const json = await res.json();
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  } catch (err: any) {
+    // Network error — fetch itself failed (no connectivity, DNS, CORS block, etc.)
+    console.error('[API Network Error]', path, err);
+    throw new Error('Error de conexión. Verificá tu internet e intentá de nuevo.');
+  }
+
+  let json: any;
+  try {
+    json = await res.json();
+  } catch {
+    throw new Error(`Error del servidor (${res.status})`);
+  }
 
   if (!res.ok) {
     throw new Error(json.error || `Error ${res.status}`);
