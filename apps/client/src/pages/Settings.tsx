@@ -16,11 +16,27 @@ const NOTIF_LEVELS = [
   { value: 'none', icon: 'notifications_off', title: 'Ninguna', desc: 'Sin interrupciones' },
 ];
 
+const DEFAULT_REMINDERS = ['09:00', '14:00', '21:00'];
+
 export default function Settings() {
   const { user, updateUser, logout } = useAuth();
   const { locale, setLocale, t } = useI18n();
+
+  // ── Profile ──
   const [name, setName] = useState(user?.name || '');
+
+  // ── Notifications ──
   const [notifLevel, setNotifLevel] = useState(user?.notificationLevel || 'all');
+  const [quietStart, setQuietStart] = useState(user?.quietHoursStart || '22:00');
+  const [quietEnd, setQuietEnd] = useState(user?.quietHoursEnd || '08:00');
+  const [quietEnabled, setQuietEnabled] = useState(!!(user?.quietHoursStart && user?.quietHoursEnd));
+  const [reminderTimes, setReminderTimes] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('zophiel_reminders');
+      return stored ? JSON.parse(stored) : DEFAULT_REMINDERS;
+    } catch { return DEFAULT_REMINDERS; }
+  });
+
   const [saving, setSaving] = useState(false);
   const [healthStatus, setHealthStatus] = useState<any>(null);
 
@@ -28,12 +44,49 @@ export default function Settings() {
     api.health.status().catch(() => null).then(setHealthStatus);
   }, []);
 
-  const save = async (field: string, value: any) => {
+  // ── Save helpers ──
+  const saveProfile = async (field: string, value: any) => {
+    setSaving(true);
+    try { await api.settings.updateProfile({ [field]: value }); } catch {}
+    setSaving(false);
+  };
+
+  const saveNotifications = async (updates: {
+    notificationLevel?: string;
+    quietHoursStart?: string;
+    quietHoursEnd?: string;
+  }) => {
     setSaving(true);
     try {
-      await api.settings.updateProfile({ [field]: value });
+      const payload = {
+        notificationLevel: updates.notificationLevel || notifLevel,
+        quietHoursStart: quietEnabled ? (updates.quietHoursStart || quietStart) : undefined,
+        quietHoursEnd: quietEnabled ? (updates.quietHoursEnd || quietEnd) : undefined,
+      };
+      const result = await api.settings.updateNotifications(payload);
+      if (result) updateUser(result);
     } catch {}
     setSaving(false);
+  };
+
+  const addReminder = () => {
+    const newTimes = [...reminderTimes, '12:00'].sort();
+    setReminderTimes(newTimes);
+    localStorage.setItem('zophiel_reminders', JSON.stringify(newTimes));
+  };
+
+  const removeReminder = (idx: number) => {
+    const newTimes = reminderTimes.filter((_, i) => i !== idx);
+    setReminderTimes(newTimes);
+    localStorage.setItem('zophiel_reminders', JSON.stringify(newTimes));
+  };
+
+  const updateReminder = (idx: number, val: string) => {
+    const newTimes = [...reminderTimes];
+    newTimes[idx] = val;
+    newTimes.sort();
+    setReminderTimes(newTimes);
+    localStorage.setItem('zophiel_reminders', JSON.stringify(newTimes));
   };
 
   const connectGoogleFit = async () => {
@@ -52,7 +105,6 @@ export default function Settings() {
 
   return (
     <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
-      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
 
       {/* Header */}
       <div className="flex items-center gap-3 px-5 pt-6 mb-6">
@@ -82,7 +134,7 @@ export default function Settings() {
                 className="flex-1 bg-transparent text-white text-sm outline-none border-none placeholder-slate-600 font-[inherit]"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                onBlur={() => name !== user?.name && save('name', name)}
+                onBlur={() => name !== user?.name && saveProfile('name', name)}
                 placeholder="Tu nombre"
               />
             </div>
@@ -109,7 +161,7 @@ export default function Settings() {
               key={lang.code}
               onClick={() => {
                 setLocale(lang.code);
-                save('language', lang.code);
+                saveProfile('language', lang.code);
               }}
               className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer border ${
                 locale === lang.code
@@ -123,16 +175,23 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* Notifications */}
+      {/* ══════════════════════════════════════════════════════════ */}
+      {/* ── NOTIFICATIONS SECTION ── */}
+      {/* ══════════════════════════════════════════════════════════ */}
       <div className="mx-5 mb-5">
-        <h3 className="text-sm font-bold text-white mb-3">Notificaciones</h3>
-        <div className="flex flex-col gap-2.5">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="material-symbols-outlined text-primary text-[20px]">notifications</span>
+          <h3 className="text-sm font-bold text-white">Notificaciones</h3>
+        </div>
+
+        {/* ── Notification Level ── */}
+        <div className="flex flex-col gap-2.5 mb-6">
           {NOTIF_LEVELS.map((level) => (
             <button
               key={level.value}
               onClick={() => {
                 setNotifLevel(level.value);
-                save('notificationLevel', level.value);
+                saveNotifications({ notificationLevel: level.value });
               }}
               className={`rounded-xl p-4 flex items-center gap-3.5 text-left transition-all duration-200 cursor-pointer border ${
                 notifLevel === level.value
@@ -158,6 +217,109 @@ export default function Settings() {
               </div>
             </button>
           ))}
+        </div>
+
+        {/* ── Quiet Hours ── */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-slate-400 text-[18px]">bedtime</span>
+              <span className="text-sm font-semibold text-white">Horario de silencio</span>
+            </div>
+            <button
+              onClick={() => {
+                const next = !quietEnabled;
+                setQuietEnabled(next);
+                if (!next) {
+                  saveNotifications({ quietHoursStart: undefined, quietHoursEnd: undefined });
+                } else {
+                  saveNotifications({ quietHoursStart: quietStart, quietHoursEnd: quietEnd });
+                }
+              }}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer border-none ${
+                quietEnabled ? 'bg-primary' : 'bg-white/10'
+              }`}
+            >
+              <span className={`inline-block size-4 transform rounded-full bg-white transition-transform ${
+                quietEnabled ? 'translate-x-6' : 'translate-x-1'
+              }`} />
+            </button>
+          </div>
+
+          {quietEnabled && (
+            <div className="glass-card rounded-2xl p-4 flex items-center gap-3">
+              <div className="flex-1">
+                <label className="text-[10px] text-slate-500 uppercase tracking-wide mb-1 block">Desde</label>
+                <input
+                  className="w-full h-10 bg-[#1f1627] border border-[#473b54] rounded-xl text-white text-center focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all text-sm font-medium"
+                  type="time"
+                  value={quietStart}
+                  onChange={(e) => {
+                    setQuietStart(e.target.value);
+                    saveNotifications({ quietHoursStart: e.target.value });
+                  }}
+                />
+              </div>
+              <span className="text-slate-500 text-sm mt-4">→</span>
+              <div className="flex-1">
+                <label className="text-[10px] text-slate-500 uppercase tracking-wide mb-1 block">Hasta</label>
+                <input
+                  className="w-full h-10 bg-[#1f1627] border border-[#473b54] rounded-xl text-white text-center focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all text-sm font-medium"
+                  type="time"
+                  value={quietEnd}
+                  onChange={(e) => {
+                    setQuietEnd(e.target.value);
+                    saveNotifications({ quietHoursEnd: e.target.value });
+                  }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ── Custom Reminder Times ── */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-slate-400 text-[18px]">schedule</span>
+              <span className="text-sm font-semibold text-white">Horarios de recordatorio</span>
+            </div>
+            <button
+              onClick={addReminder}
+              className="size-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary cursor-pointer hover:bg-primary/20 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">add</span>
+            </button>
+          </div>
+          <p className="text-[11px] text-slate-500 mb-3">Te avisamos para que registres tu dolor en estos horarios</p>
+
+          <div className="flex flex-col gap-2">
+            {reminderTimes.map((time, idx) => (
+              <div key={idx} className="glass-card rounded-xl p-3 flex items-center gap-3">
+                <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <span className="material-symbols-outlined text-[18px]">alarm</span>
+                </div>
+                <input
+                  className="flex-1 h-9 bg-[#1f1627] border border-[#473b54] rounded-lg text-white text-center focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all text-sm font-medium"
+                  type="time"
+                  value={time}
+                  onChange={(e) => updateReminder(idx, e.target.value)}
+                />
+                <button
+                  onClick={() => removeReminder(idx)}
+                  className="size-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 cursor-pointer hover:bg-red-500/20 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[16px]">close</span>
+                </button>
+              </div>
+            ))}
+            {reminderTimes.length === 0 && (
+              <div className="text-center py-6 text-slate-500 text-sm">
+                <span className="material-symbols-outlined text-[32px] mb-2 block opacity-30">notifications_off</span>
+                Sin recordatorios configurados
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -195,7 +357,7 @@ export default function Settings() {
       </div>
 
       {saving && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-medium">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-medium z-50">
           Guardando...
         </div>
       )}
