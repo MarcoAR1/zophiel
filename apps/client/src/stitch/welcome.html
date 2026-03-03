@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zophiel Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#8c25f4",
+            "background-light": "#f7f5f8",
+            "background-dark": "#191022",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-display antialiased overflow-hidden">
+<!-- Main Container -->
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto px-6 pt-8 pb-6 justify-between">
+<!-- Background Glow Effects -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[50vh] bg-primary/20 blur-[120px] rounded-full pointer-events-none z-0 opacity-40"></div>
+<div class="absolute bottom-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] rounded-full pointer-events-none z-0 opacity-30"></div>
+<!-- Header Section -->
+<div class="relative z-10 flex flex-col items-center w-full">
+<h2 class="text-primary font-bold tracking-tight text-xl mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-[24px]">stethoscope</span> Zophiel
+      </h2>
+<!-- Progress Indicators -->
+<div class="flex w-full flex-row items-center justify-center gap-3 mb-4">
+<div class="h-1.5 w-8 rounded-full bg-primary shadow-[0_0_8px_rgba(140,37,244,0.6)]"></div>
+<div class="h-1.5 w-2 rounded-full bg-slate-200/20 dark:bg-slate-700"></div>
+<div class="h-1.5 w-2 rounded-full bg-slate-200/20 dark:bg-slate-700"></div>
+<div class="h-1.5 w-2 rounded-full bg-slate-200/20 dark:bg-slate-700"></div>
+</div>
+</div>
+<!-- Content Section -->
+<div class="relative z-10 flex flex-col items-center justify-center grow py-6">
+<h1 class="text-3xl font-bold text-center text-slate-900 dark:text-white mb-8 tracking-tight leading-tight">
+        Bienvenido a Zophiel
+      </h1>
+<!-- Hero Illustration Card -->
+<div class="w-full aspect-square max-w-[320px] glass-panel rounded-2xl flex items-center justify-center relative overflow-hidden mb-8 shadow-2xl shadow-primary/5">
+<!-- Inner glow -->
+<div class="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent opacity-50"></div>
+<!-- Abstract Medical Imagery Placeholder -->
+<div class="relative w-48 h-48 rounded-full bg-gradient-to-b from-primary/20 to-primary/5 flex items-center justify-center border border-white/5 shadow-inner">
+<span class="material-symbols-outlined text-primary text-[64px] drop-shadow-[0_0_15px_rgba(140,37,244,0.5)]">
+            ecg_heart
+           </span>
+<!-- Decorative orbiting dots -->
+<div class="absolute w-full h-full border border-primary/20 rounded-full animate-pulse"></div>
+<div class="absolute w-[120%] h-[120%] border border-dashed border-white/10 rounded-full"></div>
+</div>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-base font-medium text-center max-w-[280px] leading-relaxed">
+        Tu aliado inteligente en la gestión personalizada del dolor crónico.
+      </p>
+</div>
+<!-- Footer Action -->
+<div class="relative z-10 w-full pt-4">
+<button class="w-full h-14 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-lg shadow-lg shadow-primary/25 transition-all active:scale-[0.98] flex items-center justify-center gap-2 group">
+        Comenzar mi perfil
+        <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+<!-- Safe area spacer if needed on specific devices, usually handled by padding-bottom on container -->
+</div>
+</div>
+</body></html>

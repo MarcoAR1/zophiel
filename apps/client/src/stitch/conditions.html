@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zophiel Condition Selection Onboarding Screen</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#8c25f4",
+                "primary-light": "#a34df6",
+                "primary-dark": "#701ec3",
+                "background-light": "#f7f5f8",
+                "background-dark": "#191022",
+                "surface-dark": "#231830",
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "1.75rem", "3xl": "2rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased min-h-screen flex flex-col items-center justify-center p-0 m-0 overflow-hidden">
+<div class="relative w-full max-w-md h-full min-h-screen flex flex-col bg-background-light dark:bg-background-dark overflow-y-auto">
+<!-- Header -->
+<header class="sticky top-0 z-50 flex items-center justify-between p-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-slate-900 dark:text-slate-100">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h2 class="text-base font-semibold text-slate-900 dark:text-slate-100 tracking-wide">Condiciones</h2>
+<div class="w-10"></div> <!-- Spacer for centering title -->
+</header>
+<!-- Progress Indicator -->
+<div class="flex w-full flex-row items-center justify-center gap-3 py-4">
+<div class="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+<div class="h-2 w-8 rounded-full bg-primary shadow-[0_0_10px_rgba(140,37,244,0.5)]"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+</div>
+<!-- Main Content -->
+<main class="flex-1 px-6 pt-2 pb-24">
+<h1 class="text-slate-900 dark:text-white text-[28px] md:text-[32px] font-bold leading-tight mb-3">
+                ¿Cuál es tu diagnóstico?
+            </h1>
+<p class="text-slate-500 dark:text-slate-400 text-base font-normal leading-relaxed mb-8">
+                Selecciona todas las que apliquen para personalizar tu experiencia.
+            </p>
+<!-- Grid -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Card 1: Selected -->
+<button class="group relative flex flex-col items-center justify-center gap-4 p-6 rounded-2xl border-2 border-primary bg-primary/10 transition-all duration-300 hover:bg-primary/20">
+<div class="absolute top-3 right-3 opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary text-[20px] font-bold">check_circle</span>
+</div>
+<div class="flex items-center justify-center w-14 h-14 rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-[32px]">healing</span>
+</div>
+<div class="text-center">
+<p class="text-slate-900 dark:text-white text-base font-semibold leading-tight">Fibromialgia</p>
+</div>
+</button>
+<!-- Card 2: Unselected -->
+<button class="group relative flex flex-col items-center justify-center gap-4 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark/40 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-surface-dark/80">
+<div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600"></div>
+</div>
+<div class="flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[32px]">pulmonology</span>
+</div>
+<div class="text-center">
+<p class="text-slate-700 dark:text-slate-200 text-base font-medium leading-tight group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Artritis Reumatoide</p>
+</div>
+</button>
+<!-- Card 3: Selected -->
+<button class="group relative flex flex-col items-center justify-center gap-4 p-6 rounded-2xl border-2 border-primary bg-primary/10 transition-all duration-300 hover:bg-primary/20">
+<div class="absolute top-3 right-3 opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary text-[20px] font-bold">check_circle</span>
+</div>
+<div class="flex items-center justify-center w-14 h-14 rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-[32px]">psychology</span>
+</div>
+<div class="text-center">
+<p class="text-slate-900 dark:text-white text-base font-semibold leading-tight">Migraña Crónica</p>
+</div>
+</button>
+<!-- Card 4: Unselected -->
+<button class="group relative flex flex-col items-center justify-center gap-4 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark/40 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-surface-dark/80">
+<div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600"></div>
+</div>
+<div class="flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[32px]">accessibility_new</span>
+</div>
+<div class="text-center">
+<p class="text-slate-700 dark:text-slate-200 text-base font-medium leading-tight group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Lumbago</p>
+</div>
+</button>
+<!-- Card 5: Unselected -->
+<button class="group relative flex flex-col items-center justify-center gap-4 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark/40 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-surface-dark/80">
+<div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600"></div>
+</div>
+<div class="flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[32px]">monitor_heart</span>
+</div>
+<div class="text-center">
+<p class="text-slate-700 dark:text-slate-200 text-base font-medium leading-tight group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Neuropatía</p>
+</div>
+</button>
+<!-- Card 6: Unselected (Other) -->
+<button class="group relative flex flex-col items-center justify-center gap-4 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark/40 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-surface-dark/80">
+<div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600"></div>
+</div>
+<div class="flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[32px]">add_circle</span>
+</div>
+<div class="text-center">
+<p class="text-slate-700 dark:text-slate-200 text-base font-medium leading-tight group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Otro</p>
+</div>
+</button>
+</div>
+</main>
+<!-- Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-light via-background-light to-transparent dark:from-background-dark dark:via-background-dark dark:to-transparent pt-12">
+<div class="max-w-md mx-auto w-full">
+<button class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-[#701ec3] hover:from-[#7b21d6] hover:to-[#601a9f] text-white font-semibold text-lg py-4 px-8 rounded-2xl shadow-lg shadow-primary/25 transition-transform active:scale-[0.98]">
+                    Continuar 
+                    <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>
