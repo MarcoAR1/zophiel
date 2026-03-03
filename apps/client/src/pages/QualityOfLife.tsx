@@ -49,14 +49,14 @@ export default function QualityOfLife() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+      <div className="min-h-screen bg-background-dark flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="bg-[#0a0a0f] font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
+    <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
 
       {/* Header */}
@@ -107,7 +107,7 @@ export default function QualityOfLife() {
       </div>
 
       {/* Trend Chart */}
-      <div className="mx-5 rounded-2xl p-5 mb-5 bg-white/[0.03] border border-white/[0.06]">
+      <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-bold text-white">Tendencia</h3>
           {data.length >= 2 && (
@@ -149,7 +149,7 @@ export default function QualityOfLife() {
           {BREAKDOWN.map((item) => {
             const val = breakdown[item.key] || 0;
             return (
-              <div key={item.key} className="rounded-2xl p-4 bg-white/[0.03] border border-white/[0.06]">
+              <div key={item.key} className="rounded-2xl p-4 glass-card">
                 <div className="flex items-center justify-between mb-3">
                   <div className={`size-8 rounded-lg ${item.color}/10 flex items-center justify-center`}>
                     <span className={`material-symbols-outlined ${item.color.replace('bg-', 'text-')} text-[16px]`}>{item.icon}</span>

@@ -82,7 +82,7 @@ export default function PainLog() {
   };
 
   return (
-    <div className="bg-[#0a0a0f] min-h-screen font-display text-slate-100 px-5 py-6 pb-24 antialiased">
+    <div className="bg-background-dark min-h-screen font-display text-slate-100 px-5 py-6 pb-24 antialiased">
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
 
       {/* Header with back arrow */}
@@ -113,7 +113,7 @@ export default function PainLog() {
       )}
 
       {/* ── 1. Intensity Slider ── */}
-      <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-5 mb-5">
+      <div className="rounded-2xl glass-card p-5 mb-5">
         <div className="flex items-center justify-between mb-3">
           <label className="text-[10px] font-bold text-primary/80 uppercase tracking-[0.15em]">
             Intensidad (NRS 0-10)
@@ -140,7 +140,7 @@ export default function PainLog() {
       </div>
 
       {/* ── 2. Temporality ── */}
-      <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-5 mb-5">
+      <div className="rounded-2xl glass-card p-5 mb-5">
         <label className="text-[10px] font-bold text-primary/80 uppercase tracking-[0.15em] mb-3 block">
           Temporalidad
         </label>
@@ -162,7 +162,7 @@ export default function PainLog() {
       </div>
 
       {/* ── 3. Mood States ── */}
-      <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-5 mb-5">
+      <div className="rounded-2xl glass-card p-5 mb-5">
         <div className="flex items-center justify-between mb-3">
           <label className="text-[10px] font-bold text-primary/80 uppercase tracking-[0.15em]">
             Malestar y Síntomas
@@ -190,7 +190,7 @@ export default function PainLog() {
       </div>
 
       {/* ── 4. Body Map ── */}
-      <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-5 mb-5">
+      <div className="rounded-2xl glass-card p-5 mb-5">
         <label className="text-[10px] font-bold text-primary/80 uppercase tracking-[0.15em] mb-1 block">
           Mapa de Dolor
         </label>

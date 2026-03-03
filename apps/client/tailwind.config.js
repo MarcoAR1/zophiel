@@ -5,21 +5,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#8c25f4',
-        secondary: '#00c853',
+        /* ─ Stitch PRO design tokens (exact) ─ */
+        'primary': '#8c25f4',
         'background-light': '#f7f5f8',
         'background-dark': '#0f0b15',
-        'surface-dark': '#1d1625',
-        'surface-light': '#ffffff',
+        'surface-dark': '#1d1924',
+        'surface-light': '#2a2433',
+        'accent-purple': '#a855f7',
+        'accent-green': '#22c55e',
+        'accent-blue': '#3b82f6',
+        'accent-orange': '#f97316',
       },
       fontFamily: {
-        display: ['Inter', 'sans-serif'],
+        'display': ['Inter', 'sans-serif'],
       },
       borderRadius: {
-        DEFAULT: '0.25rem',
-        lg: '0.5rem',
-        xl: '0.75rem',
-        full: '9999px',
+        'DEFAULT': '0.5rem',
+        'lg': '1rem',
+        'xl': '1.5rem',
+        '2xl': '2rem',
+        'full': '9999px',
       },
     },
   },

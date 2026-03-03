@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zophiel - Calidad de Vida</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8c25f4",
+                        "primary-dark": "#7a1fd6",
+                        "primary-light": "#a855f7",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#191022",
+                        "surface-dark": "#2a2435",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        lg: "2rem",
+                        xl: "3rem",
+                        full: "9999px",
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+        
+        /* Glassmorphism utility */
+        .glass {
+            background: rgba(42, 36, 53, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Circular Progress */
+        .circular-chart {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            max-height: 250px;
+        }
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 2.5;
+        }
+        .circle {
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            animation: progress 1s ease-out forwards;
+        }
+        @keyframes progress {
+            0% { stroke-dasharray: 0 100; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col overflow-hidden">
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto pb-24 relative">
+<!-- Header -->
+<header class="flex items-center justify-center p-6 pb-2 sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<h2 class="text-xl font-bold tracking-tight">Calidad de Vida</h2>
+</header>
+<!-- Score Gauge Section -->
+<div class="flex flex-col items-center justify-center pt-4 pb-6 px-4">
+<div class="relative w-48 h-48 flex items-center justify-center">
+<svg class="circular-chart w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path class="circle-bg" d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+<path class="circle stroke-primary drop-shadow-[0_0_10px_rgba(140,37,244,0.5)]" d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="74, 100"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="text-5xl font-bold text-white tracking-tighter drop-shadow-lg">74</span>
+</div>
+</div>
+<p class="text-slate-400 text-sm font-medium mt-[-10px]">Puntuación general</p>
+</div>
+<!-- Period Selector -->
+<div class="flex gap-3 px-6 py-2 overflow-x-auto justify-center">
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary text-white px-6 shadow-lg shadow-primary/25 transition-all">
+<span class="text-sm font-medium">7 días</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full glass text-slate-300 hover:text-white hover:bg-white/10 px-6 transition-all">
+<span class="text-sm font-medium">30 días</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full glass text-slate-300 hover:text-white hover:bg-white/10 px-6 transition-all">
+<span class="text-sm font-medium">90 días</span>
+</button>
+</div>
+<!-- Chart Section -->
+<div class="px-4 py-6">
+<div class="glass rounded-xl p-5">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-sm font-semibold text-slate-200">Tendencia</h3>
+<span class="text-xs text-primary font-medium">+5% esta semana</span>
+</div>
+<div class="h-32 w-full flex items-end gap-1 relative">
+<!-- Simple CSS bar/line approximation for visualization without complex JS libraries -->
+<!-- Line SVG -->
+<svg class="absolute inset-0 w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 100 50">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#8c25f4" stop-opacity="0.5"></stop>
+<stop offset="100%" stop-color="#8c25f4" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,40 Q10,35 20,38 T40,25 T60,30 T80,15 T100,10" fill="none" stroke="#8c25f4" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<path d="M0,40 Q10,35 20,38 T40,25 T60,30 T80,15 T100,10 V50 H0 Z" fill="url(#chartGradient)" opacity="0.4"></path>
+<!-- Dots -->
+<circle cx="20" cy="38" fill="#fff" r="1.5"></circle>
+<circle cx="40" cy="25" fill="#fff" r="1.5"></circle>
+<circle cx="60" cy="30" fill="#fff" r="1.5"></circle>
+<circle cx="80" cy="15" fill="#fff" r="1.5"></circle>
+<circle cx="100" cy="10" fill="#fff" r="1.5"></circle>
+</svg>
+<!-- X Axis Labels -->
+<div class="absolute -bottom-6 left-0 right-0 flex justify-between text-[10px] text-slate-500 font-medium px-1">
+<span>Lun</span>
+<span>Mar</span>
+<span>Mié</span>
+<span>Jue</span>
+<span>Vie</span>
+</div>
+</div>
+<div class="h-4"></div> <!-- Spacer for labels -->
+</div>
+</div>
+<!-- Grid Desglose -->
+<div class="px-4 pb-6">
+<h3 class="text-base font-semibold mb-4 px-2">Desglose</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Movilidad -->
+<div class="glass rounded-xl p-4 flex flex-col gap-3 hover:bg-white/5 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-2 rounded-lg bg-indigo-500/20 text-indigo-300">
+<span class="material-symbols-outlined text-xl">accessibility</span>
+</div>
+<span class="text-lg font-bold">65%</span>
+</div>
+<div>
+<p class="text-sm text-slate-300 font-medium mb-1.5">Movilidad</p>
+<div class="h-1.5 w-full bg-slate-700/50 rounded-full overflow-hidden">
+<div class="h-full bg-indigo-500 rounded-full" style="width: 65%"></div>
+</div>
+</div>
+</div>
+<!-- Sueño -->
+<div class="glass rounded-xl p-4 flex flex-col gap-3 hover:bg-white/5 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-2 rounded-lg bg-blue-500/20 text-blue-300">
+<span class="material-symbols-outlined text-xl">bedtime</span>
+</div>
+<span class="text-lg font-bold">82%</span>
+</div>
+<div>
+<p class="text-sm text-slate-300 font-medium mb-1.5">Sueño</p>
+<div class="h-1.5 w-full bg-slate-700/50 rounded-full overflow-hidden">
+<div class="h-full bg-blue-500 rounded-full" style="width: 82%"></div>
+</div>
+</div>
+</div>
+<!-- Ánimo -->
+<div class="glass rounded-xl p-4 flex flex-col gap-3 hover:bg-white/5 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-2 rounded-lg bg-pink-500/20 text-pink-300">
+<span class="material-symbols-outlined text-xl">mood</span>
+</div>
+<span class="text-lg font-bold">70%</span>
+</div>
+<div>
+<p class="text-sm text-slate-300 font-medium mb-1.5">Ánimo</p>
+<div class="h-1.5 w-full bg-slate-700/50 rounded-full overflow-hidden">
+<div class="h-full bg-pink-500 rounded-full" style="width: 70%"></div>
+</div>
+</div>
+</div>
+<!-- Actividad -->
+<div class="glass rounded-xl p-4 flex flex-col gap-3 hover:bg-white/5 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-2 rounded-lg bg-emerald-500/20 text-emerald-300">
+<span class="material-symbols-outlined text-xl">directions_walk</span>
+</div>
+<span class="text-lg font-bold">60%</span>
+</div>
+<div>
+<p class="text-sm text-slate-300 font-medium mb-1.5">Actividad</p>
+<div class="h-1.5 w-full bg-slate-700/50 rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 rounded-full" style="width: 60%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full z-20 border-t border-white/5 bg-background-dark/95 backdrop-blur-lg safe-area-bottom">
+<div class="flex justify-between items-center px-2 py-2">
+<!-- Inicio -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-slate-400 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:-translate-y-0.5 transition-transform duration-200" data-weight="regular">home</span>
+<span class="text-[10px] font-medium tracking-wide">Inicio</span>
+</a>
+<!-- Diario -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-slate-400 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:-translate-y-0.5 transition-transform duration-200" data-weight="regular">book</span>
+<span class="text-[10px] font-medium tracking-wide">Diario</span>
+</a>
+<!-- Calidad (Active) -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-primary" href="#">
+<div class="relative">
+<div class="absolute inset-0 bg-primary/20 blur-lg rounded-full"></div>
+<span class="material-symbols-outlined text-[24px] relative z-10" data-weight="fill">ecg_heart</span>
+</div>
+<span class="text-[10px] font-bold tracking-wide">Calidad</span>
+</a>
+<!-- Comunidad -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-slate-400 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:-translate-y-0.5 transition-transform duration-200" data-weight="regular">group</span>
+<span class="text-[10px] font-medium tracking-wide">Comunidad</span>
+</a>
+<!-- Perfil -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-slate-400 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:-translate-y-0.5 transition-transform duration-200" data-weight="regular">person</span>
+<span class="text-[10px] font-medium tracking-wide">Perfil</span>
+</a>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zophiel Settings Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8c25f4",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#191022",
+                        "surface-dark": "#2a1f36",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(42, 31, 54, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(140, 37, 244, 0.1);
+        }
+        .form-input-custom:focus {
+            box-shadow: 0 0 0 2px rgba(140, 37, 244, 0.5);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between">
+<button class="p-2 -ml-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-900 dark:text-white" style="font-size: 24px;">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold text-center flex-1 pr-8">Configuración</h1>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col gap-6 p-4 pb-24">
+<!-- Perfil Section (Glassmorphism) -->
+<section class="glass-card rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+<div class="relative group">
+<div class="w-24 h-24 rounded-full overflow-hidden border-2 border-primary ring-4 ring-primary/20">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="Close up portrait of a young man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBq6RxL7WeKSdkLy9S2q9iiFNAsFTsuvT6WfRLLRz3FzVZ-GnXW1efmtdjAlqpZn5v8mgPnAvxhiSfMpr7AdUSFQTKmhA1KuoKV_iorgdhqcPb4W4aNBq1AD3kKu9kW0kl4MvqI7GMjq8WvLA0CY6zils7zPEsj80yigTrpWTaOU72Ci-S3aazZyRMjrHCh6B8juccGgRGBE3CDL_Uwg8vQzdPGTZVY80yurq_UsR8JLITnbwdgwIXb9O9RPVjNuEJV2vQymLgRwA"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-white p-1.5 rounded-full shadow-md hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+</button>
+</div>
+<div class="w-full space-y-4 mt-2">
+<div class="space-y-1.5">
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide ml-1">Nombre completo</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+<span class="material-symbols-outlined" style="font-size: 20px;">person</span>
+</span>
+<input class="form-input-custom w-full bg-surface-light dark:bg-surface-dark/50 border border-gray-200 dark:border-gray-700 rounded-lg pl-10 pr-4 py-3 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-all" type="text" value="Mateo Rodriguez"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide ml-1">Email</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+<span class="material-symbols-outlined" style="font-size: 20px;">mail</span>
+</span>
+<input class="w-full bg-gray-100 dark:bg-white/5 border border-transparent rounded-lg pl-10 pr-4 py-3 text-slate-500 dark:text-slate-400 cursor-not-allowed focus:outline-none" readonly="" type="email" value="mateo.rodz@zophiel.app"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-primary">
+<span class="material-symbols-outlined text-green-500" style="font-size: 18px;">verified</span>
+</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Idioma Section -->
+<section>
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-3 ml-1">Idioma</h3>
+<div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+<button class="flex items-center justify-center px-5 py-2.5 rounded-full bg-primary text-white font-medium text-sm shadow-md shadow-primary/25 whitespace-nowrap transition-transform active:scale-95">
+                    ES
+                </button>
+<button class="flex items-center justify-center px-5 py-2.5 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-slate-600 dark:text-slate-300 font-medium text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors whitespace-nowrap">
+                    EN
+                </button>
+<button class="flex items-center justify-center px-5 py-2.5 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-slate-600 dark:text-slate-300 font-medium text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors whitespace-nowrap">
+                    PT
+                </button>
+<button class="flex items-center justify-center px-5 py-2.5 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-slate-600 dark:text-slate-300 font-medium text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors whitespace-nowrap">
+                    FR
+                </button>
+</div>
+</section>
+<!-- Notificaciones Section -->
+<section>
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-3 ml-1">Notificaciones</h3>
+<div class="grid grid-cols-1 gap-3">
+<!-- Active Option -->
+<button class="relative flex items-center justify-between p-4 rounded-xl bg-surface-dark/40 border border-primary ring-1 ring-primary/50 transition-all">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined" style="font-size: 20px;">notifications_active</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-semibold text-white">Todas</p>
+<p class="text-xs text-slate-400">Recordatorios, mensajes y alertas</p>
+</div>
+</div>
+<div class="w-5 h-5 rounded-full border border-primary flex items-center justify-center bg-primary">
+<span class="material-symbols-outlined text-white" style="font-size: 14px;">check</span>
+</div>
+</button>
+<!-- Inactive Option -->
+<button class="relative flex items-center justify-between p-4 rounded-xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 transition-all group">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-gray-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">notification_important</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-medium text-slate-700 dark:text-slate-200">Solo importantes</p>
+<p class="text-xs text-slate-500 dark:text-slate-500">Alertas médicas y citas</p>
+</div>
+</div>
+<div class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600"></div>
+</button>
+<!-- Inactive Option -->
+<button class="relative flex items-center justify-between p-4 rounded-xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 transition-all group">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-gray-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">notifications_off</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-medium text-slate-700 dark:text-slate-200">Ninguna</p>
+<p class="text-xs text-slate-500 dark:text-slate-500">Sin interrupciones</p>
+</div>
+</div>
+<div class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600"></div>
+</button>
+</div>
+</section>
+<!-- Google Fit Integration -->
+<section class="glass-card rounded-xl p-5 flex items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shrink-0">
+<!-- Placeholder icon for Google Fit using material symbol as per constraint -->
+<span class="material-symbols-outlined text-slate-900" style="font-size: 24px;">fitness_center</span>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white">Google Fit</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400">Sincroniza tu actividad física</p>
+</div>
+</div>
+<button class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded-lg transition-colors shadow-lg shadow-green-500/20">
+                Conectar
+            </button>
+</section>
+<!-- Logout Button -->
+<button class="mt-4 w-full py-3 text-red-500 hover:text-red-600 font-medium text-sm transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 20px;">logout</span>
+            Cerrar Sesión
+        </button>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full bg-background-light dark:bg-[#211b27] border-t border-gray-200 dark:border-[#302839] px-2 pb-5 pt-2 z-50">
+<div class="flex justify-around items-center">
+<!-- Item 1 -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#ab9cba] group-hover:text-primary dark:group-hover:text-white transition-colors" style="font-size: 24px;">home</span>
+<span class="text-[10px] font-medium text-slate-400 dark:text-[#ab9cba] group-hover:text-primary dark:group-hover:text-white transition-colors">Inicio</span>
+</a>
+<!-- Item 2 -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#ab9cba] group-hover:text-primary dark:group-hover:text-white transition-colors" style="font-size: 24px;">favorite</span>
+<span class="text-[10px] font-medium text-slate-400 dark:text-[#ab9cba] group-hover:text-primary dark:group-hover:text-white transition-colors">Dolor</span>
+</a>
+<!-- Item 3 -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#ab9cba] group-hover:text-primary dark:group-hover:text-white transition-colors" style="font-size: 24px;">pool</span>
+<span class="text-[10px] font-medium text-slate-400 dark:text-[#ab9cba] group-hover:text-primary dark:group-hover:text-white transition-colors">Ejercicios</span>
+</a>
+<!-- Item 4 -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#ab9cba] group-hover:text-primary dark:group-hover:text-white transition-colors" style="font-size: 24px;">bar_chart</span>
+<span class="text-[10px] font-medium text-slate-400 dark:text-[#ab9cba] group-hover:text-primary dark:group-hover:text-white transition-colors">Progreso</span>
+</a>
+<!-- Item 5 (Active) -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 group" href="#">
+<div class="w-12 h-8 flex items-center justify-center rounded-full bg-primary/20 dark:bg-primary/20">
+<span class="material-symbols-outlined text-primary dark:text-primary" style="font-size: 24px; font-variation-settings: 'FILL' 1;">settings</span>
+</div>
+<span class="text-[10px] font-medium text-primary dark:text-primary">Config</span>
+</a>
+</div>
+</nav>
+</body></html>

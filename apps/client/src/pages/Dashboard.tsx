@@ -33,227 +33,205 @@ export default function Dashboard() {
 
   const latestQol = qol.length > 0 ? qol[qol.length - 1] : null;
   const avgPain = stats?.average ?? 0;
-  const qolScore = latestQol?.score ?? 0;
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+      <div className="bg-background-dark min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="bg-[#0a0a0f] font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
-      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
-
-      {/* ══ Top bar with greeting + notification bell (Stitch PRO) ══ */}
-      <div className="px-5 pt-6 mb-5">
-        <div className="flex items-start justify-between">
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Bienvenido de nuevo</div>
-            <h1 className="text-[26px] font-bold text-white tracking-tight leading-tight">
+    <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col overflow-x-hidden antialiased selection:bg-primary selection:text-white">
+      {/* ── Header Section (exact Stitch) ── */}
+      <header className="flex flex-col gap-2 p-6 pb-2 pt-8">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <p className="text-slate-400 text-sm font-medium tracking-wide uppercase">Bienvenido de nuevo</p>
+            <h1 className="text-3xl font-bold leading-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
               {t('dash_hello', { name: user?.name || '' })} 👋
             </h1>
-            <p className="text-slate-500 text-sm mt-1">{t('dash_summary')}</p>
           </div>
-          <div className="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mt-1">
-            <span className="material-symbols-outlined text-slate-400 text-[20px]">notifications</span>
-          </div>
+          <button className="flex items-center justify-center w-10 h-10 rounded-full bg-surface-dark border border-white/10 text-white hover:bg-surface-light transition-colors">
+            <span className="material-symbols-outlined text-[24px]">notifications</span>
+          </button>
         </div>
-      </div>
+        <p className="text-slate-400 text-sm font-normal mt-1">{t('dash_summary')}</p>
+      </header>
 
-      {/* ══ Google Fit Banner (Stitch PRO — 3-col with trends) ══ */}
-      {healthStatus?.connected && healthData ? (
-        <div className="mx-5 rounded-2xl p-5 mb-5 relative overflow-hidden bg-white/[0.03] border border-white/[0.06]">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/15 blur-[50px] rounded-full -mr-10 -mt-10" />
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary text-[18px]">phone_iphone</span>
+      {/* ── Main Content ── */}
+      <main className="flex-1 flex flex-col gap-6 p-4 pb-24">
+        {/* ── Google Fit Banner (exact Stitch) ── */}
+        {healthStatus?.connected && healthData ? (
+          <div className="glass-card rounded-2xl p-5 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
+            <div className="flex items-center justify-between mb-4 relative z-10">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-white text-[20px]">monitor_heart</span>
+                <h3 className="font-bold text-white text-lg">Google Fit</h3>
               </div>
-              <span className="text-white font-semibold text-sm">Google Fit</span>
-            </div>
-            <span className="px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-[10px] font-bold uppercase tracking-wider">
-              ● Auto-sync
-            </span>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Pasos</span>
-              <span className="text-xl font-bold text-white">{healthData.steps ?? '—'}</span>
-              <div className="flex items-center gap-1 text-green-400 text-[10px]">
-                <span className="material-symbols-outlined text-[12px]">trending_up</span>
-                <span>+12%</span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1 border-l border-white/5 pl-3">
-              <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Sueño</span>
-              <span className="text-xl font-bold text-white">
-                {healthData.sleepMinutes ? `${Math.floor(healthData.sleepMinutes / 60)}h ${healthData.sleepMinutes % 60}m` : '—'}
+              <span className="bg-accent-green/20 text-accent-green text-xs font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-accent-green/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" /> Auto-sync
               </span>
-              <span className="text-[10px] text-slate-500">Objetivo: 8h</span>
             </div>
-            <div className="flex flex-col gap-1 border-l border-white/5 pl-3">
-              <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Pulso</span>
-              <span className="text-xl font-bold text-white">
-                {healthData.heartRateAvg ?? '—'} <span className="text-xs font-normal text-slate-500">bpm</span>
-              </span>
-              <div className="w-full bg-primary/20 h-1 mt-1 rounded-full overflow-hidden">
-                <div className="bg-primary h-full rounded-full" style={{ width: `${Math.min((healthData.heartRateAvg || 72) / 120 * 100, 100)}%` }} />
+            <div className="grid grid-cols-3 gap-4 divide-x divide-white/10 relative z-10">
+              <div className="flex flex-col gap-1 pr-2">
+                <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Pasos</p>
+                <p className="text-xl font-bold text-white">{healthData.steps?.toLocaleString() ?? '—'}</p>
+                <p className="text-[10px] text-accent-green flex items-center gap-0.5">
+                  <span className="material-symbols-outlined text-[12px]">trending_up</span> +12%
+                </p>
               </div>
-            </div>
-          </div>
-        </div>
-      ) : !healthStatus?.connected ? (
-        <Link to="/app/settings" className="mx-5 rounded-2xl p-5 mb-5 flex items-center gap-4 no-underline text-inherit hover:bg-white/5 transition-colors bg-white/[0.03] border border-white/[0.06]">
-          <div className="size-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400">
-            <span className="material-symbols-outlined">fitness_center</span>
-          </div>
-          <div>
-            <div className="text-white font-medium">Conectá Google Fit</div>
-            <div className="text-slate-500 text-xs">Sueño, pasos y frecuencia cardíaca automáticos</div>
-          </div>
-        </Link>
-      ) : null}
-
-      {/* ══ Stats Grid (Stitch PRO — 2x2 with icons & indicators) ══ */}
-      <div className="grid grid-cols-2 gap-3 mx-5 mb-6">
-        {/* Pain Average */}
-        <div className="rounded-2xl p-4 flex flex-col justify-between h-[120px] relative overflow-hidden bg-white/[0.03] border border-white/[0.06]">
-          <div className="flex items-center justify-between">
-            <div className="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary text-[16px]">sentiment_dissatisfied</span>
-            </div>
-          </div>
-          <div>
-            <span className="text-slate-500 text-[10px] font-medium uppercase tracking-wider">Dolor Promedio</span>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-2xl font-bold text-white">{stats?.average ?? '—'}</span>
-              <span className="text-xs text-slate-500">/10</span>
-            </div>
-          </div>
-          <div className="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-            <div className="bg-primary h-full rounded-full transition-all duration-500" style={{ width: `${avgPain * 10}%` }} />
-          </div>
-        </div>
-
-        {/* QoL Score */}
-        <div className="rounded-2xl p-4 flex flex-col justify-between h-[120px] relative overflow-hidden bg-white/[0.03] border border-white/[0.06]">
-          <div className="flex items-center justify-between">
-            <div className="size-8 rounded-lg bg-green-500/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-green-400 text-[16px]">spa</span>
-            </div>
-          </div>
-          <div>
-            <span className="text-slate-500 text-[10px] font-medium uppercase tracking-wider">Calidad de Vida</span>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-2xl font-bold text-white">{latestQol?.score ?? '—'}</span>
-              <span className="text-xs text-slate-500">pts</span>
-            </div>
-          </div>
-          <div className="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-            <div className="bg-green-500 h-full rounded-full transition-all duration-500" style={{ width: `${qolScore}%` }} />
-          </div>
-        </div>
-
-        {/* Records */}
-        <div className="rounded-2xl p-4 flex flex-col justify-between h-[120px] relative overflow-hidden bg-white/[0.03] border border-white/[0.06]">
-          <div className="flex items-center justify-between">
-            <div className="size-8 rounded-lg bg-slate-500/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-slate-400 text-[16px]">history</span>
-            </div>
-          </div>
-          <div>
-            <span className="text-slate-500 text-[10px] font-medium uppercase tracking-wider">Registros</span>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-2xl font-bold text-white">{stats?.count ?? 0}</span>
-              <span className="text-xs text-slate-500">esta semana</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Pending — accent glow */}
-        <div className="rounded-2xl p-4 flex flex-col justify-between h-[120px] relative overflow-hidden bg-primary/[0.06] border border-primary/20">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-primary/20 blur-[30px] rounded-full -mr-6 -mt-6" />
-          <div className="flex items-center justify-between">
-            <div className="size-8 rounded-lg bg-primary/15 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary text-[16px]">checklist</span>
-            </div>
-            <span className="text-[10px] text-primary font-bold">Pendientes</span>
-          </div>
-          <div>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-2xl font-bold text-white">{pending.length}</span>
-              <span className="text-xs text-primary/60">tareas hoy</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ══ Quick Actions (Stitch PRO — cards with sublabels) ══ */}
-      <div className="mx-5">
-        <h3 className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.15em] mb-3">Acciones Rápidas</h3>
-        <div className="flex flex-col gap-2.5">
-          {/* Log Pain */}
-          <Link to="/app/pain/new" className="rounded-xl p-4 flex items-center justify-between group active:scale-[0.98] transition-all duration-200 no-underline text-inherit bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05]">
-            <div className="flex items-center gap-3.5">
-              <div className="size-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
-                <span className="material-symbols-outlined text-[20px]">edit_square</span>
+              <div className="flex flex-col gap-1 px-2">
+                <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Sueño</p>
+                <p className="text-xl font-bold text-white">
+                  {healthData.sleepMinutes ? `${Math.floor(healthData.sleepMinutes / 60)}h ${healthData.sleepMinutes % 60}m` : '—'}
+                </p>
+                <p className="text-[10px] text-slate-400">Objetivo: 8h</p>
               </div>
-              <div>
-                <span className="text-white font-semibold text-sm block">{t('dash_log_pain')}</span>
-                <span className="text-[11px] text-slate-500">¿Cómo te sentís ahora?</span>
-              </div>
-            </div>
-            <span className="material-symbols-outlined text-slate-600 text-[18px] group-hover:text-white transition-colors">chevron_right</span>
-          </Link>
-
-          {/* Log Symptoms */}
-          <Link to="/app/symptoms" className="rounded-xl p-4 flex items-center justify-between group active:scale-[0.98] transition-all duration-200 no-underline text-inherit bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05]">
-            <div className="flex items-center gap-3.5">
-              <div className="size-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400">
-                <span className="material-symbols-outlined text-[20px]">medical_services</span>
-              </div>
-              <div>
-                <span className="text-white font-semibold text-sm block">{t('dash_log_symptoms')}</span>
-                <span className="text-[11px] text-slate-500">Nuevos o recurrentes</span>
-              </div>
-            </div>
-            <span className="material-symbols-outlined text-slate-600 text-[18px] group-hover:text-white transition-colors">chevron_right</span>
-          </Link>
-
-          {/* Answer Questions — highlighted purple */}
-          {pending.length > 0 && (
-            <Link to="/app/questions" className="rounded-xl p-4 flex items-center justify-between group active:scale-[0.98] transition-all duration-200 no-underline text-inherit bg-primary/[0.08] border border-primary/30 shadow-[0_0_20px_rgba(140,37,244,0.08)]">
-              <div className="flex items-center gap-3.5">
-                <div className="size-10 rounded-xl bg-primary/15 flex items-center justify-center text-primary ring-1 ring-primary/20">
-                  <span className="material-symbols-outlined text-[20px]">quiz</span>
-                </div>
-                <div>
-                  <span className="text-white font-semibold text-sm block">Responder preguntas</span>
-                  <span className="text-[11px] text-primary">{pending.length} pendientes de hoy</span>
+              <div className="flex flex-col gap-1 pl-2">
+                <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Pulso</p>
+                <p className="text-xl font-bold text-white">{healthData.heartRateAvg ?? '—'}<span className="text-sm font-normal text-slate-400 ml-0.5">bpm</span></p>
+                <div className="w-full h-1 bg-white/10 rounded-full mt-1.5 overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: `${Math.min((healthData.heartRateAvg || 72) / 120 * 100, 100)}%` }} />
                 </div>
               </div>
-              <span className="material-symbols-outlined text-primary text-[18px]">chevron_right</span>
+            </div>
+          </div>
+        ) : !healthStatus?.connected ? (
+          <Link to="/app/settings" className="glass-card rounded-2xl p-5 flex items-center gap-4 no-underline text-inherit hover:bg-surface-light/20 transition-colors">
+            <div className="w-10 h-10 rounded-full bg-accent-green/10 flex items-center justify-center text-accent-green">
+              <span className="material-symbols-outlined">fitness_center</span>
+            </div>
+            <div>
+              <div className="text-white font-medium">Conectá Google Fit</div>
+              <div className="text-xs text-slate-400">Sueño, pasos y frecuencia cardíaca automáticos</div>
+            </div>
+          </Link>
+        ) : null}
+
+        {/* ── Stats Grid (exact Stitch) ── */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* Pain Card */}
+          <div className="glass-card p-4 rounded-xl flex flex-col gap-3">
+            <div className="flex items-center gap-2 text-slate-300">
+              <span className="material-symbols-outlined text-[20px] text-accent-purple">coronavirus</span>
+              <span className="text-xs font-semibold">Dolor Promedio</span>
+            </div>
+            <div className="mt-auto">
+              <p className="text-2xl font-bold text-white mb-1">{stats?.average ?? '—'}<span className="text-sm text-slate-400 font-normal">/10</span></p>
+              <div className="w-full h-1.5 bg-surface-dark rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-accent-purple to-primary rounded-full" style={{ width: `${avgPain * 10}%` }} />
+              </div>
+            </div>
+          </div>
+
+          {/* Quality of Life Card */}
+          <div className="glass-card p-4 rounded-xl flex flex-col gap-3">
+            <div className="flex items-center gap-2 text-slate-300">
+              <span className="material-symbols-outlined text-[20px] text-accent-green">vital_signs</span>
+              <span className="text-xs font-semibold">Calidad de Vida</span>
+            </div>
+            <div className="mt-auto">
+              <p className="text-2xl font-bold text-white mb-1">{latestQol?.score ?? '—'} <span className="text-sm text-slate-400 font-normal">pts</span></p>
+              <div className="w-full h-1.5 bg-surface-dark rounded-full overflow-hidden">
+                <div className="h-full bg-accent-green rounded-full" style={{ width: `${latestQol?.score ?? 0}%` }} />
+              </div>
+            </div>
+          </div>
+
+          {/* Records Card */}
+          <div className="glass-card p-4 rounded-xl flex flex-col gap-3">
+            <div className="flex items-center gap-2 text-slate-300">
+              <span className="material-symbols-outlined text-[20px] text-accent-blue">edit_note</span>
+              <span className="text-xs font-semibold">Registros</span>
+            </div>
+            <div className="mt-auto">
+              <p className="text-2xl font-bold text-white">{stats?.count ?? 0}</p>
+              <p className="text-xs text-slate-400">esta semana</p>
+            </div>
+          </div>
+
+          {/* Tasks Card (Glowing — exact Stitch) */}
+          <div className="glass-card p-4 rounded-xl flex flex-col gap-3 relative border-primary/40 shadow-[0_0_15px_-5px_rgba(140,37,244,0.3)]">
+            <div className="absolute inset-0 bg-primary/5 rounded-xl pointer-events-none" />
+            <div className="flex items-center gap-2 text-primary relative z-10">
+              <span className="material-symbols-outlined text-[20px]">check_circle</span>
+              <span className="text-xs font-semibold">Pendientes</span>
+            </div>
+            <div className="mt-auto relative z-10">
+              <p className="text-2xl font-bold text-white">{pending.length}</p>
+              <p className="text-xs text-primary/80">tareas hoy</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Quick Actions (exact Stitch) ── */}
+        <div>
+          <h3 className="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-3 px-1">Acciones Rápidas</h3>
+          <div className="flex flex-col gap-2">
+            {/* Registrar dolor */}
+            <Link to="/app/pain/new" className="glass-card w-full p-4 rounded-xl flex items-center justify-between group active:scale-[0.98] transition-transform no-underline text-inherit">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-accent-blue/10 flex items-center justify-center text-accent-blue">
+                  <span className="material-symbols-outlined">medication</span>
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className="text-white font-medium">{t('dash_log_pain')}</span>
+                  <span className="text-xs text-slate-400">¿Cómo te sientes ahora?</span>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-slate-500 group-hover:text-white transition-colors">chevron_right</span>
             </Link>
-          )}
 
-          {/* View History */}
-          <Link to="/app/pain/history" className="rounded-xl p-4 flex items-center justify-between group active:scale-[0.98] transition-all duration-200 no-underline text-inherit bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05]">
-            <div className="flex items-center gap-3.5">
-              <div className="size-10 rounded-xl bg-slate-700/30 flex items-center justify-center text-slate-400">
-                <span className="material-symbols-outlined text-[20px]">bar_chart_4_bars</span>
+            {/* Registrar síntomas */}
+            <Link to="/app/symptoms" className="glass-card w-full p-4 rounded-xl flex items-center justify-between group active:scale-[0.98] transition-transform no-underline text-inherit">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-accent-orange/10 flex items-center justify-center text-accent-orange">
+                  <span className="material-symbols-outlined">thermometer</span>
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className="text-white font-medium">{t('dash_log_symptoms')}</span>
+                  <span className="text-xs text-slate-400">Nuevos o recurrentes</span>
+                </div>
               </div>
-              <div>
-                <span className="text-white font-semibold text-sm block">{t('dash_history')}</span>
-                <span className="text-[11px] text-slate-500">Revisá tus entradas anteriores</span>
+              <span className="material-symbols-outlined text-slate-500 group-hover:text-white transition-colors">chevron_right</span>
+            </Link>
+
+            {/* Responder preguntas (Highlighted — exact Stitch) */}
+            {pending.length > 0 && (
+              <Link to="/app/questions" className="w-full p-4 rounded-xl flex items-center justify-between bg-primary/10 border border-primary/30 shadow-[0_0_10px_-5px_rgba(140,37,244,0.3)] group active:scale-[0.98] transition-transform no-underline text-inherit">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary relative">
+                    <span className="material-symbols-outlined">quiz</span>
+                    <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#191022]" />
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <span className="text-white font-bold">Responder preguntas</span>
+                    <span className="text-xs text-primary/80 font-medium">{pending.length} pendientes de hoy</span>
+                  </div>
+                </div>
+                <span className="material-symbols-outlined text-primary group-hover:text-white transition-colors">chevron_right</span>
+              </Link>
+            )}
+
+            {/* Ver historial */}
+            <Link to="/app/pain/history" className="glass-card w-full p-4 rounded-xl flex items-center justify-between group active:scale-[0.98] transition-transform no-underline text-inherit">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-slate-700/30 flex items-center justify-center text-slate-400">
+                  <span className="material-symbols-outlined">history</span>
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className="text-white font-medium">{t('dash_history')}</span>
+                  <span className="text-xs text-slate-400">Revisá tus entradas anteriores</span>
+                </div>
               </div>
-            </div>
-            <span className="material-symbols-outlined text-slate-600 text-[18px] group-hover:text-white transition-colors">chevron_right</span>
-          </Link>
+              <span className="material-symbols-outlined text-slate-500 group-hover:text-white transition-colors">chevron_right</span>
+            </Link>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zophiel - Daily Questions</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8c25f4",
+                        "primary-dark": "#701bc4",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#0f0b15",
+                        "surface-dark": "#1d1726",
+                        "surface-light": "#2a2235",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                },
+            },
+        }
+    </script>
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Custom slider styles for range input */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            margin-top: -10px;
+            box-shadow: 0 0 10px rgba(140, 37, 244, 0.5);
+            border: 2px solid #8c25f4;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #372f42;
+            border-radius: 2px;
+        }
+
+        /* Glassmorphism utilities */
+        .glass-card {
+            background: rgba(42, 34, 53, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-slate-100 font-display antialiased overflow-x-hidden min-h-screen flex flex-col">
+<!-- Status Bar Area (Mockup) -->
+<div class="h-12 w-full flex items-center justify-between px-6 pt-2">
+<span class="text-sm font-medium text-slate-400">9:41</span>
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-[18px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[18px]">wifi</span>
+<span class="material-symbols-outlined text-[18px]">battery_full</span>
+</div>
+</div>
+<!-- Header Section -->
+<header class="px-6 pt-4 pb-2">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-primary/20">
+                    Z
+                </div>
+<h2 class="text-lg font-bold tracking-tight text-white">Zophiel</h2>
+</div>
+<button class="h-10 w-10 flex items-center justify-center rounded-xl bg-surface-light text-slate-300 hover:text-white transition-colors border border-white/5">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+<h1 class="text-3xl font-bold text-white leading-tight mb-2">Preguntas del día</h1>
+<p class="text-slate-400 text-sm font-medium">Respondé para mejorar tu seguimiento</p>
+</header>
+<!-- Progress Section -->
+<section class="px-6 py-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-sm font-semibold text-primary">3 de 5 respondidas</span>
+<span class="text-xs text-slate-500 font-medium">60%</span>
+</div>
+<div class="h-3 w-full bg-surface-dark rounded-full overflow-hidden border border-white/5 relative">
+<div class="absolute inset-0 bg-primary/20"></div>
+<div class="h-full bg-gradient-to-r from-primary to-purple-400 rounded-full transition-all duration-500 ease-out shadow-[0_0_12px_rgba(140,37,244,0.6)]" style="width: 60%;"></div>
+</div>
+</section>
+<!-- Questions List -->
+<main class="flex-1 px-6 pb-24 flex flex-col gap-5">
+<!-- Card 1: Pain Level (Active) -->
+<div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-transparent"></div>
+<div class="flex justify-between items-start mb-6">
+<h3 class="text-lg font-semibold text-white pr-8">¿Cómo calificás tu dolor hoy?</h3>
+<span class="flex items-center justify-center h-8 w-8 rounded-full bg-primary/20 text-primary font-bold text-sm">4</span>
+</div>
+<div class="relative pt-6 pb-2">
+<div class="absolute -top-1 left-[40%] -translate-x-1/2 bg-white text-primary-dark font-bold px-2 py-0.5 rounded text-xs shadow-lg transform transition-transform scale-100">
+                    Moderado
+                </div>
+<!-- Gradient track background -->
+<div class="h-1.5 w-full rounded-full bg-gradient-to-r from-emerald-500 via-yellow-500 to-red-500 mb-[-6px] opacity-80"></div>
+<input class="relative z-10 w-full" max="10" min="1" type="range" value="4"/>
+<div class="flex justify-between mt-3 text-xs text-slate-500 font-medium uppercase tracking-wider">
+<span>Sin dolor</span>
+<span>Intenso</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Sleep Quality (Completed) -->
+<div class="glass-card rounded-2xl p-5 border-l-4 border-l-emerald-500/50">
+<div class="flex justify-between items-start mb-6">
+<h3 class="text-lg font-semibold text-white pr-4">¿Pudiste descansar bien anoche?</h3>
+<div class="flex items-center gap-1 bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
+<span class="material-symbols-outlined text-emerald-400 text-[16px]">check_circle</span>
+<span class="text-xs font-bold text-emerald-400 uppercase tracking-wide">Guardado</span>
+</div>
+</div>
+<div class="relative pt-2 pb-2 opacity-60 pointer-events-none grayscale-[0.5]">
+<input class="relative z-10 w-full" max="10" min="1" type="range" value="8"/>
+<div class="flex justify-between mt-3 text-xs text-slate-500 font-medium uppercase tracking-wider">
+<span>Mal</span>
+<span>Excelente</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Activity Impact (Pending) -->
+<div class="glass-card rounded-2xl p-5 border-l-4 border-l-transparent hover:border-l-primary/30 transition-all">
+<div class="flex justify-between items-start mb-6">
+<h3 class="text-lg font-semibold text-white pr-8">¿Tu dolor afectó tus actividades?</h3>
+</div>
+<div class="relative pt-2 pb-2">
+<input class="relative z-10 w-full" max="10" min="1" type="range" value="1"/>
+<div class="flex justify-between mt-3 text-xs text-slate-500 font-medium uppercase tracking-wider">
+<span>Nada</span>
+<span>Mucho</span>
+</div>
+</div>
+</div>
+<!-- Auto Save Indicator -->
+<div class="flex items-center justify-center gap-2 mt-2 text-slate-500">
+<span class="material-symbols-outlined text-[16px] animate-pulse">sync</span>
+<p class="text-xs font-medium">Autoguardado activado</p>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full border-t border-white/5 bg-[#141118]/95 backdrop-blur-xl pb-6 pt-3 px-2 z-50 safe-area-bottom">
+<div class="flex justify-between items-end">
+<!-- Home -->
+<a class="flex flex-1 flex-col items-center justify-end gap-1 group" href="#">
+<div class="flex h-8 items-center justify-center text-slate-500 group-hover:text-slate-300 transition-colors">
+<span class="material-symbols-outlined text-[24px]">home</span>
+</div>
+<p class="text-xs font-medium text-slate-500 group-hover:text-slate-300 transition-colors">Inicio</p>
+</a>
+<!-- Questions (Active) -->
+<a class="flex flex-1 flex-col items-center justify-end gap-1 group relative" href="#">
+<div class="absolute -top-10 bg-primary/20 w-12 h-12 rounded-full blur-xl"></div>
+<div class="flex h-8 items-center justify-center text-primary relative z-10">
+<span class="material-symbols-outlined text-[24px] font-variation-settings-fill">quiz</span>
+</div>
+<p class="text-xs font-bold text-primary relative z-10">Preguntas</p>
+</a>
+<!-- Progress -->
+<a class="flex flex-1 flex-col items-center justify-end gap-1 group" href="#">
+<div class="flex h-8 items-center justify-center text-slate-500 group-hover:text-slate-300 transition-colors">
+<span class="material-symbols-outlined text-[24px]">insights</span>
+</div>
+<p class="text-xs font-medium text-slate-500 group-hover:text-slate-300 transition-colors">Progreso</p>
+</a>
+<!-- Community -->
+<a class="flex flex-1 flex-col items-center justify-end gap-1 group" href="#">
+<div class="flex h-8 items-center justify-center text-slate-500 group-hover:text-slate-300 transition-colors">
+<span class="material-symbols-outlined text-[24px]">group</span>
+</div>
+<p class="text-xs font-medium text-slate-500 group-hover:text-slate-300 transition-colors">Comunidad</p>
+</a>
+<!-- Profile -->
+<a class="flex flex-1 flex-col items-center justify-end gap-1 group" href="#">
+<div class="flex h-8 items-center justify-center text-slate-500 group-hover:text-slate-300 transition-colors">
+<span class="material-symbols-outlined text-[24px]">person</span>
+</div>
+<p class="text-xs font-medium text-slate-500 group-hover:text-slate-300 transition-colors">Perfil</p>
+</a>
+</div>
+</nav>
+<!-- Helper for Material Icons Filled State -->
+<style>
+        .font-variation-settings-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</body></html>

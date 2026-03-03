@@ -51,7 +51,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="bg-[#0a0a0f] font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
+    <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
 
       {/* Header */}
@@ -63,7 +63,7 @@ export default function Settings() {
       </div>
 
       {/* Profile Card */}
-      <div className="mx-5 rounded-2xl p-5 mb-5 bg-white/[0.03] border border-white/[0.06]">
+      <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
         <div className="flex flex-col items-center mb-5">
           <div className="size-20 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 border-2 border-primary/30 flex items-center justify-center mb-2 relative">
             <span className="material-symbols-outlined text-primary text-3xl">person</span>
@@ -162,7 +162,7 @@ export default function Settings() {
       </div>
 
       {/* Google Fit */}
-      <div className="mx-5 rounded-2xl p-5 mb-5 bg-white/[0.03] border border-white/[0.06]">
+      <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
         <div className="flex items-center gap-3.5">
           <div className="size-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400">
             <span className="material-symbols-outlined text-[20px]">fitness_center</span>

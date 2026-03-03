@@ -41,14 +41,14 @@ export default function PainHistory() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+      <div className="min-h-screen bg-background-dark flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="bg-[#0a0a0f] font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
+    <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
 
       {/* Header */}
@@ -93,7 +93,7 @@ export default function PainHistory() {
         </div>
 
         {/* Total entries */}
-        <div className="rounded-2xl p-4 bg-white/[0.03] border border-white/[0.06]">
+        <div className="rounded-2xl p-4 glass-card">
           <div className="flex items-center gap-2 mb-1">
             <span className="material-symbols-outlined text-slate-400 text-[16px]">edit_note</span>
             <span className="text-slate-500 text-[10px] font-medium uppercase tracking-wider">Total registros</span>
@@ -105,7 +105,7 @@ export default function PainHistory() {
         </div>
 
         {/* Most common zone */}
-        <div className="rounded-2xl p-4 bg-white/[0.03] border border-white/[0.06]">
+        <div className="rounded-2xl p-4 glass-card">
           <div className="flex items-center gap-2 mb-1">
             <span className="material-symbols-outlined text-orange-400 text-[16px]">pin_drop</span>
             <span className="text-slate-500 text-[10px] font-medium uppercase tracking-wider">Zona común</span>
@@ -118,7 +118,7 @@ export default function PainHistory() {
       </div>
 
       {/* Pain Trend Chart */}
-      <div className="mx-5 rounded-2xl p-5 mb-5 bg-white/[0.03] border border-white/[0.06]">
+      <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-bold text-white">Tendencia de dolor</h3>
           <span className="material-symbols-outlined text-slate-600 text-[16px]">more_horiz</span>
@@ -150,7 +150,7 @@ export default function PainHistory() {
       </div>
 
       {/* Intensity Heatmap */}
-      <div className="mx-5 rounded-2xl p-5 mb-5 bg-white/[0.03] border border-white/[0.06]">
+      <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
         <h3 className="text-sm font-bold text-white mb-4">Intensidad Horaria</h3>
         <div className="space-y-2">
           {heatmapRows.map((row, ri) => (
@@ -196,7 +196,7 @@ export default function PainHistory() {
       </div>
 
       {/* Frequent Zones */}
-      <div className="mx-5 rounded-2xl p-5 mb-5 bg-white/[0.03] border border-white/[0.06]">
+      <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
         <h3 className="text-sm font-bold text-white mb-4">Zonas Frecuentes</h3>
         <div className="space-y-3">
           {zones.map((zone) => (

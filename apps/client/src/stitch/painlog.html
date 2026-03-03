@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zophiel Pain Log Entry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8c25f4",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#0f0b15",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(140, 37, 244, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(140, 37, 244, 0.2);
+        }
+        .pain-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #8c25f4;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(140, 37, 244, 0.5);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen pb-32">
+<!-- Header -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<button class="flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">arrow_back_ios</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight">Registrar Dolor</h1>
+<div class="w-6"></div>
+</header>
+<main class="px-4 py-6 space-y-8 max-w-md mx-auto">
+<!-- Body Map Section -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-sm font-semibold uppercase tracking-wider text-primary/80">Mapa de Dolor</h2>
+<div class="flex gap-2">
+<button class="p-2 rounded-full glass-card text-primary">
+<span class="material-symbols-outlined text-sm">person</span>
+</button>
+<button class="p-2 rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-sm">reorder</span>
+</button>
+</div>
+</div>
+<div class="glass-card rounded-xl p-6 flex flex-col items-center justify-center relative min-h-[300px] overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
+<!-- Silhouette Placeholder -->
+<div class="relative w-48 h-64 bg-slate-800/50 rounded-full flex items-center justify-center border border-primary/20" data-alt="Interactive human body silhouette showing pain zones" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDJjBqRjm_8ipM6iH-OHiCYW8JQu0l-9yJDOUpjxt4lsozk5ZzMOFAMBIkdAAhm5EvegHNmFqhcl2FKSQD3tR1HfEEbmmx3iwhyrApVQxfiEHGwk7rK-g47ww-DprsTBcbw3sRPbxMPzM2G6B9UHmrj43J5xGmmwrqvJQaN58aKDcl5uOewYYTOgl6XJbkw_oks88LXkHBEiFnITfA-9K7U1fDPDdMx2nYxf_ZdJQyp6om9VzACK_D_fi0eKZqwunAUUdINsJDyxQ'); background-size: contain; background-repeat: no-repeat; background-position: center;">
+<!-- Glowing selected zone -->
+<div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-8 h-8 bg-primary/60 rounded-full blur-md animate-pulse"></div>
+<div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-2 border-white/30"></div>
+</div>
+<p class="mt-4 text-xs text-slate-400">Pulsa para marcar las zonas afectadas</p>
+</div>
+</section>
+<!-- Intensity Slider -->
+<section class="space-y-6">
+<div class="flex items-center justify-between">
+<h2 class="text-sm font-semibold uppercase tracking-wider text-primary/80">Intensidad</h2>
+<span class="px-3 py-1 rounded-full bg-primary/20 text-primary font-bold text-xl">7</span>
+</div>
+<div class="relative px-2">
+<div class="h-2 w-full rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 opacity-80"></div>
+<input class="pain-slider absolute top-0 left-0 w-full h-2 appearance-none bg-transparent cursor-pointer" max="10" min="0" type="range" value="7"/>
+<div class="flex justify-between mt-3 text-[10px] font-medium text-slate-500">
+<span>SIN DOLOR</span>
+<span>MODERADO</span>
+<span>MÁXIMO</span>
+</div>
+</div>
+</section>
+<!-- Temporality Chips -->
+<section class="space-y-4">
+<h2 class="text-sm font-semibold uppercase tracking-wider text-primary/80">Temporalidad</h2>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full border border-primary/30 text-sm font-medium hover:bg-primary hover:text-white transition-colors">Constante</button>
+<button class="px-4 py-2 rounded-full bg-primary text-white text-sm font-medium">Intermitente</button>
+<button class="px-4 py-2 rounded-full border border-primary/30 text-sm font-medium hover:bg-primary hover:text-white transition-colors">Agudo</button>
+<button class="px-4 py-2 rounded-full border border-primary/30 text-sm font-medium hover:bg-primary hover:text-white transition-colors">Al movimiento</button>
+</div>
+</section>
+<!-- Symptoms Grid -->
+<section class="space-y-4">
+<h2 class="text-sm font-semibold uppercase tracking-wider text-primary/80">Malestar y Síntomas</h2>
+<div class="grid grid-cols-3 gap-3">
+<button class="glass-card flex flex-col items-center justify-center p-4 rounded-xl gap-2 hover:bg-primary/20 transition-all border-primary/10">
+<span class="text-2xl">🤢</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Náuseas</span>
+</button>
+<button class="glass-card flex flex-col items-center justify-center p-4 rounded-xl gap-2 bg-primary/30 border-primary/40">
+<span class="text-2xl">😫</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Fatiga</span>
+</button>
+<button class="glass-card flex flex-col items-center justify-center p-4 rounded-xl gap-2 hover:bg-primary/20 transition-all border-primary/10">
+<span class="text-2xl">😰</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Ansiedad</span>
+</button>
+<button class="glass-card flex flex-col items-center justify-center p-4 rounded-xl gap-2 hover:bg-primary/20 transition-all border-primary/10">
+<span class="text-2xl">💢</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Irritable</span>
+</button>
+<button class="glass-card flex flex-col items-center justify-center p-4 rounded-xl gap-2 hover:bg-primary/20 transition-all border-primary/10">
+<span class="text-2xl">💫</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Mareo</span>
+</button>
+<button class="glass-card flex flex-col items-center justify-center p-4 rounded-xl gap-2 hover:bg-primary/20 transition-all border-primary/10">
+<span class="text-2xl">☁️</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Neblina</span>
+</button>
+</div>
+</section>
+<!-- Notes Area -->
+<section class="space-y-4 pb-12">
+<h2 class="text-sm font-semibold uppercase tracking-wider text-primary/80">Notas adicionales</h2>
+<textarea class="w-full glass-card rounded-xl p-4 text-sm focus:ring-primary focus:border-primary border-primary/20 outline-none resize-none min-h-[100px]" placeholder="Describe cómo te sientes hoy..."></textarea>
+</section>
+</main>
+<!-- Bottom Action & Nav -->
+<div class="fixed bottom-0 left-0 right-0 z-50">
+<!-- Floating Submit Button -->
+<div class="px-4 pb-4">
+<button class="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-[#b16bff] text-white font-bold shadow-lg shadow-primary/30 active:scale-95 transition-transform uppercase tracking-widest text-sm">
+                Guardar Registro
+            </button>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="flex gap-2 border-t border-primary/10 bg-background-dark/95 backdrop-blur-md px-4 pb-6 pt-2 items-center justify-around">
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-[10px] font-medium">Inicio</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">favorite</span>
+<p class="text-[10px] font-medium">Registro</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<p class="text-[10px] font-medium">Plan</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<p class="text-[10px] font-medium">Chat</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-[10px] font-medium">Perfil</p>
+</a>
+</nav>
+</div>
+</body></html>

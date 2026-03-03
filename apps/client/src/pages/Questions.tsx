@@ -37,14 +37,14 @@ export default function Questions() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+      <div className="min-h-screen bg-background-dark flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="bg-[#0a0a0f] font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
+    <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
 
       {/* Header */}
@@ -69,7 +69,7 @@ export default function Questions() {
 
       {/* Question Cards */}
       {questions.length === 0 ? (
-        <div className="mx-5 rounded-2xl p-8 bg-white/[0.03] border border-white/[0.06] text-center">
+        <div className="mx-5 rounded-2xl p-8 glass-card text-center">
           <span className="material-symbols-outlined text-primary text-4xl mb-3 block">task_alt</span>
           <p className="text-white font-semibold mb-1">¡Todo al día!</p>
           <p className="text-slate-500 text-sm">No tenés preguntas pendientes.</p>
@@ -87,7 +87,7 @@ export default function Questions() {
                 className={`rounded-2xl p-5 relative overflow-hidden transition-all duration-300 ${
                   isSaved
                     ? 'bg-white/[0.03] border border-green-500/20'
-                    : 'bg-white/[0.03] border border-white/[0.06]'
+                    : 'glass-card'
                 }`}
               >
                 {/* Saved badge */}
