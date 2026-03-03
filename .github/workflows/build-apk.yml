@@ -82,34 +82,6 @@ jobs:
             cat "$VARS_FILE"
           fi
 
-      - name: Register SocialLogin Google provider in MainActivity
-        run: |
-          MAIN_ACT=apps/client/android/app/src/main/java/com/zophiel/app/MainActivity.java
-          python3 -c "
-          content = '''package com.zophiel.app;
-
-          import com.getcapacitor.BridgeActivity;
-          import android.os.Bundle;
-          import ee.forgr.capacitor.social.login.SocialLoginPlugin;
-          import ee.forgr.capacitor.social.login.GoogleProvider;
-
-          public class MainActivity extends BridgeActivity {
-              @Override
-              public void onCreate(Bundle savedInstanceState) {
-                  super.onCreate(savedInstanceState);
-                  SocialLoginPlugin.registerSocialLoginHook(new GoogleProvider(this, this));
-              }
-          }
-          '''
-          # Remove leading indentation
-          import textwrap
-          content = textwrap.dedent(content).strip() + '\n'
-          with open('$MAIN_ACT', 'w') as f:
-              f.write(content)
-          print('Patched MainActivity.java')
-          "
-          cat "$MAIN_ACT"
-
       - name: Sync Capacitor
         working-directory: apps/client
         run: npx cap sync android
