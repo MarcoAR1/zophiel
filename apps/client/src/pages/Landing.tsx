@@ -504,8 +504,6 @@ export default function Landing() {
               <ul className="space-y-4 m-0 p-0 list-none">
                 <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/about">Sobre Nosotros</Link></li>
                 <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/blog">Blog</Link></li>
-                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/careers">Carreras</Link></li>
-                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/contact">Contacto</Link></li>
               </ul>
             </div>
             <div>

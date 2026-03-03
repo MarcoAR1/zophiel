@@ -16,6 +16,13 @@ import Symptoms from './pages/Symptoms';
 import Questions from './pages/Questions';
 import QualityOfLife from './pages/QualityOfLife';
 import Settings from './pages/Settings';
+import Clinics from './pages/Clinics';
+import CaseStudies from './pages/CaseStudies';
+import About from './pages/About';
+import Blog from './pages/Blog';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Security from './pages/Security';
 
 function SyncBanner() {
   const isOnline = useOnlineStatus();
@@ -101,6 +108,13 @@ export default function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/clinics" element={<Clinics />} />
+          <Route path="/case-studies" element={<CaseStudies />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/security" element={<Security />} />
           <Route path="/app/*" element={<AuthenticatedApp />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
