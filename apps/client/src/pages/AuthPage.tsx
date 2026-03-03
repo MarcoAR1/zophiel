@@ -96,6 +96,7 @@ export default function AuthPage() {
         setError('No se pudo obtener el token de Google');
       }
     } catch (err: any) {
+      console.error('[Google Native Auth Error]', JSON.stringify(err));
       if (err.message !== 'The user canceled the sign-in flow.') {
         setError(err.message || 'Error al iniciar sesión con Google');
       }
