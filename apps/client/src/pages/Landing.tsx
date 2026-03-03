@@ -1,183 +1,325 @@
 import { Link } from 'react-router-dom';
+import { useI18n } from '../i18n/index';
 import ZophielLogo from '../components/ZophielLogo';
 
 /**
- * Landing page — DIRECT 1:1 conversion from stitch/landing-mobile.html
- * Every class, every element, exact same structure as Stitch PRO output.
- * Only changes: class→className, <Link> for routes, ZophielLogo for icon
+ * Responsive Landing Page - Derived directly from Stitch 'Zophiel Desktop Landing Page'
+ * Completely responsive layout covering both mobile and desktop displays.
  */
 export default function Landing() {
+  const { t } = useI18n();
+
   return (
-    <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col antialiased selection:bg-primary selection:text-white">
+    <div className="relative flex min-h-screen w-full flex-col group/design-root bg-background-dark text-slate-100 overflow-x-hidden antialiased">
+      {/* Decorative Background Gradients */}
+      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 rounded-full blur-[120px]"></div>
+      </div>
 
-      {/* ── Navbar ── exact from Stitch line 87-99 */}
-      <nav className="sticky top-0 z-50 w-full glass-card border-b border-white/5">
-        <div className="flex items-center justify-between px-4 py-3">
-          <Link to="/" className="flex items-center gap-2 no-underline">
-            <ZophielLogo size={40} variant="icon" className="rounded-xl shadow-lg shadow-primary/20" />
-            <span className="text-xl font-bold tracking-tight text-white">Zophiel</span>
-          </Link>
-          <Link to="/auth" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors no-underline">
-            Login
-          </Link>
-        </div>
-      </nav>
-
-      {/* ── Hero Section ── exact from Stitch line 101-139 */}
-      <header className="relative overflow-hidden px-4 pt-8 pb-12">
-        {/* Background Ambient Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-primary/10 blur-[100px] rounded-full pointer-events-none -z-10"></div>
-        <div className="flex flex-col items-center text-center">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 mb-6 backdrop-blur-md">
-            <span className="flex size-2 rounded-full bg-primary animate-pulse"></span>
-            <span className="text-xs font-medium text-purple-200">Nueva Versión 2.0 Disponible</span>
+      {/* Top Navigation */}
+      <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-[#0f0b15]/80 backdrop-blur-md">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <div className="size-8 text-primary flex items-center justify-center">
+              <ZophielLogo variant="icon" />
+            </div>
+            <h2 className="text-white text-xl font-bold tracking-tight">Zophiel</h2>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15] mb-4 text-white">
-            Entendé tu <br/>
-            <span className="text-gradient-primary">dolor crónico</span> <br/>
-            con inteligencia
-          </h1>
-          <p className="text-slate-400 text-lg leading-relaxed max-w-md mx-auto mb-8 font-light">
-            Rastreá tus síntomas, descubrí patrones ocultos y mejorá tu calidad de vida con nuestra tecnología avanzada de análisis.
-          </p>
-          <Link to="/auth" className="group relative flex w-full max-w-[320px] items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-primary to-purple-600 p-[1px] shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40 active:scale-95 no-underline">
-            <div className="relative flex h-12 w-full items-center justify-center rounded-xl bg-transparent px-6 transition-all group-hover:bg-white/5">
-              <span className="text-base font-bold text-white">Empezar Gratis</span>
-              <span className="material-symbols-outlined ml-2 text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
-            </div>
-          </Link>
-          {/* Stats / Trust Indicators */}
-          <div className="mt-12 grid grid-cols-3 gap-3 w-full max-w-lg">
-            <div className="glass-card flex flex-col items-center justify-center p-3 rounded-xl gap-2 text-center">
-              <span className="material-symbols-outlined text-primary text-2xl">body_system</span>
-              <span className="text-[11px] font-medium leading-tight text-slate-300">Mapa<br/>Corporal</span>
-            </div>
-            <div className="glass-card flex flex-col items-center justify-center p-3 rounded-xl gap-2 text-center">
-              <span className="material-symbols-outlined text-primary text-2xl">monitoring</span>
-              <span className="text-[11px] font-medium leading-tight text-slate-300">Seguimiento<br/>Continuo</span>
-            </div>
-            <div className="glass-card flex flex-col items-center justify-center p-3 rounded-xl gap-2 text-center">
-              <span className="material-symbols-outlined text-primary text-2xl">encrypted</span>
-              <span className="text-[11px] font-medium leading-tight text-slate-300">100%<br/>Privado</span>
-            </div>
+          <nav className="hidden md:flex items-center gap-8">
+            <a className="text-slate-300 hover:text-white transition-colors text-sm font-medium no-underline" href="#features">
+              {t('landing_features_title')}
+            </a>
+            <a className="text-slate-300 hover:text-white transition-colors text-sm font-medium no-underline" href="#how-it-works">
+              Cómo funciona
+            </a>
+          </nav>
+          <div className="flex items-center gap-4">
+            <Link to="/auth/login" className="hidden md:flex h-10 px-5 items-center justify-center rounded-xl border border-white/10 bg-transparent text-white text-sm font-semibold hover:bg-white/5 transition-colors no-underline">
+              Iniciar Sesión
+            </Link>
+            <Link to="/auth/register" className="flex h-10 px-5 items-center justify-center rounded-xl bg-gradient-to-r from-primary to-[#701ec2] text-white text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all transform hover:-translate-y-0.5 no-underline">
+              Crear Cuenta
+            </Link>
           </div>
         </div>
       </header>
 
-      {/* ── Features Section ── exact from Stitch line 140-185 */}
-      <section className="px-4 py-8 bg-gradient-to-b from-transparent to-surface-dark/30">
-        <h2 className="text-2xl font-bold text-white mb-6 px-2">Todo lo que necesitas</h2>
-        <div className="flex flex-col gap-4">
-          {/* Feature 1 */}
-          <div className="glass-card glass-card-hover rounded-2xl p-5 flex items-start gap-4 cursor-pointer group">
-            <div className="size-12 rounded-xl bg-surface-dark flex items-center justify-center shrink-0 border border-white/5 group-hover:border-primary/50 transition-colors">
-              <span className="material-symbols-outlined text-primary text-2xl">accessibility_new</span>
+      {/* Hero Section */}
+      <section className="relative pt-20 pb-32 lg:pt-32 lg:pb-40">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+            {/* Left Column: Content */}
+            <div className="flex flex-col max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit mb-6">
+                <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                <span className="text-primary text-xs font-bold uppercase tracking-wider">{t('landing_badge')}</span>
+              </div>
+              <h1 className="text-5xl lg:text-7xl font-black tracking-tight text-white leading-[1.1] mb-6">
+                {t('landing_title_1')} <span className="bg-gradient-to-r from-[#a755f7] via-[#8c25f4] to-[#6d28d9] bg-clip-text text-transparent block">{t('landing_title_highlight')}</span> {t('landing_title_2')}
+              </h1>
+              <p className="text-lg text-slate-400 mb-10 max-w-lg leading-relaxed">
+                {t('landing_subtitle')}
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link to="/auth/register" className="flex items-center justify-center h-12 px-8 rounded-xl bg-primary text-white text-base font-bold shadow-lg shadow-primary/25 hover:bg-[#701ec2] transition-all transform hover:scale-105 no-underline">
+                  {t('landing_cta_start')}
+                </Link>
+                <button className="h-12 px-8 rounded-xl bg-white/5 border border-white/10 text-white text-base font-bold hover:bg-white/10 transition-colors backdrop-blur-sm flex items-center justify-center gap-2">
+                  <span className="material-symbols-outlined text-[20px]">play_circle</span>
+                  Ver demo
+                </button>
+              </div>
+              <div className="mt-10 flex items-center gap-4 text-sm text-slate-500">
+                <div className="flex -space-x-3">
+                  <img alt="User Avatar 1" className="w-10 h-10 rounded-full border-2 border-background-dark object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA346ZDHDWl_h_k_RFbqBM51alSTzKrnydF2939M4PpfoX3Ox-hPg9CXH57C7PeF31-CcQ0ULZnVXdQyveXnMhm_VDHZy6x4bX6kCEVQI2-83dE_IRvi63vav4Ogs4QtrhQFfJnypUIZc4rWbKDSYrnL3eigykmLCEHVFrhy5iIHeAVioD0DRBY2kpUQGHhJ1Uc1ngZgel5O2Hw_eE2Cg7Vev7HpBX-wcqFEJ5R-FNX557fZ1FhSe08YBF5B3vCvEj06ZRujXPTjg"/>
+                  <img alt="User Avatar 2" className="w-10 h-10 rounded-full border-2 border-background-dark object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOS5j6i1POaU9HIZkR8JPUGlS4VyeOiMC_e1Qiufl3U7rieIUPlTulBFUTp1M2nTYcwOmAOMxLxE9gEOKIxK-gelQFaFu2kBOwEoSYBruyaQwc0_WDDflWaHqLgJ7-73fsrjuYeW6FRM4N42XhA2Ue59yQwhtSyTcS8l10dWnif1xuM1tS57HMFUOwGhPxFjUwCU6M7quOlWb_5-QuIqoBJIRxuymLlEmU41dwRGHdfCUlKo252Y39sUgVzjrzORVqnBo_z_bO1w"/>
+                  <img alt="User Avatar 3" className="w-10 h-10 rounded-full border-2 border-background-dark object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnR0wuva2UUImNqKtcDbZxcLRV2bBcfb_KGkfZWdV5U1A5gyUpGfd8DBPxvN2NILiOauInsQOKLnATkjWdhX_BrXx3ZwqSA7SlY3LO_8Q90JqHVB3RpO-Fu6z_7VoHMHeRsF58qdDiuVHmjXol8cU3IeQsubfmLrd2Tggpb8UbGoUHQvFJYo1W6RYv8cFSVUGZ8XXQNMwwpNZr-n18Lh6M7WIj2_GA6n38r4VfDJlN1vJVMm3mWGc2egzJrLQCBCxQ0IcwJIcZ2w"/>
+                </div>
+                <p>Usado por más de <span className="text-white font-semibold">10,000+</span> pacientes</p>
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="text-white font-semibold text-lg mb-1 group-hover:text-purple-300 transition-colors">Mapa Corporal Interactivo</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">Señala exactamente dónde duele con nuestro modelo 3D intuitivo y registra la intensidad.</p>
-            </div>
-          </div>
-          {/* Feature 2 */}
-          <div className="glass-card glass-card-hover rounded-2xl p-5 flex items-start gap-4 cursor-pointer group">
-            <div className="size-12 rounded-xl bg-surface-dark flex items-center justify-center shrink-0 border border-white/5 group-hover:border-primary/50 transition-colors">
-              <span className="material-symbols-outlined text-primary text-2xl">trending_up</span>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-white font-semibold text-lg mb-1 group-hover:text-purple-300 transition-colors">Tendencias y Analíticas</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">Visualiza correlaciones entre clima, actividad y sueño con tus niveles de dolor.</p>
-            </div>
-          </div>
-          {/* Feature 3 */}
-          <div className="glass-card glass-card-hover rounded-2xl p-5 flex items-start gap-4 cursor-pointer group">
-            <div className="size-12 rounded-xl bg-surface-dark flex items-center justify-center shrink-0 border border-white/5 group-hover:border-primary/50 transition-colors">
-              <span className="material-symbols-outlined text-primary text-2xl">vital_signs</span>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-white font-semibold text-lg mb-1 group-hover:text-purple-300 transition-colors">Calidad de Vida</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">Métricas holísticas que van más allá del dolor: ánimo, energía y capacidad funcional.</p>
-            </div>
-          </div>
-          {/* Feature 4 */}
-          <div className="glass-card glass-card-hover rounded-2xl p-5 flex items-start gap-4 cursor-pointer group">
-            <div className="size-12 rounded-xl bg-surface-dark flex items-center justify-center shrink-0 border border-white/5 group-hover:border-primary/50 transition-colors">
-              <span className="material-symbols-outlined text-primary text-2xl">cloud_off</span>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-white font-semibold text-lg mb-1 group-hover:text-purple-300 transition-colors">Funciona Offline</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">Tu salud no espera a tener señal. Registra datos en cualquier momento y lugar.</p>
+            
+            {/* Right Column: 3D Mockup */}
+            <div className="relative w-full h-full min-h-[500px] flex items-center justify-center lg:justify-end mt-12 lg:mt-0">
+              <div className="relative w-[300px] h-[600px] bg-black rounded-[3rem] border-8 border-slate-800 shadow-[0_0_40px_-10px_rgba(140,37,244,0.3)] rotate-[-6deg] overflow-hidden z-10 transition-transform hover:rotate-[-2deg] duration-500">
+                {/* Screen Content Mockup */}
+                <div className="w-full h-full bg-[#191320] flex flex-col relative">
+                  {/* Status Bar */}
+                  <div className="h-8 w-full flex justify-between items-center px-6 pt-4">
+                    <div className="text-[10px] font-bold text-white">9:41</div>
+                    <div className="flex gap-1">
+                      <div className="w-3 h-3 bg-white rounded-full"></div>
+                      <div className="w-3 h-3 bg-white rounded-full"></div>
+                    </div>
+                  </div>
+                  {/* App Header */}
+                  <div className="px-6 mt-6 mb-4 flex justify-between items-center">
+                    <div>
+                      <h3 className="text-slate-400 text-xs font-medium">Buenos días,</h3>
+                      <h2 className="text-white text-xl font-bold">Sofía</h2>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                      <span className="material-symbols-outlined">notifications</span>
+                    </div>
+                  </div>
+                  {/* Chart Card */}
+                  <div className="mx-4 p-4 rounded-2xl bg-white/5 backdrop-blur-md mb-4 border border-white/5">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-white text-sm font-semibold">Nivel de dolor hoy</span>
+                      <span className="text-primary text-xs font-bold bg-primary/10 px-2 py-1 rounded">Bajo</span>
+                    </div>
+                    <div className="h-24 w-full bg-gradient-to-t from-primary/20 to-transparent rounded-lg flex items-end justify-between px-2 pb-2 gap-2">
+                      <div className="w-1/6 bg-primary/40 h-[30%] rounded-t-sm"></div>
+                      <div className="w-1/6 bg-primary/60 h-[50%] rounded-t-sm"></div>
+                      <div className="w-1/6 bg-primary/80 h-[80%] rounded-t-sm"></div>
+                      <div className="w-1/6 bg-primary h-[40%] rounded-t-sm shadow-[0_0_10px_rgba(140,37,244,0.5)]"></div>
+                      <div className="w-1/6 bg-primary/30 h-[20%] rounded-t-sm"></div>
+                    </div>
+                  </div>
+                  {/* Body Map Mini */}
+                  <div className="mx-4 p-4 rounded-2xl bg-[#0f0b15] border border-white/5 flex-1 relative overflow-hidden">
+                    <span className="text-white text-sm font-semibold block mb-2">Mapa Corporal</span>
+                    <div className="absolute inset-0 top-10 flex items-center justify-center opacity-80">
+                      {/* Abstract body shape */}
+                      <svg className="h-[80%] text-slate-700 fill-current" viewBox="0 0 200 400">
+                        <path d="M100,20 C120,20 130,40 130,60 C130,80 150,90 160,120 L160,180 C160,200 140,200 140,250 L140,350 C140,370 120,380 100,380 C80,380 60,370 60,350 L60,250 C60,200 40,200 40,180 L40,120 C50,90 70,80 70,60 C70,40 80,20 100,20 Z"></path>
+                        <circle className="fill-red-500 animate-pulse" cx="100" cy="140" r="15"></circle>
+                      </svg>
+                    </div>
+                  </div>
+                  {/* Bottom Nav */}
+                  <div className="mt-auto h-20 bg-[#0f0b15]/90 backdrop-blur-xl border-t border-white/5 flex justify-around items-center px-2">
+                    <div className="p-2 text-primary"><span className="material-symbols-outlined">home</span></div>
+                    <div className="p-2 text-slate-500"><span className="material-symbols-outlined">calendar_month</span></div>
+                    <div className="p-2 text-slate-500"><span className="material-symbols-outlined">bar_chart</span></div>
+                    <div className="p-2 text-slate-500"><span className="material-symbols-outlined">person</span></div>
+                  </div>
+                </div>
+              </div>
+              {/* Decor behind phone */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[650px] bg-primary/30 rounded-[3.5rem] blur-2xl -z-10"></div>
+              {/* Floating Info Card */}
+              <div className="absolute bottom-20 left-0 lg:-left-12 glass-panel p-4 rounded-2xl flex items-center gap-3 animate-bounce shadow-xl max-w-[240px]" style={{ animationDuration: '3s' }}>
+                <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
+                  <span className="material-symbols-outlined">check_circle</span>
+                </div>
+                <div>
+                  <p className="text-white text-xs font-bold">Reporte Diario</p>
+                  <p className="text-slate-300 text-[10px]">Completado exitosamente</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── How It Works Section ── exact from Stitch line 186-227 */}
-      <section className="px-4 py-12 relative overflow-hidden">
-        {/* Abstract decoration */}
-        <div className="absolute right-0 top-1/3 w-64 h-64 bg-primary/5 blur-[80px] rounded-full pointer-events-none"></div>
-        <h2 className="text-2xl font-bold text-center text-white mb-10">Cómo funciona Zophiel</h2>
-        <div className="relative max-w-md mx-auto">
-          {/* Connecting Line */}
-          <div className="absolute left-[27px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-primary/80 via-primary/30 to-transparent"></div>
-          <div className="flex flex-col gap-10">
+      {/* Features Section */}
+      <section className="py-24 relative overflow-hidden bg-background-dark" id="features">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none"></div>
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16 max-w-2xl mx-auto">
+            <h2 className="text-primary text-sm font-bold uppercase tracking-widest mb-3">Funcionalidades Clave</h2>
+            <h3 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-4">Tu salud bajo control</h3>
+            <p className="text-slate-400 text-lg">Herramientas diseñadas específicamente para pacientes con condiciones crónicas, simplificando lo complejo.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Feature 1 */}
+            <div className="group relative rounded-3xl glass-panel p-8 hover:bg-white/5 transition-all duration-300 border border-white/5 hover:border-primary/50">
+              <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all"></div>
+              <div className="relative">
+                <div className="w-14 h-14 rounded-2xl bg-[#2a2235] border border-white/10 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-3xl">accessibility_new</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">{t('landing_feat_body')}</h3>
+                <p className="text-slate-400 leading-relaxed">{t('landing_feat_body_desc')}</p>
+              </div>
+            </div>
+            {/* Feature 2 */}
+            <div className="group relative rounded-3xl glass-panel p-8 hover:bg-white/5 transition-all duration-300 border border-white/5 hover:border-primary/50">
+              <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
+              <div className="relative">
+                <div className="w-14 h-14 rounded-2xl bg-[#2a2235] border border-white/10 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-3xl">trending_up</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">{t('landing_feat_analytics')}</h3>
+                <p className="text-slate-400 leading-relaxed">{t('landing_feat_analytics_desc')}</p>
+              </div>
+            </div>
+            {/* Feature 3 */}
+            <div className="group relative rounded-3xl glass-panel p-8 hover:bg-white/5 transition-all duration-300 border border-white/5 hover:border-primary/50">
+              <div className="relative">
+                <div className="w-14 h-14 rounded-2xl bg-[#2a2235] border border-white/10 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-3xl">vital_signs</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">{t('landing_feat_qol')}</h3>
+                <p className="text-slate-400 leading-relaxed">{t('landing_feat_qol_desc')}</p>
+              </div>
+            </div>
+            {/* Feature 4 */}
+            <div className="group relative rounded-3xl glass-panel p-8 hover:bg-white/5 transition-all duration-300 border border-white/5 hover:border-primary/50">
+              <div className="relative">
+                <div className="w-14 h-14 rounded-2xl bg-[#2a2235] border border-white/10 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-3xl">cloud_off</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">{t('landing_feat_offline')}</h3>
+                <p className="text-slate-400 leading-relaxed">{t('landing_feat_offline_desc')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-24 bg-[#0a0710] relative" id="how-it-works">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-4">Cómo funciona</h2>
+            <p className="text-slate-400 text-lg">Tres pasos simples para retomar el control.</p>
+          </div>
+          <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12">
+            {/* Connecting Line (Desktop) */}
+            <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent border-t border-dashed border-primary/50 z-0"></div>
             {/* Step 1 */}
-            <div className="relative flex gap-6">
-              <div className="relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full bg-surface-dark border-2 border-primary text-white shadow-[0_0_15px_rgba(140,37,244,0.3)]">
-                <span className="font-bold text-xl">1</span>
+            <div className="relative z-10 flex flex-col items-center text-center group">
+              <div className="w-24 h-24 rounded-full bg-[#191320] border-2 border-primary/30 flex items-center justify-center mb-8 shadow-[0_0_20px_rgba(140,37,244,0.15)] group-hover:border-primary transition-colors duration-300">
+                <span className="text-4xl font-black text-white">1</span>
               </div>
-              <div className="flex flex-col pt-1">
-                <h3 className="text-lg font-bold text-white mb-2">Registrá</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">Ingresá tus síntomas diarios en segundos con nuestra interfaz rápida y amigable.</p>
-              </div>
+              <h3 className="text-xl font-bold text-white mb-3">{t('landing_step1_title')}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed max-w-xs">{t('landing_step1_desc')}</p>
             </div>
             {/* Step 2 */}
-            <div className="relative flex gap-6">
-              <div className="relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full bg-surface-dark border-2 border-primary/60 text-white">
-                <span className="font-bold text-xl">2</span>
+            <div className="relative z-10 flex flex-col items-center text-center group">
+              <div className="w-24 h-24 rounded-full bg-[#191320] border-2 border-primary/30 flex items-center justify-center mb-8 shadow-[0_0_20px_rgba(140,37,244,0.15)] group-hover:border-primary transition-colors duration-300">
+                <span className="text-4xl font-black text-white">2</span>
               </div>
-              <div className="flex flex-col pt-1">
-                <h3 className="text-lg font-bold text-white mb-2">Entendé</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">Recibí reportes semanales que identifican qué actividades desencadenan tu dolor.</p>
-              </div>
+              <h3 className="text-xl font-bold text-white mb-3">{t('landing_step2_title')}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed max-w-xs">{t('landing_step2_desc')}</p>
             </div>
             {/* Step 3 */}
-            <div className="relative flex gap-6">
-              <div className="relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full bg-surface-dark border-2 border-primary/30 text-white">
-                <span className="font-bold text-xl">3</span>
+            <div className="relative z-10 flex flex-col items-center text-center group">
+              <div className="w-24 h-24 rounded-full bg-[#191320] border-2 border-primary/30 flex items-center justify-center mb-8 shadow-[0_0_20px_rgba(140,37,244,0.15)] group-hover:border-primary transition-colors duration-300">
+                <span className="text-4xl font-black text-white">3</span>
               </div>
-              <div className="flex flex-col pt-1">
-                <h3 className="text-lg font-bold text-white mb-2">Mejorá</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">Aplicá recomendaciones personalizadas y compartí informes detallados con tu médico.</p>
-              </div>
+              <h3 className="text-xl font-bold text-white mb-3">{t('landing_step3_title')}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed max-w-xs">{t('landing_step3_desc')}</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Final CTA ── exact from Stitch line 228-245 */}
-      <section className="px-4 py-8 mb-4">
-        <div className="glass-card rounded-3xl p-8 text-center relative overflow-hidden border border-primary/20">
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none"></div>
-          <div className="relative z-10 flex flex-col items-center">
-            <div className="size-16 bg-gradient-to-tr from-primary to-purple-500 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-primary/30">
-              <span className="material-symbols-outlined text-white text-3xl">favorite</span>
+      {/* CTA Banner */}
+      <section className="py-20 px-6">
+        <div className="mx-auto max-w-5xl">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#2a2235] to-[#141118] border border-white/10 px-8 py-20 text-center shadow-2xl">
+            {/* Background Glows */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+              <div className="absolute top-[-50%] left-[20%] w-[60%] h-[60%] bg-primary/20 rounded-full blur-[100px]"></div>
             </div>
-            <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">¿Listo para entender tu dolor?</h2>
-            <p className="text-slate-300 mb-8 max-w-xs mx-auto">Únite a miles de personas que están recuperando el control de su vida hoy mismo.</p>
-            <Link to="/auth" className="w-full max-w-[280px] py-4 bg-white text-[#701ec2] font-bold text-lg rounded-xl shadow-lg hover:bg-slate-50 transition-colors active:scale-95 no-underline text-center inline-block">
-              Crear Cuenta Gratis
-            </Link>
-            <p className="mt-4 text-xs text-slate-500">Sin tarjeta de crédito requerida.</p>
+            <div className="relative z-10 flex flex-col items-center">
+              <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-6">
+                Empieza a vivir mejor hoy
+              </h2>
+              <p className="text-slate-300 text-lg mb-10 max-w-2xl mx-auto">
+                Únete a miles de personas que ya están gestionando su dolor de forma inteligente con Zophiel.
+              </p>
+              <Link to="/auth/register" className="flex items-center justify-center h-14 px-10 rounded-full bg-white text-[#0f0b15] text-lg font-bold hover:bg-slate-100 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.3)] no-underline">
+                Crear Cuenta Gratis
+              </Link>
+              <p className="mt-6 text-sm text-slate-500">No se requiere tarjeta de crédito • Cancelación en cualquier momento</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Footer ── exact from Stitch line 246-251 */}
-      <footer className="mt-auto py-8 text-center px-6">
-        <p className="text-xs text-slate-500 font-medium">
-          © 2026 Zophiel — Hecho con <span className="text-primary inline-block align-middle text-sm">💜</span> para quienes viven con dolor
-        </p>
+      {/* Footer */}
+      <footer className="border-t border-white/5 bg-[#0a0710] py-16">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            {/* Column 1: Brand */}
+            <div className="col-span-1 md:col-span-1">
+              <div className="flex items-center gap-2 mb-6 text-white">
+                <span className="material-symbols-outlined text-primary text-2xl">stethoscope</span>
+                <span className="text-lg font-bold">Zophiel</span>
+              </div>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                Tecnología avanzada para el manejo del dolor crónico, diseñada con empatía y precisión científica.
+              </p>
+            </div>
+            {/* Column 2: Product */}
+            <div>
+              <h4 className="text-white font-semibold mb-6">Producto</h4>
+              <ul className="space-y-4 m-0 p-0 list-none">
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Funcionalidades</a></li>
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Precios</a></li>
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Para Clínicas</a></li>
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Estudios de Caso</a></li>
+              </ul>
+            </div>
+            {/* Column 3: Company */}
+            <div>
+              <h4 className="text-white font-semibold mb-6">Compañía</h4>
+              <ul className="space-y-4 m-0 p-0 list-none">
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Sobre Nosotros</a></li>
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Blog</a></li>
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Carreras</a></li>
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Contacto</a></li>
+              </ul>
+            </div>
+            {/* Column 4: Legal */}
+            <div>
+              <h4 className="text-white font-semibold mb-6">Legal</h4>
+              <ul className="space-y-4 m-0 p-0 list-none">
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Privacidad</a></li>
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Términos</a></li>
+                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Seguridad</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-slate-600 text-sm m-0">© 2026 Zophiel. Hecho con <span className="text-primary inline-block font-sans">💜</span> para quienes viven con dolor.</p>
+          </div>
+        </div>
       </footer>
     </div>
   );
