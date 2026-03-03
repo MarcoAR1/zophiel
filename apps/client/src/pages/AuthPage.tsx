@@ -48,8 +48,23 @@ export default function AuthPage() {
     [loginWithGoogle]
   );
 
-  // Load Google Identity Services on web only
-  // On native, GIS renderButton doesn't work (WebView blocks 3rd-party cookies/FedCM)
+  // ── Initialize SocialLogin on native ──
+  useEffect(() => {
+    if (!isNative || !googleClientId) return;
+    (async () => {
+      try {
+        const { SocialLogin } = await import('@capgo/capacitor-social-login');
+        await SocialLogin.initialize({
+          google: { webClientId: googleClientId },
+        });
+        console.log('[Auth] SocialLogin initialized');
+      } catch (err) {
+        console.error('[Auth] SocialLogin init error:', err);
+      }
+    })();
+  }, [isNative, googleClientId]);
+
+  // ── Load GIS on web only ──
   useEffect(() => {
     if (!googleClientId || isNative) return;
 
@@ -80,38 +95,37 @@ export default function AuthPage() {
   }, [handleGoogleResponse, googleClientId, isNative]);
 
   /**
-   * Native Google Sign-In: open OAuth consent in system browser
-   * The system browser (Chrome) handles Google auth properly with cookies.
-   * After consent, Google redirects back to our server callback which returns the token.
+   * Native Google Sign-In via @capgo/capacitor-social-login
+   * Uses Google Credential Manager (Android) / Sign In with Apple framework (iOS)
    */
   const handleNativeGoogleLogin = async () => {
     setLoading(true);
     setError('');
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      // Redirect to our server's Google OAuth endpoint
-      // Server handles the OAuth flow and returns the user to the app
-      const redirectUri = `${apiUrl}/auth/google/native-callback`;
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
-        `client_id=${googleClientId}` +
-        `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-        `&response_type=code` +
-        `&scope=${encodeURIComponent('openid email profile')}` +
-        `&prompt=select_account`;
-
-      // Open in system browser (not WebView)
-      const { Browser } = await import('@capacitor/browser');
-      await Browser.open({ url: authUrl });
-
-      // Listen for the app to return from the browser
-      Browser.addListener('browserFinished', () => {
-        setLoading(false);
+      const { SocialLogin } = await import('@capgo/capacitor-social-login');
+      const result = await SocialLogin.login({
+        provider: 'google',
+        options: { scopes: ['email', 'profile'] },
       });
+
+      // Extract the ID token and send to our backend
+      const idToken = (result as any)?.result?.idToken;
+      if (!idToken) {
+        throw new Error('No se recibió token de Google');
+      }
+      await loginWithGoogle(idToken);
     } catch (err: any) {
+      // User cancelled = not an error
+      if (err.message?.includes('cancel') || err.code === 'SIGN_IN_CANCELLED') {
+        setLoading(false);
+        return;
+      }
       setError(`Google: ${err.message}`);
+    } finally {
       setLoading(false);
     }
   };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
