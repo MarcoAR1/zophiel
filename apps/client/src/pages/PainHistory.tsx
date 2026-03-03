@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import { useI18n } from '../i18n/index';
 
 const PERIODS = [
   { label: '7 días', days: 7 },
@@ -8,36 +7,67 @@ const PERIODS = [
   { label: '90 días', days: 90 },
 ];
 
-const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+const REGION_LABELS: Record<string, string> = {
+  head: 'Cabeza', neck: 'Cervical', chest: 'Pecho', upper_back: 'Dorsal',
+  lower_back: 'Lumbar', abdomen: 'Abdomen', left_shoulder: 'Hombro Izq.',
+  right_shoulder: 'Hombro Der.', left_arm: 'Brazo Izq.', right_arm: 'Brazo Der.',
+  left_hand: 'Mano Izq.', right_hand: 'Mano Der.', left_leg: 'Pierna Izq.',
+  right_leg: 'Pierna Der.', left_knee: 'Rodilla Izq.', right_knee: 'Rodilla Der.',
+  left_foot: 'Pie Izq.', right_foot: 'Pie Der.', pelvis: 'Pelvis',
+  unknown: 'Otro',
+};
 
 export default function PainHistory() {
-  const { t } = useI18n();
-  const [period, setPeriod] = useState(7);
+  const [period, setPeriod] = useState(30);
   const [stats, setStats] = useState<any>(null);
-  const [entries, setEntries] = useState<any[]>([]);
+  const [trend, setTrend] = useState<any[]>([]);
+  const [report, setReport] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
     Promise.all([
       api.pain.stats(period).catch(() => null),
-      api.pain.list({ days: String(period) }).catch(() => []),
-    ]).then(([s, e]) => {
+      api.analytics.painTrend(period).catch(() => []),
+      api.analytics.painReport(period).catch(() => null),
+    ]).then(([s, t, r]) => {
       setStats(s);
-      setEntries(e || []);
+      setTrend(Array.isArray(t) ? t : []);
+      setReport(r);
       setLoading(false);
     });
   }, [period]);
 
-  // Simulated zone frequencies
-  const zones = [
-    { name: 'Lumbar', pct: 45 },
-    { name: 'Cervical', pct: 30 },
-    { name: 'Dorsal', pct: 25 },
-  ];
+  const summary = report?.summary;
+  const regionStats: any[] = report?.regionStats || [];
+  const weeklyHeatmap: any[] = report?.weeklyHeatmap || [];
+  const timeOfDay = report?.timeOfDay;
+  const totalRegionEntries = regionStats.reduce((sum: number, r: any) => sum + r.count, 0);
 
-  // Generate heatmap data (4 time blocks x 7 days)
-  const heatmapRows = ['Mañ', 'Tar', 'Noc', 'Mad'];
+  // ── Trend SVG ──
+  const trendValues = trend.map((d: any) => d.average || 0);
+  const chartW = 300;
+  const chartH = 100;
+  const maxVal = Math.max(...trendValues, 10);
+  const trendPath = trendValues.length >= 2
+    ? trendValues.map((v: number, i: number) => {
+        const x = (i / (trendValues.length - 1)) * chartW;
+        const y = chartH - (v / maxVal) * (chartH - 10) - 5;
+        return `${i === 0 ? 'M' : 'L'}${x},${y}`;
+      }).join(' ')
+    : '';
+  const areaPath = trendPath ? `${trendPath} L${chartW},${chartH} L0,${chartH} Z` : '';
+
+  // ── Hourly intensity ──
+  const hourLabels = ['00', '03', '06', '09', '12', '15', '18', '21'];
+  const allHours = Array.from({ length: 24 }, (_, h) => {
+    if (!report) return { hour: h, average: 0 };
+    // timeOfDay only has peak/best, so derive from weeklyHeatmap or trend
+    return { hour: h, average: 0 };
+  });
+  // Build from raw entries if available — use timeOfDay peak/best
+  const peakHour = timeOfDay?.peak;
+  const bestHour = timeOfDay?.best;
 
   if (loading) {
     return (
@@ -49,8 +79,6 @@ export default function PainHistory() {
 
   return (
     <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
-      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
-
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-6 mb-4">
         <h1 className="text-[22px] font-bold text-white tracking-tight">Historial de Dolor</h1>
@@ -77,141 +105,185 @@ export default function PainHistory() {
         ))}
       </div>
 
-      {/* Summary Cards (Stitch PRO — separate cards) */}
-      <div className="flex flex-col gap-3 px-5 mb-5">
-        {/* Pain Average */}
-        <div className="rounded-2xl p-4 bg-white/[0.03] border border-primary/20 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-12 h-12 bg-primary/10 blur-[25px] rounded-full -mr-4 -mt-4" />
-          <div className="flex items-center gap-2 mb-1">
-            <span className="material-symbols-outlined text-primary text-[16px]">sentiment_dissatisfied</span>
-            <span className="text-slate-500 text-[10px] font-medium uppercase tracking-wider">Dolor promedio</span>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-white">{stats?.average ?? '—'}</span>
-            <span className="text-xs text-primary font-semibold">/10</span>
-          </div>
+      {/* ── Summary Cards ── */}
+      <div className="grid grid-cols-3 gap-2.5 px-5 mb-5">
+        <div className="rounded-2xl p-3.5 glass-card text-center">
+          <span className="material-symbols-outlined text-primary text-[18px] mb-1 block">avg_pace</span>
+          <span className="text-2xl font-bold text-white block">{summary?.average ?? '—'}</span>
+          <span className="text-[9px] text-slate-500 uppercase tracking-wider">Promedio</span>
         </div>
-
-        {/* Total entries */}
-        <div className="rounded-2xl p-4 glass-card">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="material-symbols-outlined text-slate-400 text-[16px]">edit_note</span>
-            <span className="text-slate-500 text-[10px] font-medium uppercase tracking-wider">Total registros</span>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-white">{stats?.count ?? 0}</span>
-            <span className="text-xs text-slate-500">últimos {period} días</span>
-          </div>
+        <div className="rounded-2xl p-3.5 glass-card text-center">
+          <span className="material-symbols-outlined text-orange-400 text-[18px] mb-1 block">edit_note</span>
+          <span className="text-2xl font-bold text-white block">{summary?.total ?? 0}</span>
+          <span className="text-[9px] text-slate-500 uppercase tracking-wider">Registros</span>
         </div>
-
-        {/* Most common zone */}
-        <div className="rounded-2xl p-4 glass-card">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="material-symbols-outlined text-orange-400 text-[16px]">pin_drop</span>
-            <span className="text-slate-500 text-[10px] font-medium uppercase tracking-wider">Zona común</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-[14px]">radio_button_checked</span>
-            <span className="text-lg font-bold text-white">Lumbalgia</span>
-          </div>
+        <div className="rounded-2xl p-3.5 glass-card text-center">
+          <span className="material-symbols-outlined text-red-400 text-[18px] mb-1 block">arrow_upward</span>
+          <span className="text-2xl font-bold text-white block">{summary?.max ?? '—'}</span>
+          <span className="text-[9px] text-slate-500 uppercase tracking-wider">Máximo</span>
         </div>
       </div>
 
-      {/* Pain Trend Chart */}
+      {/* ── Pain Trend Chart ── */}
       <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-bold text-white">Tendencia de dolor</h3>
-          <span className="material-symbols-outlined text-slate-600 text-[16px]">more_horiz</span>
+          {trendValues.length >= 2 && (
+            <span className="text-[10px] font-bold text-slate-400 bg-white/5 rounded-full px-2 py-1">
+              {trend.length} días
+            </span>
+          )}
         </div>
-        <div className="h-28 flex items-end gap-1">
-          {DAYS.map((day, i) => {
-            // Simulate pain values for visual chart
-            const painValues = [3, 5, 4, 6, 5, 3, 4];
-            const val = painValues[i] || 3;
-            const h = Math.max(15, val * 10);
-            return (
-              <div key={day} className="flex-1 flex flex-col items-center gap-1 group">
-                <div className="relative w-full">
-                  <div
-                    className="w-full rounded-t-lg bg-gradient-to-t from-primary/40 to-primary/80 transition-all duration-500 mx-auto"
-                    style={{ height: `${h}px` }}
-                  />
-                  {i === DAYS.length - 2 && (
-                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-[8px] text-primary font-bold bg-primary/15 rounded px-1.5 py-0.5">
-                      ● {val}
-                    </div>
-                  )}
-                </div>
-                <span className="text-[8px] text-slate-600">{day}</span>
-              </div>
-            );
-          })}
-        </div>
+
+        {trendValues.length >= 2 ? (
+          <div className="relative h-28">
+            <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full h-full" preserveAspectRatio="none">
+              {[2, 4, 6, 8].map((v) => {
+                const y = chartH - (v / maxVal) * (chartH - 10) - 5;
+                return (
+                  <g key={v}>
+                    <line x1="0" y1={y} x2={chartW} y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+                    <text x="-2" y={y + 3} fill="rgba(255,255,255,0.15)" fontSize="7" textAnchor="end">{v}</text>
+                  </g>
+                );
+              })}
+              <path d={areaPath} fill="url(#painGrad)" />
+              <path d={trendPath} fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              {trendValues.map((v: number, i: number) => {
+                const x = (i / (trendValues.length - 1)) * chartW;
+                const y = chartH - (v / maxVal) * (chartH - 10) - 5;
+                return <circle key={i} cx={x} cy={y} r="2.5" fill="#ef4444" stroke="#0f0b15" strokeWidth="1" />;
+              })}
+              <defs>
+                <linearGradient id="painGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ef4444" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div className="flex justify-between mt-1 text-[9px] text-slate-600">
+              <span>{trend[0]?.date?.slice(5) || ''}</span>
+              {trend.length > 4 && <span>{trend[Math.floor(trend.length / 2)]?.date?.slice(5) || ''}</span>}
+              <span>{trend[trend.length - 1]?.date?.slice(5) || ''}</span>
+            </div>
+          </div>
+        ) : (
+          <div className="h-28 flex items-center justify-center text-slate-600 text-sm">
+            <div className="text-center">
+              <span className="material-symbols-outlined text-2xl mb-1 block opacity-30">show_chart</span>
+              Sin datos suficientes para mostrar
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Intensity Heatmap */}
+      {/* ── Intensidad Horaria (peak/best from API) ── */}
       <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
         <h3 className="text-sm font-bold text-white mb-4">Intensidad Horaria</h3>
-        <div className="space-y-2">
-          {heatmapRows.map((row, ri) => (
-            <div key={row} className="flex items-center gap-2">
-              <span className="text-[9px] text-slate-600 w-6">{row}</span>
-              <div className="flex-1 grid grid-cols-7 gap-1">
-                {DAYS.map((_, di) => {
-                  // Simulated intensity values
-                  const intensities = [
-                    [2, 3, 1, 4, 2, 0, 1],
-                    [4, 5, 3, 6, 5, 2, 3],
-                    [3, 4, 2, 5, 3, 1, 2],
-                    [1, 2, 1, 3, 1, 0, 1],
-                  ];
-                  const val = intensities[ri]?.[di] || 0;
-                  const opacity = val === 0 ? '0.05' : (val / 6).toFixed(2);
-                  return (
-                    <div
-                      key={di}
-                      className="aspect-square rounded-full"
-                      style={{ backgroundColor: `rgba(140, 37, 244, ${opacity})` }}
-                    />
-                  );
-                })}
+        {peakHour || bestHour ? (
+          <div className="space-y-3">
+            {peakHour && (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/10">
+                <div className="size-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-red-400 text-[20px]">trending_up</span>
+                </div>
+                <div className="flex-1">
+                  <span className="text-white text-sm font-semibold block">Pico de dolor</span>
+                  <span className="text-[11px] text-slate-500">{peakHour.hour}:00 hs — promedio {peakHour.average}/10</span>
+                </div>
+                <span className="text-xl font-bold text-red-400">{peakHour.average}</span>
               </div>
+            )}
+            {bestHour && (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/5 border border-green-500/10">
+                <div className="size-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-green-400 text-[20px]">trending_down</span>
+                </div>
+                <div className="flex-1">
+                  <span className="text-white text-sm font-semibold block">Menor dolor</span>
+                  <span className="text-[11px] text-slate-500">{bestHour.hour}:00 hs — promedio {bestHour.average}/10</span>
+                </div>
+                <span className="text-xl font-bold text-green-400">{bestHour.average}</span>
+              </div>
+            )}
+            {/* Weekly heatmap */}
+            {weeklyHeatmap.length > 0 && (
+              <div className="mt-4">
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-2">Dolor por día de semana</span>
+                <div className="flex gap-1.5">
+                  {weeklyHeatmap.map((d: any) => {
+                    const intensity = d.average || 0;
+                    const opacity = intensity > 0 ? Math.min(intensity / 10, 1) : 0.05;
+                    return (
+                      <div key={d.day} className="flex-1 flex flex-col items-center gap-1">
+                        <div
+                          className="w-full aspect-square rounded-lg flex items-center justify-center"
+                          style={{ backgroundColor: `rgba(239,68,68,${opacity})` }}
+                        >
+                          {d.count > 0 && <span className="text-[9px] text-white font-bold">{d.average}</span>}
+                        </div>
+                        <span className="text-[8px] text-slate-600">{d.day}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="h-20 flex items-center justify-center text-slate-600 text-sm">
+            <div className="text-center">
+              <span className="material-symbols-outlined text-2xl mb-1 block opacity-30">schedule</span>
+              Sin datos horarios aún
             </div>
-          ))}
-        </div>
-        <div className="flex items-center justify-center gap-3 mt-3">
-          <div className="flex items-center gap-1">
-            <div className="size-2 rounded-full bg-primary/10" />
-            <span className="text-[8px] text-slate-600">Leve</span>
           </div>
-          <div className="flex items-center gap-1">
-            <div className="size-2 rounded-full bg-primary/50" />
-            <span className="text-[8px] text-slate-600">Mod.</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="size-2 rounded-full bg-primary" />
-            <span className="text-[8px] text-slate-600">Intenso</span>
-          </div>
-        </div>
+        )}
       </div>
 
-      {/* Frequent Zones */}
+      {/* ── Zonas Frecuentes (real from API) ── */}
       <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
         <h3 className="text-sm font-bold text-white mb-4">Zonas Frecuentes</h3>
-        <div className="space-y-3">
-          {zones.map((zone) => (
-            <div key={zone.name} className="flex items-center gap-3">
-              <span className="text-xs text-slate-400 w-16 shrink-0">{zone.name}</span>
-              <div className="flex-1 bg-white/5 h-2 rounded-full overflow-hidden">
-                <div
-                  className="bg-primary h-full rounded-full transition-all duration-700"
-                  style={{ width: `${zone.pct}%` }}
-                />
-              </div>
-              <span className="text-xs text-white font-bold w-10 text-right">{zone.pct}%</span>
+        {regionStats.length > 0 ? (
+          <div className="space-y-3">
+            {regionStats.map((zone: any, i: number) => {
+              const pct = totalRegionEntries > 0 ? Math.round((zone.count / totalRegionEntries) * 100) : 0;
+              const label = REGION_LABELS[zone.region] || zone.region;
+              const isTop = i === 0;
+              return (
+                <div key={zone.region}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-2">
+                      {isTop && (
+                        <span className="material-symbols-outlined text-primary text-[14px]">star</span>
+                      )}
+                      <span className={`text-xs ${isTop ? 'text-white font-semibold' : 'text-slate-400'}`}>{label}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-slate-500">{zone.count} registros</span>
+                      <span className="text-xs text-white font-bold">{pct}%</span>
+                    </div>
+                  </div>
+                  <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${pct}%`,
+                        backgroundColor: isTop ? '#8c25f4' : 'rgba(140,37,244,0.5)',
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="h-20 flex items-center justify-center text-slate-600 text-sm">
+            <div className="text-center">
+              <span className="material-symbols-outlined text-2xl mb-1 block opacity-30">pin_drop</span>
+              Sin datos de zonas aún
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

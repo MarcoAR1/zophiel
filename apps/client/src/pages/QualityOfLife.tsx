@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import { useI18n } from '../i18n/index';
 
 const PERIODS = [
   { label: '7 días', days: 7 },
@@ -9,43 +8,71 @@ const PERIODS = [
 ];
 
 const BREAKDOWN = [
-  { key: 'mobility', icon: 'accessibility_new', label: 'Movilidad', color: 'bg-blue-500' },
-  { key: 'sleep', icon: 'bedtime', label: 'Sueño', color: 'bg-indigo-500' },
-  { key: 'mood', icon: 'mood', label: 'Ánimo', color: 'bg-pink-500' },
-  { key: 'activity', icon: 'directions_walk', label: 'Actividad', color: 'bg-green-500' },
+  { key: 'pain', icon: 'coronavirus', label: 'Dolor', color: '#ef4444', bg: 'rgba(239,68,68,0.1)' },
+  { key: 'sleep', icon: 'bedtime', label: 'Sueño', color: '#818cf8', bg: 'rgba(129,140,248,0.1)' },
+  { key: 'mood', icon: 'mood', label: 'Ánimo', color: '#ec4899', bg: 'rgba(236,72,153,0.1)' },
+  { key: 'activity', icon: 'directions_walk', label: 'Actividad', color: '#22c55e', bg: 'rgba(34,197,94,0.1)' },
 ];
 
 export default function QualityOfLife() {
-  const { t } = useI18n();
   const [period, setPeriod] = useState(7);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<any>(null);
+  const [trend, setTrend] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    api.analytics.qualityOfLife(period).then((d: any[]) => {
-      setData(d || []);
+    api.analytics.qualityOfLife(period).then((result: any) => {
+      // API may return a single object or an array
+      if (Array.isArray(result)) {
+        setTrend(result);
+        setData(result.length > 0 ? result[result.length - 1] : null);
+      } else if (result && typeof result === 'object') {
+        setData(result);
+        setTrend([result]);
+      } else {
+        setData(null);
+        setTrend([]);
+      }
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch(() => {
+      setData(null);
+      setTrend([]);
+      setLoading(false);
+    });
   }, [period]);
 
-  const latest = data.length > 0 ? data[data.length - 1] : null;
-  const score = latest?.score ?? 0;
+  const score = data?.score ?? 0;
+  const hasData = data != null && score > 0;
 
-  // Calculate ring arc
-  const circumference = 2 * Math.PI * 52; // radius 52
-  const arcOffset = circumference - (score / 100) * circumference;
-
-  // Score color
+  // Ring gauge
+  const circumference = 2 * Math.PI * 52;
+  const arcOffset = hasData ? circumference - (score / 100) * circumference : circumference;
   const scoreColor = score >= 70 ? '#8c25f4' : score >= 40 ? '#eab308' : '#ef4444';
 
-  // Simulate breakdown percentages from score
-  const breakdown: Record<string, number> = {
-    mobility: Math.min(100, Math.max(0, score - 9 + Math.floor(Math.random() * 5))),
-    sleep: Math.min(100, Math.max(0, score + 8 + Math.floor(Math.random() * 5))),
-    mood: Math.min(100, Math.max(0, score - 4 + Math.floor(Math.random() * 5))),
-    activity: Math.min(100, Math.max(0, score - 14 + Math.floor(Math.random() * 5))),
-  };
+  // Real breakdown from API
+  const breakdown = data?.breakdown || {};
+
+  // Trend chart — build SVG path
+  const trendScores = trend.map((d: any) => d.score || 0);
+  const maxScore = Math.max(...trendScores, 1);
+  const chartW = 300;
+  const chartH = 100;
+  const trendPath = trendScores.length >= 2
+    ? trendScores.map((s: number, i: number) => {
+        const x = (i / (trendScores.length - 1)) * chartW;
+        const y = chartH - (s / maxScore) * (chartH - 10) - 5;
+        return `${i === 0 ? 'M' : 'L'}${x},${y}`;
+      }).join(' ')
+    : '';
+  const areaPath = trendPath
+    ? `${trendPath} L${chartW},${chartH} L0,${chartH} Z`
+    : '';
+
+  // Delta
+  const delta = trendScores.length >= 2
+    ? trendScores[trendScores.length - 1] - trendScores[0]
+    : 0;
 
   if (loading) {
     return (
@@ -57,36 +84,44 @@ export default function QualityOfLife() {
 
   return (
     <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
-      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
-
       {/* Header */}
       <div className="px-5 pt-6 mb-4">
         <h1 className="text-[26px] font-bold text-white tracking-tight text-center">Calidad de Vida</h1>
+        <p className="text-slate-500 text-sm text-center mt-1">Puntuación general</p>
       </div>
 
       {/* Circular Score Gauge */}
       <div className="flex flex-col items-center mb-5">
-        <div className="relative size-40">
+        <div className="relative size-44">
           <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
-            {/* Background ring */}
             <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-            {/* Score arc */}
-            <circle
-              cx="60" cy="60" r="52" fill="none"
-              stroke={scoreColor}
-              strokeWidth="8"
-              strokeLinecap="round"
-              strokeDasharray={circumference}
-              strokeDashoffset={arcOffset}
-              className="transition-all duration-1000"
-              style={{ filter: `drop-shadow(0 0 8px ${scoreColor}40)` }}
-            />
+            {hasData && (
+              <circle
+                cx="60" cy="60" r="52" fill="none"
+                stroke={scoreColor}
+                strokeWidth="8"
+                strokeLinecap="round"
+                strokeDasharray={circumference}
+                strokeDashoffset={arcOffset}
+                className="transition-all duration-1000"
+                style={{ filter: `drop-shadow(0 0 12px ${scoreColor}60)` }}
+              />
+            )}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-5xl font-bold text-white">{score || '—'}</span>
+            {hasData ? (
+              <>
+                <span className="text-5xl font-bold text-white">{Math.round(score)}</span>
+                <span className="text-xs text-slate-500 mt-1">de 100</span>
+              </>
+            ) : (
+              <>
+                <span className="material-symbols-outlined text-slate-600 text-3xl mb-1">analytics</span>
+                <span className="text-sm text-slate-500">Sin datos</span>
+              </>
+            )}
           </div>
         </div>
-        <span className="text-slate-500 text-sm mt-2">Puntuación general</span>
       </div>
 
       {/* Period selector */}
@@ -110,55 +145,92 @@ export default function QualityOfLife() {
       <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-bold text-white">Tendencia</h3>
-          {data.length >= 2 && (
-            <span className="text-[10px] text-primary font-bold bg-primary/10 px-2 py-1 rounded-full">
-              +{Math.max(0, (data[data.length - 1]?.score || 0) - (data[0]?.score || 0))}% esta semana
+          {delta !== 0 && (
+            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
+              delta > 0
+                ? 'text-green-400 bg-green-500/10 border border-green-500/20'
+                : 'text-red-400 bg-red-500/10 border border-red-500/20'
+            }`}>
+              {delta > 0 ? '+' : ''}{Math.round(delta)} pts
             </span>
           )}
         </div>
-        <div className="h-32 flex items-end gap-1 relative">
-          {/* Simple bar chart visualization */}
-          {(data.length > 0 ? data : [{ score: 0 }]).map((d: any, i: number) => {
-            const h = Math.max(5, (d.score || 0) * 1.2);
-            return (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1 group">
-                <div
-                  className="w-full rounded-t-lg bg-gradient-to-t from-primary/60 to-primary transition-all duration-500 relative min-w-[4px]"
-                  style={{ height: `${h}%` }}
-                >
-                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[9px] text-primary font-bold bg-primary/10 rounded px-1">
-                    {d.score}
-                  </div>
-                </div>
+
+        {trendScores.length >= 2 ? (
+          <div className="relative h-28">
+            <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full h-full" preserveAspectRatio="none">
+              {/* Grid lines */}
+              {[0, 25, 50, 75, 100].map((pct) => {
+                const y = chartH - (pct / maxScore) * (chartH - 10) - 5;
+                return <line key={pct} x1="0" y1={y} x2={chartW} y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />;
+              })}
+              {/* Area fill */}
+              <path d={areaPath} fill="url(#trendGradient)" />
+              {/* Line */}
+              <path d={trendPath} fill="none" stroke={scoreColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              {/* Dots */}
+              {trendScores.map((s: number, i: number) => {
+                const x = (i / (trendScores.length - 1)) * chartW;
+                const y = chartH - (s / maxScore) * (chartH - 10) - 5;
+                return (
+                  <circle key={i} cx={x} cy={y} r="3" fill={scoreColor} stroke="#0f0b15" strokeWidth="1.5" />
+                );
+              })}
+              <defs>
+                <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={scoreColor} stopOpacity="0.3" />
+                  <stop offset="100%" stopColor={scoreColor} stopOpacity="0" />
+                </linearGradient>
+              </defs>
+            </svg>
+            {/* Date labels */}
+            {trend.length > 0 && (
+              <div className="flex justify-between mt-1 text-[9px] text-slate-600">
+                <span>{trend[0]?.date?.slice(5) || ''}</span>
+                {trend.length > 2 && <span>{trend[Math.floor(trend.length / 2)]?.date?.slice(5) || ''}</span>}
+                <span>{trend[trend.length - 1]?.date?.slice(5) || ''}</span>
               </div>
-            );
-          })}
-          {/* X axis labels */}
-          <div className="absolute -bottom-5 left-0 right-0 flex justify-between text-[8px] text-slate-600">
-            {['Lun', 'Mar', 'Mié', 'Jue', 'Vie'].map((day) => (
-              <span key={day}>{day}</span>
-            ))}
+            )}
           </div>
-        </div>
+        ) : (
+          <div className="h-28 flex items-center justify-center text-slate-600 text-sm">
+            <div className="text-center">
+              <span className="material-symbols-outlined text-2xl mb-1 block opacity-30">show_chart</span>
+              Registrá al menos 2 días para ver la tendencia
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Breakdown 2x2 Grid */}
+      {/* Breakdown */}
       <div className="mx-5 mb-5">
         <h3 className="text-sm font-bold text-white mb-3">Desglose</h3>
         <div className="grid grid-cols-2 gap-3">
           {BREAKDOWN.map((item) => {
-            const val = breakdown[item.key] || 0;
+            const val = breakdown[item.key];
+            const hasVal = val != null && val > 0;
+            const displayVal = hasVal ? Math.round(val) : null;
+
             return (
               <div key={item.key} className="rounded-2xl p-4 glass-card">
                 <div className="flex items-center justify-between mb-3">
-                  <div className={`size-8 rounded-lg ${item.color}/10 flex items-center justify-center`}>
-                    <span className={`material-symbols-outlined ${item.color.replace('bg-', 'text-')} text-[16px]`}>{item.icon}</span>
+                  <div className="size-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: item.bg }}>
+                    <span className="material-symbols-outlined text-[18px]" style={{ color: item.color }}>{item.icon}</span>
                   </div>
-                  <span className="text-xl font-bold text-white">{val}%</span>
+                  <span className="text-xl font-bold text-white">
+                    {displayVal != null ? `${displayVal}%` : '—'}
+                  </span>
                 </div>
                 <span className="text-[11px] text-slate-500 block mb-2">{item.label}</span>
                 <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
-                  <div className={`${item.color} h-full rounded-full transition-all duration-700`} style={{ width: `${val}%` }} />
+                  {displayVal != null ? (
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{ width: `${displayVal}%`, backgroundColor: item.color }}
+                    />
+                  ) : (
+                    <div className="h-full rounded-full bg-white/5" style={{ width: '0%' }} />
+                  )}
                 </div>
               </div>
             );
