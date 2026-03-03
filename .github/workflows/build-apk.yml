@@ -78,10 +78,9 @@ jobs:
           VARS_FILE=apps/client/android/variables.gradle
           if [ -f "$VARS_FILE" ]; then
             sed -i 's/minSdkVersion = .*/minSdkVersion = 26/' "$VARS_FILE"
+            echo "Updated variables.gradle:"
+            cat "$VARS_FILE"
           fi
-          # Also patch build.gradle directly as fallback
-          BUILD_FILE=apps/client/android/app/build.gradle
-          sed -i 's/minSdkVersion [0-9]*/minSdkVersion 26/g' "$BUILD_FILE"
 
       - name: Sync Capacitor
         working-directory: apps/client
