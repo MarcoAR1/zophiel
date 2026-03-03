@@ -102,12 +102,17 @@ function AuthenticatedApp() {
   );
 }
 
+import { Capacitor } from '@capacitor/core';
+
 export default function App() {
+  const isNative = Capacitor.isNativePlatform();
+
   return (
     <I18nProvider>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<Landing />} />
+          {/* On native (APK), skip Landing — go directly to auth/dashboard */}
+          <Route path="/" element={isNative ? <Navigate to="/app" replace /> : <Landing />} />
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/about" element={<About />} />
@@ -116,7 +121,7 @@ export default function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/security" element={<Security />} />
           <Route path="/app/*" element={<AuthenticatedApp />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to={isNative ? "/app" : "/"} replace />} />
         </Routes>
       </AuthProvider>
     </I18nProvider>

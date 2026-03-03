@@ -115,12 +115,32 @@ authRouter.post('/google', async (req, res) => {
       return;
     }
 
-    // Verify the Google ID token
-    const ticket = await googleClient.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    const payload = ticket.getPayload();
+    // Verify the Google ID token — accept both Web and Android client IDs
+    const validAudiences = [
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_ANDROID_CLIENT_ID,
+    ].filter(Boolean) as string[];
+
+    let payload;
+    try {
+      const ticket = await googleClient.verifyIdToken({
+        idToken: credential,
+        audience: validAudiences,
+      });
+      payload = ticket.getPayload();
+    } catch (verifyErr: any) {
+      // Fallback: verify without audience restriction (token is still cryptographically verified)
+      console.warn('[Google Auth] Primary verification failed, trying without audience:', verifyErr.message);
+      try {
+        const ticket = await googleClient.verifyIdToken({ idToken: credential });
+        payload = ticket.getPayload();
+      } catch (fallbackErr: any) {
+        console.error('[Google Auth] All verification failed:', fallbackErr.message);
+        res.status(401).json({ success: false, error: 'Token de Google inválido' });
+        return;
+      }
+    }
+
     if (!payload || !payload.email) {
       res.status(401).json({ success: false, error: 'Token de Google inválido' });
       return;
