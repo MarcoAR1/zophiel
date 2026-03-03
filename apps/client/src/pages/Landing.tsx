@@ -106,7 +106,7 @@ export default function Landing() {
                   </div>
                 </Link>
                 {/* Mobile APK download */}
-                <a href="https://github.com/MarcoAR1/zophiel/releases/latest/download/app-debug.apk" download="zophiel.apk" className="lg:hidden flex w-full max-w-[320px] mx-auto h-12 rounded-xl bg-white/5 border border-white/10 text-white text-base font-bold hover:bg-white/10 transition-colors backdrop-blur-sm items-center justify-center gap-2 no-underline">
+                <a href="https://github.com/MarcoAR1/zophiel/releases/latest/download/app-debug.apk" target="_blank" rel="noopener noreferrer" className="lg:hidden flex w-full max-w-[320px] mx-auto h-12 rounded-xl bg-white/5 border border-white/10 text-white text-base font-bold hover:bg-white/10 transition-colors backdrop-blur-sm items-center justify-center gap-2 no-underline">
                   <span className="material-symbols-outlined text-[20px]">download</span>
                   Descargar APK Android
                 </a>
@@ -114,7 +114,7 @@ export default function Landing() {
                 <Link to="/app" className="hidden lg:flex items-center justify-center h-12 px-8 rounded-xl bg-primary text-white text-base font-bold shadow-lg shadow-primary/25 hover:bg-[#701ec2] transition-all transform hover:scale-105 no-underline">
                   {t('landing_cta_start')}
                 </Link>
-                <a href="https://github.com/MarcoAR1/zophiel/releases/latest/download/app-debug.apk" download="zophiel.apk" className="hidden lg:flex h-12 px-8 rounded-xl bg-white/5 border border-white/10 text-white text-base font-bold hover:bg-white/10 transition-colors backdrop-blur-sm items-center justify-center gap-2 no-underline">
+                <a href="https://github.com/MarcoAR1/zophiel/releases/latest/download/app-debug.apk" target="_blank" rel="noopener noreferrer" className="hidden lg:flex h-12 px-8 rounded-xl bg-white/5 border border-white/10 text-white text-base font-bold hover:bg-white/10 transition-colors backdrop-blur-sm items-center justify-center gap-2 no-underline">
                   <span className="material-symbols-outlined text-[20px]">download</span>
                   Descargar APK
                 </a>
@@ -139,7 +139,7 @@ export default function Landing() {
               {/* Desktop APK Download Link */}
               <div className="hidden lg:flex mt-10 items-center gap-3 text-sm text-slate-500">
                 <span className="material-symbols-outlined text-green-400 text-lg">phone_android</span>
-                <p className="m-0">Disponible para <a href="https://github.com/MarcoAR1/zophiel/releases/latest/download/app-debug.apk" download="zophiel.apk" className="text-primary hover:text-white transition-colors no-underline font-semibold">Android</a> y como <span className="text-white font-semibold">PWA</span></p>
+                <p className="m-0">Disponible para <a href="https://github.com/MarcoAR1/zophiel/releases/latest/download/app-debug.apk" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-white transition-colors no-underline font-semibold">Android</a> y como <span className="text-white font-semibold">PWA</span></p>
               </div>
             </div>
 
@@ -385,9 +385,7 @@ export default function Landing() {
                 <div className="flex flex-col sm:flex-row gap-3 items-center justify-center lg:justify-start">
                   <a
                     href="https://github.com/MarcoAR1/zophiel/releases/latest/download/app-debug.apk"
-                    download="zophiel.apk"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_blank" rel="noopener noreferrer"
                     className="group flex items-center gap-3 h-14 px-6 rounded-xl bg-white text-[#0f0b15] font-bold text-base shadow-lg hover:bg-slate-100 transition-all active:scale-95 no-underline"
                   >
                     <span className="material-symbols-outlined text-2xl">download</span>
@@ -461,7 +459,7 @@ export default function Landing() {
                 <Link to="/app" className="flex items-center justify-center h-14 px-10 rounded-full bg-white text-[#0f0b15] text-lg font-bold hover:bg-slate-100 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.3)] no-underline">
                   Crear Cuenta Gratis
                 </Link>
-                <a href="https://github.com/MarcoAR1/zophiel/releases/latest/download/app-debug.apk" download="zophiel.apk" className="flex items-center justify-center gap-2 h-14 px-8 rounded-full border border-white/10 bg-white/5 text-white text-base font-bold hover:bg-white/10 transition-colors no-underline">
+                <a href="https://github.com/MarcoAR1/zophiel/releases/latest/download/app-debug.apk" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 h-14 px-8 rounded-full border border-white/10 bg-white/5 text-white text-base font-bold hover:bg-white/10 transition-colors no-underline">
                   <span className="material-symbols-outlined text-xl">download</span>
                   Descargar APK
                 </a>
