@@ -23,6 +23,7 @@ export const translations = {
     nav_pain: 'Dolor',
     nav_questions: 'Preguntas',
     nav_quality: 'Calidad',
+    nav_history: 'Historial',
     nav_settings: 'Config',
 
     // ── Auth ──
@@ -140,6 +141,7 @@ export const translations = {
     nav_pain: 'Pain',
     nav_questions: 'Questions',
     nav_quality: 'Quality',
+    nav_history: 'History',
     nav_settings: 'Settings',
     auth_tagline: 'Your companion for chronic pain management',
     auth_name: 'Name',
@@ -168,6 +170,7 @@ export const translations = {
     nav_pain: 'Dor',
     nav_questions: 'Perguntas',
     nav_quality: 'Qualidade',
+    nav_history: 'Hist�rico',
     nav_settings: 'Config',
 
     auth_tagline: 'Seu companheiro no manejo da dor crônica',

@@ -77,7 +77,7 @@ function AuthenticatedApp() {
   return (
     <div className="app-layout">
       <Sidebar />
-      <div className="app-content">
+      <div className="app-content lg:ml-[280px]">
         <SyncBanner />
         <Routes>
           <Route path="/" element={<Dashboard />} />
