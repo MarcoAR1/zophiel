@@ -376,30 +376,31 @@ export default function Settings() {
               <div className="flex-1">
                 <span className="text-white font-semibold text-sm block">Health Connect</span>
                 <span className="text-[11px] text-slate-500">
-                  {nativeHealthAvail?.available
-                    ? nativeHealthConnected
-                      ? 'Conectado — leyendo datos de salud'
-                      : 'Disponible — conectá para sincronizar'
-                    : nativeHealthAvail?.reason || 'Verificando disponibilidad...'}
+                  {nativeHealthConnected
+                    ? 'Conectado — leyendo datos de salud'
+                    : nativeHealthAvail === null
+                      ? 'Verificando disponibilidad...'
+                      : nativeHealthAvail.available
+                        ? 'Disponible — conectá para sincronizar'
+                        : 'No disponible en este dispositivo'}
                 </span>
               </div>
-              {nativeHealthAvail?.available && (
-                nativeHealthConnected ? (
-                  <button
-                    onClick={disconnectNativeHealth}
-                    className="px-4 py-2 rounded-xl text-xs font-bold text-red-400 bg-red-500/10 border border-red-500/20 cursor-pointer transition-colors hover:bg-red-500/20"
-                  >
-                    Gestionar
-                  </button>
-                ) : (
-                  <button
-                    onClick={connectNativeHealth}
-                    disabled={healthLoading}
-                    className="px-4 py-2 rounded-xl text-xs font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/25 cursor-pointer transition-colors hover:bg-emerald-500/25 disabled:opacity-50"
-                  >
-                    {healthLoading ? 'Conectando...' : 'Conectar'}
-                  </button>
-                )
+              {/* Always show button on native */}
+              {nativeHealthConnected ? (
+                <button
+                  onClick={disconnectNativeHealth}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-red-400 bg-red-500/10 border border-red-500/20 cursor-pointer transition-colors hover:bg-red-500/20"
+                >
+                  Gestionar
+                </button>
+              ) : (
+                <button
+                  onClick={connectNativeHealth}
+                  disabled={healthLoading}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/25 cursor-pointer transition-colors hover:bg-emerald-500/25 disabled:opacity-50"
+                >
+                  {healthLoading ? 'Conectando...' : 'Conectar'}
+                </button>
               )}
             </div>
             {nativeHealthConnected && (
