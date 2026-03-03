@@ -1,7 +1,15 @@
 import { useState, useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../services/api';
 import { useI18n } from '../i18n/index';
+import {
+  isHealthAvailable,
+  requestHealthPermissions,
+  checkHealthPermissions,
+  openHealthSettings,
+  type HealthAvailability,
+} from '../services/nativeHealth';
 
 const LANGUAGES = [
   { code: 'es' as const, label: 'ES' },
@@ -39,10 +47,29 @@ export default function Settings() {
 
   const [saving, setSaving] = useState(false);
   const [healthStatus, setHealthStatus] = useState<any>(null);
+  const isNative = Capacitor.isNativePlatform();
+
+  // Native health state
+  const [nativeHealthAvail, setNativeHealthAvail] = useState<HealthAvailability | null>(null);
+  const [nativeHealthConnected, setNativeHealthConnected] = useState(false);
+  const [healthLoading, setHealthLoading] = useState(false);
 
   useEffect(() => {
-    api.health.status().catch(() => null).then(setHealthStatus);
-  }, []);
+    if (!isNative) {
+      // Web: check Google Fit status
+      api.health.status().catch(() => null).then(setHealthStatus);
+    } else {
+      // Native: check Health Connect / HealthKit availability + permissions
+      (async () => {
+        const avail = await isHealthAvailable();
+        setNativeHealthAvail(avail);
+        if (avail.available) {
+          const authorized = await checkHealthPermissions();
+          setNativeHealthConnected(authorized);
+        }
+      })();
+    }
+  }, [isNative]);
 
   // ── Save helpers ──
   const saveProfile = async (field: string, value: any) => {
@@ -103,6 +130,20 @@ export default function Settings() {
     } catch {}
   };
 
+  const connectNativeHealth = async () => {
+    setHealthLoading(true);
+    try {
+      const granted = await requestHealthPermissions();
+      setNativeHealthConnected(granted);
+    } catch {}
+    setHealthLoading(false);
+  };
+
+  const disconnectNativeHealth = async () => {
+    // Can't actually revoke — open system settings instead
+    await openHealthSettings();
+    setNativeHealthConnected(false);
+  };
   return (
     <div className="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col antialiased pb-24">
 
@@ -323,26 +364,76 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* Google Fit */}
+      {/* Health Integration */}
       <div className="mx-5 rounded-2xl p-5 mb-5 glass-card">
-        <div className="flex items-center gap-3.5">
-          <div className="size-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400">
-            <span className="material-symbols-outlined text-[20px]">fitness_center</span>
+        {isNative ? (
+          /* ═══ Native: Health Connect / HealthKit ═══ */
+          <>
+            <div className="flex items-center gap-3.5">
+              <div className="size-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                <span className="material-symbols-outlined text-[20px]">favorite</span>
+              </div>
+              <div className="flex-1">
+                <span className="text-white font-semibold text-sm block">Health Connect</span>
+                <span className="text-[11px] text-slate-500">
+                  {nativeHealthAvail?.available
+                    ? nativeHealthConnected
+                      ? 'Conectado — leyendo datos de salud'
+                      : 'Disponible — conectá para sincronizar'
+                    : nativeHealthAvail?.reason || 'Verificando disponibilidad...'}
+                </span>
+              </div>
+              {nativeHealthAvail?.available && (
+                nativeHealthConnected ? (
+                  <button
+                    onClick={disconnectNativeHealth}
+                    className="px-4 py-2 rounded-xl text-xs font-bold text-red-400 bg-red-500/10 border border-red-500/20 cursor-pointer transition-colors hover:bg-red-500/20"
+                  >
+                    Gestionar
+                  </button>
+                ) : (
+                  <button
+                    onClick={connectNativeHealth}
+                    disabled={healthLoading}
+                    className="px-4 py-2 rounded-xl text-xs font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/25 cursor-pointer transition-colors hover:bg-emerald-500/25 disabled:opacity-50"
+                  >
+                    {healthLoading ? 'Conectando...' : 'Conectar'}
+                  </button>
+                )
+              )}
+            </div>
+            {nativeHealthConnected && (
+              <div className="mt-4 pt-4 border-t border-white/5">
+                <p className="text-[11px] text-slate-500">Datos sincronizados:</p>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {['Pasos', 'Sueño', 'Cardio', 'Calorías', 'SpO₂'].map(d => (
+                    <span key={d} className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-[10px] font-medium">{d}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          /* ═══ Web: Google Fit ═══ */
+          <div className="flex items-center gap-3.5">
+            <div className="size-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400">
+              <span className="material-symbols-outlined text-[20px]">fitness_center</span>
+            </div>
+            <div className="flex-1">
+              <span className="text-white font-semibold text-sm block">Google Fit</span>
+              <span className="text-[11px] text-slate-500">Sincronizá tu actividad física</span>
+            </div>
+            {healthStatus?.connected ? (
+              <button onClick={disconnectGoogleFit} className="px-4 py-2 rounded-xl text-xs font-bold text-red-400 bg-red-500/10 border border-red-500/20 cursor-pointer transition-colors hover:bg-red-500/20">
+                Desconectar
+              </button>
+            ) : (
+              <button onClick={connectGoogleFit} className="px-4 py-2 rounded-xl text-xs font-bold text-green-400 bg-green-500/15 border border-green-500/25 cursor-pointer transition-colors hover:bg-green-500/25">
+                Conectar
+              </button>
+            )}
           </div>
-          <div className="flex-1">
-            <span className="text-white font-semibold text-sm block">Google Fit</span>
-            <span className="text-[11px] text-slate-500">Sincronizá tu actividad física</span>
-          </div>
-          {healthStatus?.connected ? (
-            <button onClick={disconnectGoogleFit} className="px-4 py-2 rounded-xl text-xs font-bold text-red-400 bg-red-500/10 border border-red-500/20 cursor-pointer transition-colors hover:bg-red-500/20">
-              Desconectar
-            </button>
-          ) : (
-            <button onClick={connectGoogleFit} className="px-4 py-2 rounded-xl text-xs font-bold text-green-400 bg-green-500/15 border border-green-500/25 cursor-pointer transition-colors hover:bg-green-500/25">
-              Conectar
-            </button>
-          )}
-        </div>
+        )}
       </div>
 
       {/* Logout */}

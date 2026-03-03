@@ -17,6 +17,7 @@
     "dependencies": {
         "@capacitor/android": "^6.1.0",
         "@capacitor/splash-screen": "^6.0.4",
+        "@capgo/capacitor-health": "8.2.17",
         "@codetrix-studio/capacitor-google-auth": "3.4.0-rc.4",
         "@zophiel/shared": "workspace:*",
         "chart.js": "^4.4.0",

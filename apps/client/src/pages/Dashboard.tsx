@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { api } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
+import { readHealthData, checkHealthPermissions } from '../services/nativeHealth';
 
 /**
  * Dashboard — 100% real data, zero hardcoded values.
@@ -85,6 +87,25 @@ export default function Dashboard() {
         // silently fail
       } finally {
         setLoading(false);
+      }
+
+      // Also try native health data (runs after main data loads)
+      if (Capacitor.isNativePlatform()) {
+        try {
+          const hasPerms = await checkHealthPermissions();
+          if (hasPerms) {
+            const nativeData = await readHealthData(1);
+            // Override with native data if available
+            if (nativeData.steps != null || nativeData.sleepMinutes != null || nativeData.heartRateAvg != null) {
+              setHealthStatus({ connected: true, provider: 'health_connect' });
+              setHealthData({
+                steps: nativeData.steps,
+                sleepMinutes: nativeData.sleepMinutes,
+                heartRateAvg: nativeData.heartRateAvg,
+              });
+            }
+          }
+        } catch {}
       }
     })();
   }, []);
