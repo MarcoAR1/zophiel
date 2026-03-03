@@ -29,18 +29,21 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
       'http://localhost:5173',
       'http://localhost:5174',
       'http://localhost:4173',
-      'capacitor://localhost',  // Android Capacitor
-      'http://localhost',       // Some Android WebView variants
-      'ionic://localhost',      // iOS Capacitor
+      'capacitor://localhost',
+      'http://localhost',
+      'ionic://localhost',
     ];
 
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (mobile apps, curl, etc.)
+    // Also temporarily allow ALL origins to debug Capacitor connectivity
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('CORS not allowed'));
+      // Allow but log unknown origins for debugging
+      console.warn('[CORS] Allowing unknown origin:', origin);
+      callback(null, true);
     }
   },
   credentials: true,

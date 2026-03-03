@@ -98,7 +98,8 @@ export default function AuthPage() {
     } catch (err: any) {
       console.error('[Google Native Auth Error]', JSON.stringify(err));
       if (err.message !== 'The user canceled the sign-in flow.') {
-        setError(err.message || 'Error al iniciar sesión con Google');
+        const detail = err.code ? `[${err.code}] ` : '';
+        setError(`Google: ${detail}${err.message || JSON.stringify(err)}`);
       }
     } finally {
       setLoading(false);
@@ -122,7 +123,7 @@ export default function AuthPage() {
         await register(email, password, name);
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(`${isLogin ? 'Login' : 'Registro'}: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -178,7 +179,8 @@ export default function AuthPage() {
           {/* Error */}
           {error && (
             <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
-              {error}
+              <p>{error}</p>
+              <p className="text-[10px] text-red-400/50 mt-1">API: {import.meta.env.VITE_API_URL || '/api'}</p>
             </div>
           )}
 
