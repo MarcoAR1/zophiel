@@ -97,7 +97,7 @@ jobs:
               @Override
               public void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
-                  SocialLoginPlugin.registerSocialLoginHook(new GoogleProvider(this));
+                  SocialLoginPlugin.registerSocialLoginHook(new GoogleProvider(this, this));
               }
           }
           '''
