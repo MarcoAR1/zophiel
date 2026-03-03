@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -73,38 +73,6 @@ jobs:
         working-directory: apps/client
         run: npx cap add android
 
-      - name: Inject google-services.json for Google Sign-In
-        run: |
-          cat > apps/client/android/app/google-services.json << 'GSEOF'
-          {
-            "project_info": {
-              "project_number": "399934829057",
-              "project_id": "zophiel-app",
-              "storage_bucket": "zophiel-app.appspot.com"
-            },
-            "client": [{
-              "client_info": {
-                "mobilesdk_app_id": "1:399934829057:android:zophiel",
-                "android_client_info": {
-                  "package_name": "com.zophiel.app"
-                }
-              },
-              "oauth_client": [
-                {
-                  "client_id": "399934829057-9rlehsblaukd4p0fa00m344n3p3othg1.apps.googleusercontent.com",
-                  "client_type": 1
-                },
-                {
-                  "client_id": "399934829057-ion4sr02mpnftbd3kssju2e63jg4c4s4.apps.googleusercontent.com",
-                  "client_type": 3
-                }
-              ],
-              "api_key": [{"current_key": "placeholder"}],
-              "services": {"appinvite_service": {"other_platform_oauth_client": []}}
-            }],
-            "configuration_version": "1"
-          }
-          GSEOF
 
       - name: Sync Capacitor
         working-directory: apps/client
