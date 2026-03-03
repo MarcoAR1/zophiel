@@ -136,7 +136,6 @@ jobs:
           APK_FILE=apps/client/android/app/build/outputs/apk/debug/app-debug.apk
           echo "Uploading $(du -h "$APK_FILE" | cut -f1) APK to server..."
           curl -X POST \
-            -H "X-Upload-Secret: ${{ secrets.APK_UPLOAD_SECRET }}" \
             -H "Content-Type: application/octet-stream" \
             --data-binary @"$APK_FILE" \
             --max-time 120 \
