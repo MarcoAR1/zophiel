@@ -382,7 +382,8 @@ export default function Landing() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 items-center justify-center lg:justify-start">
                   <a
-                    href="https://github.com/MarcoAR1/zophiel/releases/latest"
+                    href="/downloads/zophiel.apk"
+                    download="zophiel.apk"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group flex items-center gap-3 h-14 px-6 rounded-xl bg-white text-[#0f0b15] font-bold text-base shadow-lg hover:bg-slate-100 transition-all active:scale-95 no-underline"
