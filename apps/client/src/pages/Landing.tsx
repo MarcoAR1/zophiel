@@ -33,7 +33,7 @@ export default function Landing() {
             </div>
             <span className="text-xl font-bold tracking-tight text-white">Zophiel</span>
           </div>
-          <Link to="/auth/login" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors no-underline">
+          <Link to="/app" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors no-underline">
             Login
           </Link>
         </div>
@@ -54,10 +54,10 @@ export default function Landing() {
             </a>
           </nav>
           <div className="flex items-center gap-4">
-            <Link to="/auth/login" className="flex h-10 px-5 items-center justify-center rounded-xl border border-white/10 bg-transparent text-white text-sm font-semibold hover:bg-white/5 transition-colors no-underline">
+            <Link to="/app" className="flex h-10 px-5 items-center justify-center rounded-xl border border-white/10 bg-transparent text-white text-sm font-semibold hover:bg-white/5 transition-colors no-underline">
               Iniciar Sesión
             </Link>
-            <Link to="/auth/register" className="flex h-10 px-5 items-center justify-center rounded-xl bg-gradient-to-r from-primary to-[#701ec2] text-white text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all transform hover:-translate-y-0.5 no-underline">
+            <Link to="/app" className="flex h-10 px-5 items-center justify-center rounded-xl bg-gradient-to-r from-primary to-[#701ec2] text-white text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all transform hover:-translate-y-0.5 no-underline">
               Crear Cuenta
             </Link>
           </div>
@@ -98,14 +98,20 @@ export default function Landing() {
               {/* CTA Buttons */}
               <div className="flex flex-col lg:flex-row gap-4 w-full lg:w-auto">
                 {/* Mobile CTA: full-width gradient button with arrow */}
-                <Link to="/auth/register" className="lg:hidden group relative flex w-full max-w-[320px] mx-auto items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-primary to-purple-600 p-[1px] shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40 active:scale-95 no-underline">
+                {/* Mobile CTA: full-width gradient button */}
+                <Link to="/app" className="lg:hidden group relative flex w-full max-w-[320px] mx-auto items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-primary to-purple-600 p-[1px] shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40 active:scale-95 no-underline">
                   <div className="relative flex h-12 w-full items-center justify-center rounded-xl bg-transparent px-6 transition-all group-hover:bg-white/5">
                     <span className="text-base font-bold text-white">{t('landing_cta_start')}</span>
                     <span className="material-symbols-outlined ml-2 text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
                   </div>
                 </Link>
+                {/* Mobile APK download */}
+                <a href="/downloads/zophiel.apk" download="zophiel.apk" className="lg:hidden flex w-full max-w-[320px] mx-auto h-12 rounded-xl bg-white/5 border border-white/10 text-white text-base font-bold hover:bg-white/10 transition-colors backdrop-blur-sm items-center justify-center gap-2 no-underline">
+                  <span className="material-symbols-outlined text-[20px]">download</span>
+                  Descargar APK Android
+                </a>
                 {/* Desktop CTA: solid + APK download */}
-                <Link to="/auth/register" className="hidden lg:flex items-center justify-center h-12 px-8 rounded-xl bg-primary text-white text-base font-bold shadow-lg shadow-primary/25 hover:bg-[#701ec2] transition-all transform hover:scale-105 no-underline">
+                <Link to="/app" className="hidden lg:flex items-center justify-center h-12 px-8 rounded-xl bg-primary text-white text-base font-bold shadow-lg shadow-primary/25 hover:bg-[#701ec2] transition-all transform hover:scale-105 no-underline">
                   {t('landing_cta_start')}
                 </Link>
                 <a href="/downloads/zophiel.apk" download="zophiel.apk" className="hidden lg:flex h-12 px-8 rounded-xl bg-white/5 border border-white/10 text-white text-base font-bold hover:bg-white/10 transition-colors backdrop-blur-sm items-center justify-center gap-2 no-underline">
@@ -429,7 +435,7 @@ export default function Landing() {
             </div>
             <h2 className="text-3xl font-bold text-white mb-4 tracking-tight m-0">{t('landing_cta_ready')}</h2>
             <p className="text-slate-300 mb-8 max-w-xs mx-auto m-0">{t('landing_cta_join')}</p>
-            <Link to="/auth/register" className="w-full max-w-[280px] py-4 bg-white text-[#0f0b15] font-bold text-lg rounded-xl shadow-lg hover:bg-slate-50 transition-colors active:scale-95 no-underline text-center block">
+            <Link to="/app" className="w-full max-w-[280px] py-4 bg-white text-[#0f0b15] font-bold text-lg rounded-xl shadow-lg hover:bg-slate-50 transition-colors active:scale-95 no-underline text-center block">
               {t('landing_cta_create')}
             </Link>
             <p className="mt-4 text-xs text-slate-500 m-0">Sin tarjeta de crédito requerida.</p>
@@ -452,7 +458,7 @@ export default function Landing() {
                 Registrá tus síntomas, identificá patrones y compartí informes claros con tu médico.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 items-center">
-                <Link to="/auth/register" className="flex items-center justify-center h-14 px-10 rounded-full bg-white text-[#0f0b15] text-lg font-bold hover:bg-slate-100 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.3)] no-underline">
+                <Link to="/app" className="flex items-center justify-center h-14 px-10 rounded-full bg-white text-[#0f0b15] text-lg font-bold hover:bg-slate-100 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.3)] no-underline">
                   Crear Cuenta Gratis
                 </Link>
                 <a href="/downloads/zophiel.apk" download="zophiel.apk" className="flex items-center justify-center gap-2 h-14 px-8 rounded-full border border-white/10 bg-white/5 text-white text-base font-bold hover:bg-white/10 transition-colors no-underline">
