@@ -104,14 +104,14 @@ export default function Landing() {
                     <span className="material-symbols-outlined ml-2 text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
                   </div>
                 </Link>
-                {/* Desktop CTA: solid + ghost */}
+                {/* Desktop CTA: solid + APK download */}
                 <Link to="/auth/register" className="hidden lg:flex items-center justify-center h-12 px-8 rounded-xl bg-primary text-white text-base font-bold shadow-lg shadow-primary/25 hover:bg-[#701ec2] transition-all transform hover:scale-105 no-underline">
                   {t('landing_cta_start')}
                 </Link>
-                <button className="hidden lg:flex h-12 px-8 rounded-xl bg-white/5 border border-white/10 text-white text-base font-bold hover:bg-white/10 transition-colors backdrop-blur-sm items-center justify-center gap-2">
-                  <span className="material-symbols-outlined text-[20px]">play_circle</span>
-                  Ver demo
-                </button>
+                <a href="/downloads/zophiel.apk" download="zophiel.apk" className="hidden lg:flex h-12 px-8 rounded-xl bg-white/5 border border-white/10 text-white text-base font-bold hover:bg-white/10 transition-colors backdrop-blur-sm items-center justify-center gap-2 no-underline">
+                  <span className="material-symbols-outlined text-[20px]">download</span>
+                  Descargar APK
+                </a>
               </div>
 
               {/* Mobile Trust Indicators */}
@@ -130,14 +130,10 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Desktop Social Proof */}
-              <div className="hidden lg:flex mt-10 items-center gap-4 text-sm text-slate-500">
-                <div className="flex -space-x-3">
-                  <img alt="User 1" className="w-10 h-10 rounded-full border-2 border-background-dark object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA346ZDHDWl_h_k_RFbqBM51alSTzKrnydF2939M4PpfoX3Ox-hPg9CXH57C7PeF31-CcQ0ULZnVXdQyveXnMhm_VDHZy6x4bX6kCEVQI2-83dE_IRvi63vav4Ogs4QtrhQFfJnypUIZc4rWbKDSYrnL3eigykmLCEHVFrhy5iIHeAVioD0DRBY2kpUQGHhJ1Uc1ngZgel5O2Hw_eE2Cg7Vev7HpBX-wcqFEJ5R-FNX557fZ1FhSe08YBF5B3vCvEj06ZRujXPTjg" />
-                  <img alt="User 2" className="w-10 h-10 rounded-full border-2 border-background-dark object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOS5j6i1POaU9HIZkR8JPUGlS4VyeOiMC_e1Qiufl3U7rieIUPlTulBFUTp1M2nTYcwOmAOMxLxE9gEOKIxK-gelQFaFu2kBOwEoSYBruyaQwc0_WDDflWaHqLgJ7-73fsrjuYeW6FRM4N42XhA2Ue59yQwhtSyTcS8l10dWnif1xuM1tS57HMFUOwGhPxFjUwCU6M7quOlWb_5-QuIqoBJIRxuymLlEmU41dwRGHdfCUlKo252Y39sUgVzjrzORVqnBo_z_bO1w" />
-                  <img alt="User 3" className="w-10 h-10 rounded-full border-2 border-background-dark object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnR0wuva2UUImNqKtcDbZxcLRV2bBcfb_KGkfZWdV5U1A5gyUpGfd8DBPxvN2NILiOauInsQOKLnATkjWdhX_BrXx3ZwqSA7SlY3LO_8Q90JqHVB3RpO-Fu6z_7VoHMHeRsF58qdDiuVHmjXol8cU3IeQsubfmLrd2Tggpb8UbGoUHQvFJYo1W6RYv8cFSVUGZ8XXQNMwwpNZr-n18Lh6M7WIj2_GA6n38r4VfDJlN1vJVMm3mWGc2egzJrLQCBCxQ0IcwJIcZ2w" />
-                </div>
-                <p className="m-0">Usado por más de <span className="text-white font-semibold">10,000+</span> pacientes</p>
+              {/* Desktop APK Download Link */}
+              <div className="hidden lg:flex mt-10 items-center gap-3 text-sm text-slate-500">
+                <span className="material-symbols-outlined text-green-400 text-lg">phone_android</span>
+                <p className="m-0">Disponible para <a href="/downloads/zophiel.apk" download="zophiel.apk" className="text-primary hover:text-white transition-colors no-underline font-semibold">Android</a> y como <span className="text-white font-semibold">PWA</span></p>
               </div>
             </div>
 
@@ -450,15 +446,21 @@ export default function Landing() {
             </div>
             <div className="relative z-10 flex flex-col items-center">
               <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-6 m-0">
-                Empieza a vivir mejor hoy
+                Tomá el control de tu dolor
               </h2>
               <p className="text-slate-300 text-lg mb-10 max-w-2xl mx-auto m-0">
-                Únete a miles de personas que ya están gestionando su dolor de forma inteligente con Zophiel.
+                Registrá tus síntomas, identificá patrones y compartí informes claros con tu médico.
               </p>
-              <Link to="/auth/register" className="flex items-center justify-center h-14 px-10 rounded-full bg-white text-[#0f0b15] text-lg font-bold hover:bg-slate-100 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.3)] no-underline">
-                Crear Cuenta Gratis
-              </Link>
-              <p className="mt-6 text-sm text-slate-500 m-0">No se requiere tarjeta de crédito • Cancelación en cualquier momento</p>
+              <div className="flex flex-col sm:flex-row gap-4 items-center">
+                <Link to="/auth/register" className="flex items-center justify-center h-14 px-10 rounded-full bg-white text-[#0f0b15] text-lg font-bold hover:bg-slate-100 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.3)] no-underline">
+                  Crear Cuenta Gratis
+                </Link>
+                <a href="/downloads/zophiel.apk" download="zophiel.apk" className="flex items-center justify-center gap-2 h-14 px-8 rounded-full border border-white/10 bg-white/5 text-white text-base font-bold hover:bg-white/10 transition-colors no-underline">
+                  <span className="material-symbols-outlined text-xl">download</span>
+                  Descargar APK
+                </a>
+              </div>
+              <p className="mt-6 text-sm text-slate-500 m-0">Gratis • Sin tarjeta de crédito</p>
             </div>
           </div>
         </div>
@@ -493,26 +495,25 @@ export default function Landing() {
               <h4 className="text-white font-semibold mb-6 m-0">Producto</h4>
               <ul className="space-y-4 m-0 p-0 list-none">
                 <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#features">Funcionalidades</a></li>
-                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Precios</a></li>
-                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Para Clínicas</a></li>
-                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Estudios de Caso</a></li>
+                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/clinics">Para Clínicas</Link></li>
+                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/case-studies">Estudios de Caso</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white font-semibold mb-6 m-0">Compañía</h4>
               <ul className="space-y-4 m-0 p-0 list-none">
-                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Sobre Nosotros</a></li>
-                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Blog</a></li>
-                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Carreras</a></li>
-                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Contacto</a></li>
+                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/about">Sobre Nosotros</Link></li>
+                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/blog">Blog</Link></li>
+                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/careers">Carreras</Link></li>
+                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/contact">Contacto</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white font-semibold mb-6 m-0">Legal</h4>
               <ul className="space-y-4 m-0 p-0 list-none">
-                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Privacidad</a></li>
-                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Términos</a></li>
-                <li><a className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" href="#">Seguridad</a></li>
+                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/privacy">Privacidad</Link></li>
+                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/terms">Términos</Link></li>
+                <li><Link className="text-slate-400 hover:text-primary text-sm transition-colors no-underline" to="/security">Seguridad</Link></li>
               </ul>
             </div>
           </div>
