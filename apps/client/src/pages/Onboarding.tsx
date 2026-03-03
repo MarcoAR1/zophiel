@@ -23,16 +23,17 @@ const LEVEL_LABELS: Record<NotificationLevel, string> = {
 };
 
 const PAIN_DURATIONS = [
-  { value: '<1', label: '< 1 año' },
+  { value: '<1', label: 'Menos de 6 meses' },
   { value: '1-3', label: '1-3 años' },
   { value: '3-5', label: '3-5 años' },
-  { value: '5+', label: '5+ años' },
+  { value: '5+', label: 'Más de 5 años' },
 ];
 
 const TREATMENTS = [
   { key: 'medication', icon: 'medication', label: 'Medicación' },
-  { key: 'physio', icon: 'fitness_center', label: 'Fisioterapia' },
-  { key: 'cbt', icon: 'psychology', label: 'Terapia cognitiva' },
+  { key: 'physio', icon: 'physical_therapy', label: 'Fisioterapia' },
+  { key: 'meditation', icon: 'self_improvement', label: 'Meditación' },
+  { key: 'exercise', icon: 'fitness_center', label: 'Ejercicio' },
   { key: 'acupuncture', icon: 'pin_drop', label: 'Acupuntura' },
   { key: 'cannabis', icon: 'spa', label: 'Cannabis medicinal' },
   { key: 'none', icon: 'block', label: 'Ninguno' },
@@ -40,6 +41,9 @@ const TREATMENTS = [
 
 const TOTAL_STEPS = 4;
 
+/**
+ * Onboarding — Stitch-styled multi-step wizard
+ */
 export default function Onboarding({ onComplete, userName }: OnboardingProps) {
   const [step, setStep] = useState(0);
   const [diagnosis, setDiagnosis] = useState<DiagnosisOption | ''>('');
@@ -77,58 +81,107 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
   };
 
   return (
-    <div className="bg-background-dark min-h-screen font-display text-slate-100 flex flex-col px-6 py-8">
-      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+    <div className="bg-background-dark min-h-screen font-display text-slate-100 flex flex-col">
 
-      {/* Progress dots */}
-      <div className="flex justify-center gap-2 mb-8">
+      {/* ─── Top bar ─── */}
+      <div className="flex items-center p-4 pb-2 justify-between">
+        {step > 0 ? (
+          <button onClick={() => setStep(step - 1)} className="p-1">
+            <span className="material-symbols-outlined text-slate-400">arrow_back_ios</span>
+          </button>
+        ) : <div className="w-8" />}
+        <h2 className="text-lg font-bold text-white flex-1 text-center">
+          {step === 0 && '🩺 Zophiel'}
+          {step === 1 && 'Condiciones'}
+          {step === 2 && 'Tu Dolor'}
+          {step === 3 && 'Preferencias'}
+        </h2>
+        {step > 0 ? <div className="w-8" /> : <div className="w-8" />}
+      </div>
+
+      {/* ─── Progress dots (Stitch style: round dots) ─── */}
+      <div className="flex w-full flex-row items-center justify-center gap-3 py-5">
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
           <div
             key={i}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              step === i ? 'w-8 bg-primary' : step > i ? 'w-4 bg-primary/40' : 'w-4 bg-white/10'
+            className={`h-2 w-2 rounded-full transition-all duration-300 ${
+              step === i ? 'bg-primary scale-125' : step > i ? 'bg-primary/60' : 'bg-primary/20'
             }`}
           />
         ))}
       </div>
 
-      {/* Step 0: Welcome + Condition */}
+      {/* ════════════════════════════════════════════════════ */}
+      {/* Step 0: Welcome Screen — Stitch: large illustration */}
+      {/* ════════════════════════════════════════════════════ */}
       {step === 0 && (
-        <div className="flex-1 flex flex-col">
-          <div className="flex flex-col items-center mb-8">
-            <div className="relative flex items-center justify-center size-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 shadow-inner shadow-primary/20 ring-1 ring-white/10 mb-4">
-              <ZophielLogo size={32} />
+        <div className="flex-1 flex flex-col px-6 pb-12">
+          <h1 className="text-[32px] font-bold text-white text-center tracking-tight pb-3 pt-6">
+            Bienvenido, {userName}
+          </h1>
+
+          {/* Illustration area — matches Stitch gradient card */}
+          <div className="flex w-full grow py-6">
+            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 rounded-3xl flex items-center justify-center border border-primary/10 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent opacity-50"></div>
+              <div className="relative z-10 flex flex-col items-center">
+                <ZophielLogo size={80} />
+                <div className="mt-4 w-32 h-1 bg-primary/40 rounded-full"></div>
+              </div>
+              <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-background-dark/80 to-transparent"></div>
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Bienvenido, {userName} 👋</h1>
-            <p className="text-slate-400 text-sm text-center leading-relaxed max-w-xs">
-              Tu compañero inteligente en el manejo del dolor crónico. Contanos sobre tu condición para personalizar tu experiencia.
-            </p>
           </div>
 
-          <div className="glass-card rounded-2xl p-5 mb-6">
-            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3 block">
-              ¿Qué condición de dolor tenés?
-            </label>
-            <div className="grid grid-cols-2 gap-2">
+          <p className="text-slate-400 text-lg font-normal leading-relaxed pb-8 px-2 text-center">
+            Tu aliado inteligente en la gestión personalizada del dolor crónico.
+          </p>
+
+          <button
+            className="w-full bg-primary py-4 rounded-xl font-semibold text-white shadow-lg shadow-primary/25 active:scale-[0.98] transition-transform"
+            onClick={() => setStep(1)}
+          >
+            Comenzar mi perfil
+          </button>
+        </div>
+      )}
+
+      {/* ════════════════════════════════════════════════════ */}
+      {/* Step 1: Conditions — Stitch: centered icon cards    */}
+      {/* ════════════════════════════════════════════════════ */}
+      {step === 1 && (
+        <div className="flex-1 flex flex-col px-6 pb-12">
+          <div className="py-4">
+            <h3 className="text-2xl font-bold text-white mb-2 text-center">¿Cuál es tu diagnóstico?</h3>
+            <p className="text-slate-500 text-center text-sm mb-6">
+              Seleccioná tu condición para personalizar tu experiencia.
+            </p>
+            <div className="grid grid-cols-2 gap-4">
               {DIAGNOSIS_OPTIONS.map((opt) => (
                 <button
                   key={opt}
-                  className={`flex items-center gap-3 p-3 rounded-xl text-left text-sm font-medium transition-all duration-200 active:scale-[0.97] ${
+                  className={`p-4 rounded-xl backdrop-blur-md flex flex-col items-center text-center gap-2 transition-all duration-200 active:scale-[0.97] ${
                     diagnosis === opt
-                      ? 'bg-primary/20 border border-primary/40 text-white'
-                      : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10'
+                      ? 'bg-primary/10 border border-primary/30'
+                      : 'bg-slate-800/40 border border-slate-700/50 hover:bg-slate-800/60'
                   }`}
                   onClick={() => setDiagnosis(diagnosis === opt ? '' : opt)}
                 >
-                  <span className="text-lg">{DIAGNOSIS_ICONS[opt]}</span>
-                  <span>{DIAGNOSIS_LABELS[opt]}</span>
+                  <span className={`material-symbols-outlined ${diagnosis === opt ? 'text-primary' : 'text-slate-400'}`}>
+                    {DIAGNOSIS_ICONS[opt] === '🔥' ? 'healing' :
+                     DIAGNOSIS_ICONS[opt] === '💪' ? 'pulmonology' :
+                     DIAGNOSIS_ICONS[opt] === '🧠' ? 'psychology' :
+                     DIAGNOSIS_ICONS[opt] === '🦴' ? 'accessibility_new' :
+                     DIAGNOSIS_ICONS[opt] === '⚡' ? 'monitor_heart' :
+                     'add_circle'}
+                  </span>
+                  <span className="text-sm font-medium">{DIAGNOSIS_LABELS[opt]}</span>
                 </button>
               ))}
             </div>
 
             {diagnosis === 'other' && (
               <input
-                className="w-full h-12 mt-4 pl-4 pr-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
+                className="w-full h-12 mt-4 pl-4 pr-4 bg-slate-800/40 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
                 placeholder="Describí tu condición..."
                 value={customDiagnosis}
                 onChange={(e) => setCustomDiagnosis(e.target.value)}
@@ -137,49 +190,33 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
             )}
           </div>
 
-          <div className="mt-auto space-y-3">
+          <div className="mt-auto">
             <button
-              className="w-full h-14 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2"
-              onClick={() => setStep(1)}
+              className="w-full bg-primary py-4 rounded-xl font-semibold text-white shadow-lg shadow-primary/25 active:scale-[0.98] transition-transform"
+              onClick={() => setStep(2)}
             >
-              <span>Continuar</span>
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-            </button>
-            <button
-              className="w-full py-3 text-sm text-slate-500 hover:text-slate-300 transition-colors"
-              onClick={() => setStep(1)}
-            >
-              Omitir por ahora
+              Continuar
             </button>
           </div>
         </div>
       )}
 
-      {/* Step 1: Pain Profile */}
-      {step === 1 && (
-        <div className="flex-1 flex flex-col">
-          <div className="flex flex-col items-center mb-8">
-            <div className="size-14 rounded-full bg-primary/20 flex items-center justify-center mb-4">
-              <span className="material-symbols-outlined text-primary text-3xl">fitness_center</span>
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Tu perfil de dolor</h1>
-            <p className="text-slate-400 text-sm text-center leading-relaxed max-w-xs">
-              Esta información nos ayuda a personalizar tus reportes y detectar patrones relevantes.
-            </p>
-          </div>
-
-          <div className="glass-card rounded-2xl p-5 mb-4">
-            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3 block">
-              ¿Hace cuánto convivís con dolor crónico?
-            </label>
-            <div className="grid grid-cols-2 gap-2">
+      {/* ════════════════════════════════════════════════════ */}
+      {/* Step 2: Pain Profile — Stitch: pills + chips        */}
+      {/* ════════════════════════════════════════════════════ */}
+      {step === 2 && (
+        <div className="flex-1 flex flex-col px-6 pb-12">
+          <div className="py-4 flex-grow overflow-y-auto">
+            {/* Duration */}
+            <h3 className="text-xl font-bold text-white mb-4">¿Cuánto tiempo llevás así?</h3>
+            <div className="flex flex-wrap gap-2 mb-8">
               {PAIN_DURATIONS.map((d) => (
                 <button
                   key={d.value}
-                  className={`py-3 px-4 rounded-xl text-sm font-medium text-center transition-all duration-200 active:scale-[0.97] ${
+                  className={`px-4 py-2 rounded-full text-sm transition-all active:scale-[0.97] ${
                     painDuration === d.value
-                      ? 'bg-primary text-white shadow-lg shadow-primary/25'
-                      : 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10'
+                      ? 'border border-primary bg-primary/20 font-medium'
+                      : 'border border-slate-700 bg-slate-800/30 hover:bg-slate-800/60'
                   }`}
                   onClick={() => setPainDuration(painDuration === d.value ? '' : d.value)}
                 >
@@ -187,191 +224,119 @@ export default function Onboarding({ onComplete, userName }: OnboardingProps) {
                 </button>
               ))}
             </div>
-          </div>
 
-          <div className="glass-card rounded-2xl p-5 mb-6">
-            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3 block">
-              ¿Qué tratamientos probaste?
-            </label>
-            <div className="grid grid-cols-2 gap-2">
+            {/* Treatments — Stitch: chip style with check/add icons */}
+            <h3 className="text-xl font-bold text-white mb-4">Tratamientos actuales</h3>
+            <div className="flex flex-wrap gap-2">
               {TREATMENTS.map((t) => (
                 <button
                   key={t.key}
-                  className={`flex items-center gap-3 p-3 rounded-xl text-sm font-medium text-left transition-all duration-200 active:scale-[0.97] ${
+                  className={`px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition-all active:scale-[0.97] ${
                     treatments.includes(t.key)
-                      ? 'bg-primary/20 border border-primary/40 text-white'
-                      : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10'
+                      ? 'bg-primary/20 border border-primary/30'
+                      : 'bg-slate-800/50 border border-slate-700 hover:bg-slate-800/70'
                   }`}
                   onClick={() => toggleTreatment(t.key)}
                 >
-                  <span className="material-symbols-outlined text-primary text-[20px]">{t.icon}</span>
-                  <span>{t.label}</span>
+                  <span className="material-symbols-outlined text-[16px]">
+                    {treatments.includes(t.key) ? 'check_circle' : 'add'}
+                  </span>
+                  {t.label}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="mt-auto flex gap-3">
+          <div className="pt-4">
             <button
-              className="flex-1 h-12 rounded-xl text-sm font-semibold bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 transition-colors"
-              onClick={() => setStep(0)}
+              className="w-full bg-primary py-4 rounded-xl font-semibold text-white shadow-lg shadow-primary/25 active:scale-[0.98] transition-transform"
+              onClick={() => setStep(3)}
             >
-              ← Atrás
-            </button>
-            <button
-              className="flex-[2] h-14 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2"
-              onClick={() => setStep(2)}
-            >
-              <span>Continuar</span>
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              Continuar
             </button>
           </div>
         </div>
       )}
 
-      {/* Step 2: Notifications */}
-      {step === 2 && (
-        <div className="flex-1 flex flex-col">
-          <div className="flex flex-col items-center mb-8">
-            <div className="size-14 rounded-full bg-primary/20 flex items-center justify-center mb-4">
-              <span className="material-symbols-outlined text-primary text-3xl">notifications</span>
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Recordatorios</h1>
-            <p className="text-slate-400 text-sm text-center leading-relaxed max-w-xs">
-              Te ayudamos a mantener un registro consistente para que tu médico tenga datos reales.
+      {/* ════════════════════════════════════════════════════ */}
+      {/* Step 3: Notifications — Stitch: toggles + time card */}
+      {/* ════════════════════════════════════════════════════ */}
+      {step === 3 && (
+        <div className="flex-1 flex flex-col px-6 pb-12">
+          <div className="py-4 flex-grow">
+            <h3 className="text-2xl font-bold text-white mb-2 text-center">No olvides registrarte</h3>
+            <p className="text-slate-500 text-center text-sm mb-8">
+              La constancia es clave para entender tus patrones de dolor.
             </p>
-          </div>
 
-          <div className="glass-card rounded-2xl p-5 mb-4">
-            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3 block">
-              Frecuencia de recordatorios
-            </label>
-            <div className="flex flex-col gap-2">
-              {NOTIFICATION_LEVELS.map((level) => (
-                <button
-                  key={level}
-                  className={`w-full p-4 rounded-xl text-left transition-all duration-200 ${
-                    notifLevel === level
-                      ? 'bg-primary/20 border border-primary/40'
-                      : 'bg-white/5 border border-white/10 hover:bg-white/10'
-                  }`}
-                  onClick={() => setNotifLevel(level)}
-                >
-                  <div className={`text-sm font-medium ${notifLevel === level ? 'text-white' : 'text-slate-300'}`}>
-                    {LEVEL_LABELS[level]}
-                  </div>
-                  <div className="text-[10px] text-slate-500 mt-1">
-                    {NOTIFICATION_SCHEDULES[level].join(' · ')}
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="glass-card rounded-2xl p-5 mb-6">
-            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3 block">
-              Horas silenciosas
-            </label>
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <label className="text-[10px] text-slate-500 mb-1 block">Desde</label>
+            {/* Quiet hours card — Stitch: centered time display */}
+            <div className="bg-slate-800/30 rounded-3xl p-6 mb-8 border border-slate-700/50 flex flex-col items-center">
+              <span className="text-slate-400 text-sm font-medium mb-4 uppercase tracking-widest">Horas silenciosas</span>
+              <div className="flex items-center gap-3 mb-2">
                 <input
-                  className="w-full h-12 pl-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
+                  className="w-24 h-12 text-center bg-transparent text-3xl font-bold text-white focus:outline-none focus:ring-0 border-none"
                   type="time"
                   value={quietStart}
                   onChange={(e) => setQuietStart(e.target.value)}
                 />
-              </div>
-              <div className="flex-1">
-                <label className="text-[10px] text-slate-500 mb-1 block">Hasta</label>
+                <span className="text-slate-500 text-lg">—</span>
                 <input
-                  className="w-full h-12 pl-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-sm"
+                  className="w-24 h-12 text-center bg-transparent text-3xl font-bold text-white focus:outline-none focus:ring-0 border-none"
                   type="time"
                   value={quietEnd}
                   onChange={(e) => setQuietEnd(e.target.value)}
                 />
               </div>
-            </div>
-          </div>
-
-          <div className="mt-auto flex gap-3">
-            <button
-              className="flex-1 h-12 rounded-xl text-sm font-semibold bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 transition-colors"
-              onClick={() => setStep(1)}
-            >
-              ← Atrás
-            </button>
-            <button
-              className="flex-[2] h-14 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2"
-              onClick={() => setStep(3)}
-            >
-              <span>Continuar</span>
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Step 3: Ready */}
-      {step === 3 && (
-        <div className="flex-1 flex flex-col">
-          <div className="flex flex-col items-center mb-8">
-            <div className="relative flex items-center justify-center size-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 shadow-inner shadow-primary/20 ring-1 ring-white/10 mb-4">
-              <ZophielLogo size={32} />
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-2">¡Todo listo!</h1>
-            <p className="text-slate-400 text-sm text-center leading-relaxed max-w-xs">
-              Tu configuración está lista. Podés cambiarla en cualquier momento desde Configuración.
-            </p>
-          </div>
-
-          <div className="glass-card rounded-2xl p-5 mb-6">
-            <div className="space-y-3">
-              {finalDiagnosis && (
-                <div className="flex justify-between items-center py-2.5 border-b border-white/5">
-                  <span className="text-xs text-slate-500 uppercase tracking-wide">Condición</span>
-                  <span className="text-sm font-medium text-white">{finalDiagnosis}</span>
-                </div>
-              )}
-              {painDuration && (
-                <div className="flex justify-between items-center py-2.5 border-b border-white/5">
-                  <span className="text-xs text-slate-500 uppercase tracking-wide">Duración</span>
-                  <span className="text-sm font-medium text-white">{PAIN_DURATIONS.find(d => d.value === painDuration)?.label}</span>
-                </div>
-              )}
-              {treatments.length > 0 && (
-                <div className="flex justify-between items-center py-2.5 border-b border-white/5">
-                  <span className="text-xs text-slate-500 uppercase tracking-wide">Tratamientos</span>
-                  <span className="text-sm font-medium text-white text-right max-w-[60%]">
-                    {treatments.map(t => TREATMENTS.find(tr => tr.key === t)?.label).join(', ')}
-                  </span>
-                </div>
-              )}
-              <div className="flex justify-between items-center py-2.5 border-b border-white/5">
-                <span className="text-xs text-slate-500 uppercase tracking-wide">Recordatorios</span>
-                <span className="text-sm font-medium text-white">{LEVEL_LABELS[notifLevel].split(' — ')[1]}</span>
-              </div>
-              <div className="flex justify-between items-center py-2.5">
-                <span className="text-xs text-slate-500 uppercase tracking-wide">Silencio</span>
-                <span className="text-sm font-medium text-white">{quietStart} - {quietEnd}</span>
+              <div className="w-full h-[1px] bg-slate-700 my-4"></div>
+              <div className="flex gap-4">
+                {['L','M','X','J','V','S','D'].map((d, i) => (
+                  <span key={d} className={`text-xs ${i === 3 ? 'text-primary font-bold' : 'text-slate-500'}`}>{d}</span>
+                ))}
               </div>
             </div>
+
+            {/* Toggle notifications — Stitch style */}
+            <div className="space-y-4">
+              {NOTIFICATION_LEVELS.map((level) => (
+                <div
+                  key={level}
+                  className="flex items-center justify-between p-4 bg-slate-800/40 rounded-2xl border border-slate-700/50 cursor-pointer"
+                  onClick={() => setNotifLevel(level)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <span className="material-symbols-outlined text-primary text-xl">
+                        {level === 'low' ? 'notifications_paused' : level === 'medium' ? 'edit_notifications' : 'notifications_active'}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold m-0">{LEVEL_LABELS[level].split(' — ')[0]}</p>
+                      <p className="text-[10px] text-slate-500 m-0">{NOTIFICATION_SCHEDULES[level].join(' · ')}</p>
+                    </div>
+                  </div>
+                  {/* Toggle */}
+                  <div className={`w-12 h-6 rounded-full relative transition-colors ${notifLevel === level ? 'bg-primary' : 'bg-slate-700'}`}>
+                    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${notifLevel === level ? 'right-1' : 'left-1'}`}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="mt-auto flex gap-3">
+          <div className="pt-4">
             <button
-              className="flex-1 h-12 rounded-xl text-sm font-semibold bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 transition-colors"
-              onClick={() => setStep(2)}
-            >
-              ← Atrás
-            </button>
-            <button
-              className="flex-[2] h-14 bg-gradient-to-r from-primary to-[#6d1cc5] text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full bg-gradient-to-r from-primary to-[#a855f7] py-4 rounded-xl font-bold text-white shadow-xl shadow-primary/20 active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
               onClick={handleComplete}
               disabled={saving}
             >
               <span className="material-symbols-outlined text-[18px]">rocket_launch</span>
-              {saving ? 'Guardando...' : 'Empezar a registrar'}
+              {saving ? 'Guardando...' : 'Finalizar configuración'}
+            </button>
+            <button
+              className="w-full py-4 text-slate-500 text-sm font-medium hover:text-slate-300 transition-colors"
+              onClick={handleComplete}
+            >
+              Configurar más tarde
             </button>
           </div>
         </div>

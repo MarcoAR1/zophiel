@@ -472,10 +472,39 @@ export default function Landing() {
       {/* Desktop: 4-column grid */}
       {/* ══════════════════════════════════════════════════════════ */}
       {/* Mobile Footer */}
-      <footer className="lg:hidden mt-auto py-8 text-center px-6">
-        <p className="text-xs text-slate-500 font-medium m-0">
-          {t('landing_footer')}
-        </p>
+      <footer className="lg:hidden mt-auto border-t border-white/5 py-10 px-6">
+        <div className="flex items-center gap-2 mb-6">
+          <ZophielLogo variant="icon" size={20} />
+          <span className="text-white text-sm font-bold">Zophiel</span>
+        </div>
+        <div className="grid grid-cols-3 gap-6 mb-8">
+          <div>
+            <h4 className="text-white text-xs font-semibold mb-3 m-0">Producto</h4>
+            <ul className="space-y-2 m-0 p-0 list-none">
+              <li><a className="text-slate-500 hover:text-primary text-xs transition-colors no-underline" href="#features">Funcionalidades</a></li>
+              <li><Link className="text-slate-500 hover:text-primary text-xs transition-colors no-underline" to="/clinics">Clínicas</Link></li>
+              <li><Link className="text-slate-500 hover:text-primary text-xs transition-colors no-underline" to="/case-studies">Casos</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white text-xs font-semibold mb-3 m-0">Compañía</h4>
+            <ul className="space-y-2 m-0 p-0 list-none">
+              <li><Link className="text-slate-500 hover:text-primary text-xs transition-colors no-underline" to="/about">Sobre Nosotros</Link></li>
+              <li><Link className="text-slate-500 hover:text-primary text-xs transition-colors no-underline" to="/blog">Blog</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white text-xs font-semibold mb-3 m-0">Legal</h4>
+            <ul className="space-y-2 m-0 p-0 list-none">
+              <li><Link className="text-slate-500 hover:text-primary text-xs transition-colors no-underline" to="/privacy">Privacidad</Link></li>
+              <li><Link className="text-slate-500 hover:text-primary text-xs transition-colors no-underline" to="/terms">Términos</Link></li>
+              <li><Link className="text-slate-500 hover:text-primary text-xs transition-colors no-underline" to="/security">Seguridad</Link></li>
+            </ul>
+          </div>
+        </div>
+        <div className="border-t border-white/5 pt-4">
+          <p className="text-[10px] text-slate-600 m-0">{t('landing_footer')}</p>
+        </div>
       </footer>
 
       {/* Desktop Footer */}
