@@ -48,18 +48,16 @@ export default function AuthPage() {
     [loginWithGoogle]
   );
 
-  // ── Initialize SocialLogin on native ──
+  // ── Initialize GoogleSignIn on native ──
   useEffect(() => {
     if (!isNative || !googleClientId) return;
     (async () => {
       try {
-        const { SocialLogin } = await import('@capgo/capacitor-social-login');
-        await SocialLogin.initialize({
-          google: { webClientId: googleClientId },
-        });
-        console.log('[Auth] SocialLogin initialized');
+        const { GoogleSignIn } = await import('@capawesome/capacitor-google-sign-in');
+        await GoogleSignIn.initialize({ clientId: googleClientId });
+        console.log('[Auth] GoogleSignIn initialized');
       } catch (err) {
-        console.error('[Auth] SocialLogin init error:', err);
+        console.error('[Auth] GoogleSignIn init error:', err);
       }
     })();
   }, [isNative, googleClientId]);
@@ -95,86 +93,29 @@ export default function AuthPage() {
   }, [handleGoogleResponse, googleClientId, isNative]);
 
   /**
-   * Native Google Sign-In via @capgo/capacitor-social-login
-   * Uses Google Credential Manager (Android) / Sign In with Apple framework (iOS)
-   * Falls back to browser-based OAuth if Credential Manager fails
+   * Native Google Sign-In via @capawesome/capacitor-google-sign-in
+   * Uses Google Credential Manager (Android) — clean, modern API
    */
   const handleNativeGoogleLogin = async () => {
     setLoading(true);
     setError('');
     try {
-      const { SocialLogin } = await import('@capgo/capacitor-social-login');
+      const { GoogleSignIn } = await import('@capawesome/capacitor-google-sign-in');
+      const result = await GoogleSignIn.signIn();
+      console.log('[Auth] GoogleSignIn result:', JSON.stringify(result));
 
-      // Attempt 1: Try Credential Manager (native Google signin)
-      try {
-        console.log('[Auth] Attempting Credential Manager login...');
-        const result = await SocialLogin.login({
-          provider: 'google',
-          options: {},
-        });
-        console.log('[Auth] Credential Manager result:', JSON.stringify(result));
-
-        const idToken = (result as any)?.result?.idToken;
-        if (idToken) {
-          await loginWithGoogle(idToken);
-          return;
-        }
-        console.warn('[Auth] No idToken in result, trying browser fallback...');
-      } catch (credErr: any) {
-        console.error('[Auth] Credential Manager failed:', credErr.message, JSON.stringify(credErr));
-        // If user cancelled, stop entirely
-        if (credErr.message?.includes('cancel') || credErr.code === 'SIGN_IN_CANCELLED') {
-          setLoading(false);
-          return;
-        }
-        // Otherwise fall through to browser-based OAuth
-        console.log('[Auth] Falling back to browser OAuth...');
+      if (!result.idToken) {
+        throw new Error('No se recibió token de Google');
       }
+      await loginWithGoogle(result.idToken);
 
-      // Attempt 2: Browser-based OAuth (opens system browser)
-      const redirectUri = `https://com.zophiel.app/oauth/callback`;
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
-        `client_id=${encodeURIComponent(googleClientId)}` +
-        `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-        `&response_type=code` +
-        `&scope=${encodeURIComponent('openid email profile')}` +
-        `&access_type=offline` +
-        `&prompt=consent`;
-
-      console.log('[Auth] Opening browser OAuth:', authUrl);
-      const browserResult = await SocialLogin.openSecureWindow({
-        authEndpoint: authUrl,
-        redirectUri: redirectUri,
-      });
-
-      console.log('[Auth] Browser OAuth result:', JSON.stringify(browserResult));
-      const redirectedUri = (browserResult as any)?.redirectedUri;
-      if (redirectedUri) {
-        const url = new URL(redirectedUri);
-        const code = url.searchParams.get('code');
-        if (code) {
-          // Exchange the code for an ID token on the backend
-          const apiUrl = import.meta.env.VITE_API_URL || '/api';
-          const resp = await fetch(`${apiUrl}/auth/google/exchange`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code, redirectUri }),
-          });
-          if (!resp.ok) throw new Error('Error al intercambiar código OAuth');
-          const { idToken } = await resp.json();
-          if (idToken) {
-            await loginWithGoogle(idToken);
-            return;
-          }
-        }
-      }
-      throw new Error('No se pudo completar la autenticación con Google');
     } catch (err: any) {
-      if (err.message?.includes('cancel') || err.message?.includes('OAuth cancelled')) {
+      // User cancelled = not an error
+      if (err.message?.includes('cancel') || err.code === 'canceled') {
         setLoading(false);
         return;
       }
-      console.error('[Auth] Google login error:', err);
+      console.error('[Auth] GoogleSignIn error:', err.message, err.code);
       setError(`Google: ${err.message}`);
     } finally {
       setLoading(false);

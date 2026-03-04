@@ -85,42 +85,6 @@ jobs:
         working-directory: apps/client
         run: npx cap sync android
 
-      - name: Patch MainActivity for SocialLogin (MUST be after cap sync)
-        run: |
-          MAIN_ACT=apps/client/android/app/src/main/java/com/zophiel/app/MainActivity.java
-          cat > "$MAIN_ACT" << 'JAVAEOF'
-          package com.zophiel.app;
-
-          import android.content.Intent;
-          import android.os.Bundle;
-          import com.getcapacitor.BridgeActivity;
-          import ee.forgr.capacitor.social.login.ModifiedMainActivityForSocialLoginPlugin;
-          import ee.forgr.capacitor.social.login.SocialLoginPlugin;
-          import ee.forgr.capacitor.social.login.GoogleProvider;
-
-          public class MainActivity extends BridgeActivity implements ModifiedMainActivityForSocialLoginPlugin {
-              @Override
-              public void IHaveModifiedTheMainActivityForTheUseWithSocialLoginPlugin() {
-                  // Required marker method — confirms this activity is patched for SocialLogin
-              }
-
-              @Override
-              protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-                  super.onActivityResult(requestCode, resultCode, data);
-                  if (requestCode >= GoogleProvider.REQUEST_AUTHORIZE_GOOGLE_MIN
-                      && requestCode <= GoogleProvider.REQUEST_AUTHORIZE_GOOGLE_MAX) {
-                      SocialLoginPlugin plugin = (SocialLoginPlugin) this.bridge.getPlugin("SocialLogin").getInstance();
-                      if (plugin != null) {
-                          plugin.handleGoogleLoginIntent(requestCode, data);
-                      }
-                  }
-              }
-          }
-          JAVAEOF
-          # Fix indentation (heredoc preserves leading spaces)
-          sed -i 's/^          //' "$MAIN_ACT"
-          echo "=== Patched MainActivity.java ==="
-          cat "$MAIN_ACT"
 
       - name: Copy app icon and splash to Android resources
         run: |

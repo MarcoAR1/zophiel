@@ -19,12 +19,12 @@ importers:
       '@capacitor/splash-screen':
         specifier: ^8.0.1
         version: 8.0.1(@capacitor/core@8.1.0)
+      '@capawesome/capacitor-google-sign-in':
+        specifier: ^0.1.1
+        version: 0.1.1(@capacitor/core@8.1.0)
       '@capgo/capacitor-health':
         specifier: 8.2.17
         version: 8.2.17(@capacitor/core@8.1.0)
-      '@capgo/capacitor-social-login':
-        specifier: ^8.3.8
-        version: 8.3.8(@capacitor/core@8.1.0)
       '@zophiel/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -744,13 +744,13 @@ packages:
     peerDependencies:
       '@capacitor/core': '>=8.0.0'
 
-  '@capgo/capacitor-health@8.2.17':
-    resolution: {integrity: sha512-yavzYsp2aAgCaREQr8IBb9pTwi0wVagbZ6gwbTWnMlOfjKlSeZNdjljt0hmRKXVGVi2bCqPPUogSIHG439xgZQ==}
+  '@capawesome/capacitor-google-sign-in@0.1.1':
+    resolution: {integrity: sha512-9A5X57CeOSzTEz4LvAopABBH4YAfA/3NgW2PgUQ4WwrkzZVcolWA+v0d2earoA3kiwPfvOgzb948WWUS0oHv+w==}
     peerDependencies:
       '@capacitor/core': '>=8.0.0'
 
-  '@capgo/capacitor-social-login@8.3.8':
-    resolution: {integrity: sha512-daj3mTkFjrP3Z1S0ZaMHQ8rfZRdTyPUnxj8Nu32pejMsksG1TCekvmC1bqarKvSVA+R9iNPJaDMrFHRH0HLG8A==}
+  '@capgo/capacitor-health@8.2.17':
+    resolution: {integrity: sha512-yavzYsp2aAgCaREQr8IBb9pTwi0wVagbZ6gwbTWnMlOfjKlSeZNdjljt0hmRKXVGVi2bCqPPUogSIHG439xgZQ==}
     peerDependencies:
       '@capacitor/core': '>=8.0.0'
 
@@ -4237,11 +4237,11 @@ snapshots:
     dependencies:
       '@capacitor/core': 8.1.0
 
-  '@capgo/capacitor-health@8.2.17(@capacitor/core@8.1.0)':
+  '@capawesome/capacitor-google-sign-in@0.1.1(@capacitor/core@8.1.0)':
     dependencies:
       '@capacitor/core': 8.1.0
 
-  '@capgo/capacitor-social-login@8.3.8(@capacitor/core@8.1.0)':
+  '@capgo/capacitor-health@8.2.17(@capacitor/core@8.1.0)':
     dependencies:
       '@capacitor/core': 8.1.0
 
