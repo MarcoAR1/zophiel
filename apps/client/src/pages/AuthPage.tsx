@@ -101,22 +101,26 @@ export default function AuthPage() {
     setError('');
     try {
       const { GoogleSignIn } = await import('@capawesome/capacitor-google-sign-in');
+      setError('🔄 Iniciando sesión con Google...');
       const result = await GoogleSignIn.signIn();
       console.log('[Auth] GoogleSignIn result:', JSON.stringify(result));
 
       if (!result.idToken) {
-        throw new Error('No se recibió token de Google');
+        throw new Error(`No idToken. Keys: ${Object.keys(result).join(', ')}`);
       }
+      setError('🔄 Token recibido, autenticando...');
       await loginWithGoogle(result.idToken);
+      setError(''); // login succeeded, clear status
 
     } catch (err: any) {
       // User cancelled = not an error
       if (err.message?.includes('cancel') || err.code === 'canceled') {
+        setError('');
         setLoading(false);
         return;
       }
       console.error('[Auth] GoogleSignIn error:', err.message, err.code);
-      setError(`Google: ${err.message}`);
+      setError(`Google: ${err.code || ''} ${err.message}`);
     } finally {
       setLoading(false);
     }
