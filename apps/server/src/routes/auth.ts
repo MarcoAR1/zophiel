@@ -196,3 +196,29 @@ authRouter.post('/google', async (req, res) => {
     res.status(401).json({ success: false, error: 'Error al verificar con Google' });
   }
 });
+
+// POST /api/auth/google/exchange — exchange OAuth code for ID token (browser fallback flow)
+authRouter.post('/google/exchange', async (req, res) => {
+  try {
+    const { code, redirectUri } = req.body;
+    if (!code) {
+      res.status(400).json({ success: false, error: 'code requerido' });
+      return;
+    }
+
+    const { tokens } = await googleClient.getToken({
+      code,
+      redirect_uri: redirectUri || 'https://com.zophiel.app/oauth/callback',
+    });
+
+    if (!tokens.id_token) {
+      res.status(400).json({ success: false, error: 'No se obtuvo id_token de Google' });
+      return;
+    }
+
+    res.json({ success: true, idToken: tokens.id_token });
+  } catch (err: any) {
+    console.error('[Google Exchange Error]', err.message);
+    res.status(400).json({ success: false, error: 'Error al intercambiar código: ' + err.message });
+  }
+});
