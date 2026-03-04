@@ -67,27 +67,31 @@ downloadRouter.post('/apk', (req: Request, res: Response) => {
 
 /**
  * GET /api/download/apk — Download APK (public)
- * If APK not cached locally, fetches it from GitHub Release first.
+ * Always fetches the latest from GitHub Release to avoid stale cache.
  */
 downloadRouter.get('/apk', async (_req: Request, res: Response) => {
-  // Auto-fetch from GitHub Release if not cached
-  if (!fs.existsSync(APK_PATH)) {
-    try {
-      await downloadFromRelease();
-    } catch (err: any) {
+  // Always re-fetch from GitHub Release to get the latest APK
+  try {
+    await downloadFromRelease();
+  } catch (err: any) {
+    // If download fails but we have a cached copy, use it
+    if (!fs.existsSync(APK_PATH)) {
       console.error('[APK] Failed to fetch from release:', err.message);
       res.status(503).json({
         error: 'APK no disponible. Intentá de nuevo en unos minutos.',
       });
       return;
     }
+    console.warn('[APK] Using cached APK (GitHub fetch failed:', err.message, ')');
   }
 
   const stat = fs.statSync(APK_PATH);
+  const etag = `"apk-${stat.mtimeMs}"`;
   res.setHeader('Content-Type', 'application/vnd.android.package-archive');
   res.setHeader('Content-Disposition', 'attachment; filename="zophiel.apk"');
   res.setHeader('Content-Length', stat.size);
-  res.setHeader('Cache-Control', 'public, max-age=3600');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('ETag', etag);
 
   const stream = fs.createReadStream(APK_PATH);
   stream.pipe(res);
