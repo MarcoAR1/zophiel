@@ -36,25 +36,24 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Restore debug keystore
+      - name: Setup debug keystore
         run: |
           mkdir -p ~/.android
-          if [ -f apps/client/debug.keystore ]; then
-            echo "Using committed debug keystore (consistent SHA-1)"
-            cp apps/client/debug.keystore ~/.android/debug.keystore
-          else
-            echo "No committed keystore found — generating new one..."
-            keytool -genkey -v -keystore ~/.android/debug.keystore \
-              -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 \
-              -storepass android -keypass android \
-              -dname "CN=Android Debug,O=Android,C=US"
-            cp ~/.android/debug.keystore apps/client/debug.keystore
-          fi
-          echo "=== SHA-1 FINGERPRINT ==="
+          # ALWAYS generate fresh to avoid Git binary corruption
+          echo "Generating fresh debug keystore..."
+          keytool -genkey -v -keystore ~/.android/debug.keystore \
+            -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass android -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US"
+          echo ""
+          echo "╔══════════════════════════════════════════════════════════════╗"
+          echo "║  DEBUG KEYSTORE SHA-1 — ADD THIS TO GOOGLE CLOUD CONSOLE   ║"
+          echo "╠══════════════════════════════════════════════════════════════╣"
           keytool -list -v -keystore ~/.android/debug.keystore \
             -alias androiddebugkey -storepass android -keypass android \
-            | grep -E "SHA1|SHA-1"
-          echo "========================="
+            | grep -E "SHA1|SHA-1|SHA256|SHA-256"
+          echo "╚══════════════════════════════════════════════════════════════╝"
+
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -146,7 +145,14 @@ jobs:
         working-directory: apps/client/android
         run: chmod +x gradlew && ./gradlew assembleDebug
 
-
+      - name: Verify APK signing SHA-1
+        run: |
+          APK=apps/client/android/app/build/outputs/apk/debug/app-debug.apk
+          echo "╔══════════════════════════════════════════════════════════════╗"
+          echo "║  APK SIGNING CERTIFICATE — MUST MATCH GOOGLE CLOUD CONSOLE ║"
+          echo "╠══════════════════════════════════════════════════════════════╣"
+          keytool -printcert -jarfile "$APK" | grep -E "SHA1|SHA-1|SHA256|SHA-256"
+          echo "╚══════════════════════════════════════════════════════════════╝"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -179,11 +185,3 @@ jobs:
             https://zophielserver-production.up.railway.app/api/download/apk
           echo ""
           echo "APK uploaded successfully"
-
-      - name: Persist debug keystore to repo
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add apps/client/debug.keystore
-          git diff --staged --quiet || git commit -m "ci: persist debug keystore [skip ci]"
-          git push
