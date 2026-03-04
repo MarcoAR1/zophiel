@@ -151,7 +151,15 @@ jobs:
           echo "╔══════════════════════════════════════════════════════════════╗"
           echo "║  APK SIGNING CERTIFICATE — MUST MATCH GOOGLE CLOUD CONSOLE ║"
           echo "╠══════════════════════════════════════════════════════════════╣"
-          keytool -printcert -jarfile "$APK" | grep -E "SHA1|SHA-1|SHA256|SHA-256"
+          # Try apksigner first (works with V2/V3 signatures)
+          if command -v apksigner &> /dev/null; then
+            apksigner verify --print-certs "$APK" 2>/dev/null || true
+          fi
+          # Also try keytool on the keystore directly
+          echo "--- Keystore SHA-1 (should match above) ---"
+          keytool -list -v -keystore ~/.android/debug.keystore \
+            -alias androiddebugkey -storepass android -keypass android \
+            | grep -E "SHA1|SHA-1|SHA256|SHA-256"
           echo "╚══════════════════════════════════════════════════════════════╝"
 
       - name: Upload APK artifact
