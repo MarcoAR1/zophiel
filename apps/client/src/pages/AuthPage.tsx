@@ -94,33 +94,39 @@ export default function AuthPage() {
 
   /**
    * Native Google Sign-In via @capawesome/capacitor-google-sign-in
-   * Uses Google Credential Manager (Android) — clean, modern API
    */
   const handleNativeGoogleLogin = async () => {
     setLoading(true);
     setError('');
     try {
       const { GoogleSignIn } = await import('@capawesome/capacitor-google-sign-in');
-      setError('🔄 Iniciando sesión con Google...');
+      setError('🔄 Abriendo Google Sign-In...');
+      
       const result = await GoogleSignIn.signIn();
-      console.log('[Auth] GoogleSignIn result:', JSON.stringify(result));
+      
+      // Show full result for debugging
+      const keys = Object.keys(result || {});
+      const hasToken = !!(result as any)?.idToken;
+      const tokenPreview = hasToken ? (result as any).idToken.substring(0, 20) + '...' : 'NULL';
+      setError(`✅ Result keys: [${keys.join(', ')}] idToken: ${tokenPreview}`);
+      
+      // Wait 2s so user can read the debug info
+      await new Promise(r => setTimeout(r, 2000));
 
-      if (!result.idToken) {
-        throw new Error(`No idToken. Keys: ${Object.keys(result).join(', ')}`);
-      }
-      setError('🔄 Token recibido, autenticando...');
-      await loginWithGoogle(result.idToken);
-      setError(''); // login succeeded, clear status
-
-    } catch (err: any) {
-      // User cancelled = not an error
-      if (err.message?.includes('cancel') || err.code === 'canceled') {
-        setError('');
+      if (!(result as any)?.idToken) {
+        setError(`❌ No idToken. Resultado: ${JSON.stringify(result).substring(0, 200)}`);
         setLoading(false);
         return;
       }
-      console.error('[Auth] GoogleSignIn error:', err.message, err.code);
-      setError(`Google: ${err.code || ''} ${err.message}`);
+      
+      setError('🔄 Token OK, enviando al backend...');
+      await loginWithGoogle((result as any).idToken);
+      setError('✅ Login exitoso!');
+
+    } catch (err: any) {
+      // SHOW ALL ERRORS — don't filter anything for now
+      setError(`❌ Error: [${err.code || 'no-code'}] ${err.message || JSON.stringify(err)}`);
+      console.error('[Auth] GoogleSignIn FULL error:', JSON.stringify(err));
     } finally {
       setLoading(false);
     }
