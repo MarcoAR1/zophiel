@@ -184,6 +184,9 @@ export default function AuthPage() {
             <ZophielLogo size={36} />
           </div>
           <h1 className="text-3xl font-bold text-white mb-1">Zophiel</h1>
+          <span className="text-[10px] text-slate-500 bg-white/5 px-2 py-0.5 rounded-full">
+            {Capacitor.getPlatform()} {isNative ? '(native)' : '(web)'}
+          </span>
         </div>
 
         {/* ═══ Glassmorphism Card — exact Stitch Pro wrapper ═══ */}
