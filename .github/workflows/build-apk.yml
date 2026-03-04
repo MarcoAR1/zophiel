@@ -82,7 +82,11 @@ jobs:
             cat "$VARS_FILE"
           fi
 
-      - name: Patch MainActivity for SocialLogin (Google auth requires onActivityResult forwarding)
+      - name: Sync Capacitor
+        working-directory: apps/client
+        run: npx cap sync android
+
+      - name: Patch MainActivity for SocialLogin (MUST be after cap sync)
         run: |
           MAIN_ACT=apps/client/android/app/src/main/java/com/zophiel/app/MainActivity.java
           cat > "$MAIN_ACT" << 'JAVAEOF'
@@ -118,10 +122,6 @@ jobs:
           sed -i 's/^          //' "$MAIN_ACT"
           echo "=== Patched MainActivity.java ==="
           cat "$MAIN_ACT"
-
-      - name: Sync Capacitor
-        working-directory: apps/client
-        run: npx cap sync android
 
       - name: Copy app icon and splash to Android resources
         run: |
